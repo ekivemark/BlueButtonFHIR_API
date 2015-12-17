@@ -1,0 +1,92 @@
+ {% extends "base.html" %}
+ {% load i18n %}
+ {% load staticfiles %}
+ {% block pretitle %}{% endblock %}
+ {% block extra_head %} {% endblock %}
+ {% block breadcrumbs %}
+         <div class="container">
+        <ul class="breadcrumb">
+            <li><a href="{% url 'home' %}">Home</a></li>
+
+            <li class="active">What's New</li>
+        </ul>
+    </div>
+ {%  endblock %}
+ {% block pagename %}<h3>What's New with {{ settings.APPLICATION_TITLE }}</h3>{% endblock %}
+ {% block content %}
+
+ <div class="section"
+     <div class="row-fluid">
+     {% if is_staff %}
+         <div class="col-lg-12">
+            <a href="{% url 'base:new_stuff_create' %}"
+                            class="btn btn-success">
+                            <i class="fa fa-plus-square-o fa-1x"></i>
+                            {% trans 'Add a News Item' %}</a>
+         </div>
+     {% endif %}
+        <div class="col-lg-8">
+         {% for newstuff in news %}
+             <div class="col-lg-12 well well-large">
+                <h4><a href="{% url 'base:newsitem' newstuff.id %}">{{ newstuff.title }}</a>
+                {% if is_staff %}
+                    <a href="{% url 'base:new_stuff_update' newstuff.id %}"
+                            class="btn btn-success">
+                            <i class="fa fa-pencil fa-1x"></i>
+                            {% trans 'Edit' %}</a>
+                {% endif %}
+                </h4>
+                <p style="font-style: italic;"><strong>Dateline:</strong> {{ newstuff.modified }} <strong>by:</strong> {{ newstuff.author }}</p>
+                <p>
+                    <span>
+                        {{ newstuff.body }}
+                    </span>
+                </p>
+             </div>
+         {% empty %}
+             <div class="col-lg-8 well well-large">
+                 <p>hmmm.... nothing new found</p>
+             </div>
+         {% endfor %}
+        </div>
+        <div class="col-md-4">
+             <img src="{% static 'img/layout/blue-button.png' %}" style="height:300px">
+        </div>
+        <div class="col-lg-12">
+
+            <div class="pagination">
+                <ul class="pagination">
+                    {% if page_obj.has_previous %}
+                        <li><a href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+                    {% else %}
+
+                        <li class="disabled"><a href="?page=">[Previous]</a></li>
+
+                    {% endif %}
+
+                    {% for pg in paginator.page_range %}
+                        {% if paginator.number == pg %}
+                            <li><a href="?page={{ pg }}">[{{ pg }}]</a></li>
+                        {% else %}
+                            <li><a href="?page={{ pg }}">{{ pg }}</a></li>
+                        {% endif %}
+                    {% endfor %}
+                    {% if page_obj.has_next %}
+                        <li><a href="?page={{ page_obj.next_page_number }}">Next</a></li>
+                    {% else %}
+
+                        <li class="disabled"><a href="?page=">[Next]</a></li>
+
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+
+
+     </div>
+
+</div>
+
+
+
+ {% endblock %}

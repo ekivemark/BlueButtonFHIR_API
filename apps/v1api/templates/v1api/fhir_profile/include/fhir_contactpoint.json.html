@@ -1,0 +1,50 @@
+{% if profile.fhir_contact_point %}"telecom": [
+  {% for cp in profile.fhir_contact_point %}{
+  {% if cp.resourceType %}"resourceType" : "{{ cp.resourceType }}",{% endif %}
+  {% if cp.system %}"system" : "{{ cp.system }}",{% endif %}
+  "value" : "{{ cp.value }}",
+  "use" : "{{ cp.use }}"{% if cp.rank %},
+  "rank" : "{{ cp.rank }}"{% endif %}{% if cp.period %},
+  "period": { {% for item, date in cp.period.items %}
+            "{{ item }}" : "{{ date }}"{% if forloop.last %}{% else %},{% endif %}{% endfor %}
+            }{% endif %}
+  }{% if forloop.last %}{% else %},{% endif %}{% endfor %}
+    ],{% endif %}{% comment %}
+JSON: http://hl7-fhir.github.io/datatypes.html#ContactPoint
+{
+  "resourceType" : "ContactPoint",
+  // from Element: extension
+  "system" : "<code>", // C? phone | fax | email | pager | other
+  "value" : "<string>", // The actual contact point details
+  "use" : "<code>", // home | work | temp | old | mobile - purpose of this contact point
+  "rank" : "<positiveInt>", // Specify preferred order of use (1 = highest)
+  "period" : { Period } // Time period when the contact point was/is in use
+}
+
+Period:
+{
+  // from Element: extension
+  "start" : "<dateTime>", // C? Starting time with inclusive boundary
+  "end" : "<dateTime>" // C? End time with inclusive boundary, if not ongoing
+}
+
+{% endcomment %}{% comment %}
+
+XML:
+<[name] xmlns="http://hl7.org/fhir">
+ <!-- from Element: extension -->
+ <system value="[code]"/><!-- ?? 0..1 phone | fax | email | pager | other -->
+ <value value="[string]"/><!-- 0..1 The actual contact point details -->
+ <use value="[code]"/><!-- 0..1 home | work | temp | old | mobile - purpose of this contact point -->
+ <rank value="[positiveInt]"/><!-- 0..1 Specify preferred order of use (1 = highest) -->
+ <period><!-- 0..1 Period Time period when the contact point was/is in use --></period>
+</[name]>
+
+Period:
+<[name] xmlns="http://hl7.org/fhir">
+ <!-- from Element: extension -->
+ <start value="[dateTime]"/><!-- ?? 0..1 Starting time with inclusive boundary -->
+ <end value="[dateTime]"/><!-- ?? 0..1 End time with inclusive boundary, if not ongoing -->
+</[name]>
+
+{% endcomment %}

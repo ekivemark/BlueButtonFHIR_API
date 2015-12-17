@@ -1,0 +1,47 @@
+{% extends 'demo/bootstrap.html' %}
+
+{% load bootstrap3 %}
+
+{% block bootstrap3_content %}
+    <div class="container">
+        <h1>{% block title %}(no title){% endblock %}</h1>
+
+        <div class="navbar navbar-default navbar-static">
+            <ul class="nav nav-pills">
+
+                <li class="active"><a href="/">home</a></li>
+                <li class="divider-vertical"></li>
+                <li class="dropdown-menu" id="menu1">
+                    <a href="#" class="btn dropdown-toggle"
+                       data-toggle="dropdown">Form options...<span
+                            class="caret"></span></a>
+                    <ul class="dropdown-menu" id="menu1" role="menu">
+
+                        <li><a href="/demo/formset" class="">formset</a>
+                        </li>
+                        <li><a href="/demo/form" class="">form</a></li>
+                        <li><a href="/demo/form_by_field" class="">form_by_field</a>
+                        </li>
+                        <li><a href="/demo/form_horizontal" class="">form_horizontal</a>
+                        </li>
+                        <li><a href="/demo/form_inline" class="">form_inline</a>
+                        </li>
+                        <li><a href="/demo/form_with_files" class="">form_with_files</a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="divider-vertical"></li>
+
+                <li><a href="/demo/pagination">pagination</a></li>
+                <li><a href="/demo/misc">miscellaneous</a></li>
+                <li class="divider-vertical"></li>
+                <li><a href="/demo/demoapi">Demo API</a></li>
+
+            </ul>
+        </div>
+        {% bootstrap_messages %}
+
+        {% block content %}(no content){% endblock %}
+    </div>
+
+{% endblock %}

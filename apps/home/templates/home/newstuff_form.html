@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block pretitle %}{% if object == None %}Adding {% else %}Editing {{ object }}{% endif %}{% endblock %}
+{% block extra_head %}
+
+{% endblock %}
+
+{% block pagename%}{% if object == None %}Adding {% else %}Editing {{ object }}{% endif %}{% endblock %}
+{% block breadcrumbs %}
+    <div class="container">
+        <ul class="breadcrumb">
+            <li><a href="{% url 'home' %}">Home</a></li>
+            <li><a href="{% url 'base:new_stuff' %}">What's New</a></li>
+            <li>{% if object == None %}Adding {% else %}Editing {{ object }}{% endif %}</li>
+
+        </ul>
+    </div>
+
+{% endblock %}
+{% block content %}
+
+
+    <div class="container col-lg-8 well">
+        <form method="post" action="" xmlns="http://www.w3.org/1999/html">
+            {% csrf_token %}
+            <table>
+                <tr>
+                    <td>
+                        {{ form.as_table }}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <a href="{% url "base:new_stuff" %}"><input
+                                type="button" class="btn-danger"
+                                value="Cancel"/></a>
+                    </td>
+                    <td>
+                        <input class="btn-success btn-lg" type="submit"
+                               value="Save"/>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+
+{% endblock %}

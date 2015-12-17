@@ -1,0 +1,17 @@
+{% extends 'demo/base.html' %}
+
+{% block title %}demo API{% endblock %}
+
+{% block content %}
+    This is <em>the Demo API</em> for <strong>Developer Account</strong>.
+    <p>A call was made to: <br><b><em>{{ url }}{{ params }}</em></b><br>
+        and the results are shown below:</p>
+    <h2>JSON</h2>
+    <pre>
+        {{ result }}
+    </pre>
+    <h2>XML</h2>
+    <pre>
+        {{ xmlresult }}
+    </pre>
+{% endblock %}

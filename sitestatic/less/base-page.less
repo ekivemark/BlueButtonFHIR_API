@@ -1,0 +1,74 @@
+/*
+base_page: Objective is a sticky header and footer
+based on:  https://gist.github.com/1918937
+
+*/
+
+@footerHeight: 100px;
+
+html, body, .container, .content {
+  height: 100%;
+}
+
+.container, .content {
+  position: relative;
+  padding-left: 0px;
+}
+
+.proper-content {
+  padding-top: @footerHeight; /* >= navbar height */
+
+}
+
+.wrapper {
+  //overflow:auto;
+  min-height: 100%;
+  height: auto !important;
+  height: 100%;
+  padding-left: 0;
+  border-left: 0;
+  margin: 0 auto (@footerHeight * -1); /* same as the footer but a negative value */
+}
+
+.push {
+  height: @footerHeight; /* same as the footer */
+}
+
+.footer-wrapper {
+  border-left: 0px solid @grayLighter;
+  border-top: 1px solid @grayDarker;
+  position: relative;
+  // position: fixed;
+  height: @footerHeight;
+  overflow: hidden;
+  width: 100%;
+  margin-left: 0;
+  padding-left: 0;
+  padding-top: 5px;
+  color: @blue;
+  background-color: lighten(@linkColor, 40%);
+
+  .a {
+    color: @white;
+    &:hover {
+      color: @yellow;
+    }
+  }
+}
+
+.opaque {
+  filter: alpha(opacity=100); /* IE */
+  -moz-opacity: 1; /* Mozilla */
+  opacity: 1; /* CSS3 */
+}
+
+.transparency {
+  filter: alpha(opacity=60); /* IE */
+  -moz-opacity: 0.6; /* Mozilla */
+  opacity: 0.6; /* CSS3 */
+}
+
+.behind-image {
+  background-image: url('../images/layout/background_image.jpg');
+
+}

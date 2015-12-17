@@ -1,0 +1,71 @@
+ {% extends "base.html" %}
+ {% load i18n %}
+ {% load staticfiles %}
+ {% block pretitle %}{% endblock %}
+ {% block extra_head %} {% endblock %}
+ {% block breadcrumbs %}
+         <div class="container">
+        <ul class="breadcrumb">
+            <li><a href="{% url 'apps.home' %}">Home</a></li>
+
+            <li class="active">About BlueButton</li>
+        </ul>
+    </div>
+ {%  endblock %}
+ {% block pagename %}About{% endblock %}
+ {% block content %}
+
+     <div class="row">
+         <div class="col-md-12">
+             <h3 contenteditable="true">Put Your Medicare Claims Information to Work For You</h3>
+         </div>
+     </div>
+<div class="section">
+     <div class="row">
+         <div class="col-lg-8">
+             <p>
+                 <span>
+                     <a href="https://www.mymedicare.gov/">MyMedicare.gov's</a>
+                 </span>
+                 <span>Blue Button provides you an easy way to put your data to work for you
+                     in the devices and applications you trust. Switching on the advanced functionality
+                     of Medicare's next generation BlueButton service lets you setup unique
+                     passwords for each device you use and lets you remove or change the password
+                     if you lose a device.&nbsp;
+                 </span>
+             </p>
+             <p>
+                 <span>To use this feature you will setup a device profile and copy
+                     the unique credentials (a custom user name and password). You can save those
+                     credentials and use them whenever you connect to the BlueButton service from that device.
+                 </span>
+             </p>
+         </div>
+         <div class="col-md-4">
+             <img src="{% static 'img/layout/blue-button.png' %}" style="height:300px">
+         </div>
+          {%  if request.is_secure %}
+             <div class="col-md-4">
+             <h4>Securing your data</h4>
+             This server is protected with a Security Certificate. All communication with this server
+             is encrypted using SSL. Your browser indicates this with a lock icon ( <i class="fa fa-lock fa-lg"></i> ).
+
+            <a href="https://www.positivessl.com/multi-domain-ssl-certificate.php"
+                target="_blank"
+                style="font-family: arial; font-size: 10px; color: #212121; text-decoration: none;">
+                 <img src="https://www.positivessl.com/images-new/PositiveSSL_tl_trans.png"
+                      alt="Multi Domain SSL"
+                      title="Multi Domain SSL"
+                      border="0" /></a><div style="font-family: arial;font-weight:bold;font-size:15px;color:#86BEE0;">
+                <a href="https://www.positivessl.com/multi-domain-ssl-certificate.php"
+                   target="_blank"
+                   style="color:#86BEE0; text-decoration: none;">Multi Domain SSL</a></div>
+         </div>
+         {% endif %}
+
+     </div>
+</div>
+
+
+
+ {% endblock %}

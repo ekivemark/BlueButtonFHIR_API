@@ -1,0 +1,27 @@
+[global]
+secret_key = --INSERT_SECRET_KEY_HERE--
+domain = __ADD_DOMAIN_HERE__
+debug = True
+template_debug = True
+debug_settings = True
+email_host = __ADD_EMAIL_HOST_IN_LOCAL.INI__
+#email_host = __ADD_EMAIL_HOST_IN_LOCAL.INI__
+application_title =Beneficiary Accounts
+email_port = 465
+email_html = True
+#email_backend = 'django.core.mail.backends.console.EmailBackend'
+#email_backend = django.core.mail.backends.smtp.EmailBackend
+email_backend_type = smtp
+email_host_user = __ADD_EMAIL_HOST_USER_IN_LOCAL.INI__
+email_host_password = __ADD_EMAIL_HOST_PASSWORD_IN_LOCAL.INI__
+# EMAIL_USE_TLS and EMAIL_USE_SSL are mutually exclusive. Use only one
+# email_use_tls = True
+# TLS = True if port = 587
+# SSL = True if port = 465
+email_use_ssl = True
+default_from_email = __ADD_DEFAULT_FROM_EMAIL_IN_LOCAL.INI__
+account_activation_days = 5
+registration_auto_login = False
+device_permission_count = 3
+auth_ldap_scope="ou=python-user,dc=example,dc=com"
+default_valid_until = 365

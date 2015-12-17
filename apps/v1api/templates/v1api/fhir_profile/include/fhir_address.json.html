@@ -1,0 +1,64 @@
+{% if profile.fhir_address %}"address": [
+     {% for addr in profile.fhir_address %}{
+     {% if addr.resourceType %}"resourceType" : "{{ addr.resourceType }}"{% endif %}{% if addr.use %},
+     "use" : "{{ addr.use }}"{% endif %}{% if addr.type %},
+     "type" : "{{ addr.type }}"{% endif %}{% if addr.text %},
+     "text" : "{{ addr.text }}"{% endif %}{% if addr.line %},
+     "line" : [{% for item in addr.line %}"{{ item }}"{% if forloop.last %}{% else %},{% endif %}
+        {% endfor %}]{% endif %}{% if addr.city %},
+     "city" : "{{ addr.city }}"{% endif %}{% if addr.district %},
+     "district" : "{{ addr.district }}"{% endif %}{% if addr.state %},
+     "state" : "{{ addr.state }}"{% endif %}{% if addr.postalCode %},
+     "postalCode" : "{{ addr.postalCode }}"{% endif %}{% if addr.country %},
+     "country" : "{{ addr.country }}"{% endif %}{% if addr.period %},
+     "period": { {% for item, date in addr.period.items %}
+                "{{ item }}" : "{{ date }}"{% if forloop.last %}{% else %},{% endif %}{% endfor %}
+            }{% endif %}
+     }{% if forloop.last %}{% else %},{% endif %}{% endfor %}
+    ],{% endif %}{% comment %}
+JSON: http://hl7-fhir.github.io/datatypes.html#HumanName
+{
+  "resourceType" : "Address",
+  // from Element: extension
+  "use" : "<code>", // home | work | temp | old - purpose of this address
+  "type" : "<code>", // postal | physical | both
+  "text" : "<string>", // Text representation of the address
+  "line" : ["<string>"], // Street name, number, direction & P.O. Box etc
+  "city" : "<string>", // Name of city, town etc.
+  "district" : "<string>", // District name (aka county)
+  "state" : "<string>", // Sub-unit of country (abreviations ok)
+  "postalCode" : "<string>", // Postal code for area
+  "country" : "<string>", // Country (can be ISO 3166 3 letter code)
+  "period" : { Period } // Time period when address was/is in use
+}
+Period:
+{
+  // from Element: extension
+  "start" : "<dateTime>", // C? Starting time with inclusive boundary
+  "end" : "<dateTime>" // C? End time with inclusive boundary, if not ongoing
+}
+
+{% endcomment %}{% comment %}
+
+XML:
+<[name] xmlns="http://hl7.org/fhir"> doco
+ <!-- from Element: extension -->
+ <use value="[code]"/><!-- 0..1 home | work | temp | old - purpose of this address -->
+ <type value="[code]"/><!-- 0..1 postal | physical | both -->
+ <text value="[string]"/><!-- 0..1 Text representation of the address -->
+ <line value="[string]"/><!-- 0..* Street name, number, direction & P.O. Box etc -->
+ <city value="[string]"/><!-- 0..1 Name of city, town etc. -->
+ <district value="[string]"/><!-- 0..1 District name (aka county) -->
+ <state value="[string]"/><!-- 0..1 Sub-unit of country (abreviations ok) -->
+ <postalCode value="[string]"/><!-- 0..1 Postal code for area -->
+ <country value="[string]"/><!-- 0..1 Country (can be ISO 3166 3 letter code) -->
+ <period><!-- 0..1 Period Time period when address was/is in use --></period>
+</[name]>
+Period:
+<[name] xmlns="http://hl7.org/fhir">
+ <!-- from Element: extension -->
+ <start value="[dateTime]"/><!-- ?? 0..1 Starting time with inclusive boundary -->
+ <end value="[dateTime]"/><!-- ?? 0..1 End time with inclusive boundary, if not ongoing -->
+</[name]>
+
+{% endcomment %}

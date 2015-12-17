@@ -1,0 +1,35 @@
+{# DONE: Fix bottom NavBar #}
+{#  DONE: Link to Privacy Statement #}
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="nav navbar navbar-nav navbar-fixed-bottom panel-footer footer-wrapper"
+        {% if request.META.HTTP_HOST == "localhost:8000" %} style="background-color:lightcyan"{% endif %}>
+            <div class="col-md-2">
+
+                <a href="https://github.com/ekivemark/bbofuser"
+                    title="{{ settings.APPLICATION_TITLE }} on github"
+                    target="_blank"><i class="fa fa-github"></i> {{ settings.APPLICATION_TITLE }}
+                </a>
+
+            </div>
+            <div class="col-md-2">
+                <a href="https://www.cms.gov/About-CMS/Agency-Information/Aboutwebsite/Privacy-Policy.html"
+                   title="Medicare Privacy Policy"
+                   target="_blank"><i class="fa fa-info-circle"></i> Privacy Policy</a>
+            </div>
+            <div class="col-md-2">
+                {% if request.is_secure %}<i class="fa fa-lock fa-lg" style="color:green"></i>{% endif %}
+                <a href="https://www.positivessl.com/multi-domain-ssl-certificate.php"
+                style="font-family: arial; font-size: 10px; color: #212121; text-decoration: none;"
+                   target="_blank">
+                 <img src="https://www.positivessl.com/images-new/PositiveSSL_tl_trans.png"
+                      alt="Multi Domain SSL"
+                      title="Multi Domain SSL"
+                      border="0" height="32px"/></a>
+            </div>
+            <div class="col-md-6">
+
+            </div>
+        </div>
+    </div>
+</div>

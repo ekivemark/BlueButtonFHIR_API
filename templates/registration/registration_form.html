@@ -1,0 +1,72 @@
+{% extends "registration/registration_base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Register for an account" %}{% endblock %}
+{% block pagename %}Register for {{ settings.APPLICATION_TITLE }}{% endblock %}
+{% block breadcrumbs %}
+    <div class="container">
+        <ul class="breadcrumb">
+            <li><a href="{% url 'apps.home' %}">Home</a></li>
+
+            <li class="active">Register</li>
+        </ul>
+    </div>
+{% endblock %}
+{% block content %}
+    <p>Please read the Terms of Use and then complete the registration form below.</p>
+ <div class="container-fluid">
+    <div class="row">
+
+        <div class="col-md-5">
+            <p>
+                <br>
+            </p>
+            <form method="post" action="" xmlns="http://www.w3.org/1999/html">
+                {% csrf_token %}
+                <table>
+                    <tr>
+                        <td>
+                            {{ form.as_p }}
+                        </td>
+                    </tr>
+                </table>
+                <p>
+                    <a href="/"><input type="button"
+                                       class="btn-danger"
+                                       value="Cancel"/></a>
+                </p>
+                <p>
+                    <input class="btn-success btn-lg"
+                           type="submit"
+                           value="{% trans 'I Agree to the terms - Register Me' %}"/>
+                </p>
+            </form>
+            <p>
+                <a href="https://mymedicare.gov/registration.aspx" target="_blank">
+                    {% trans "Register on MyMedicare.gov (Opens a new window)" %}</a>
+            </p>
+        </div>
+        <div class="col-md-7">
+            <div class="terms">
+                <!--- Template is in bbonfhiruser/accounts/templates/accounts/agree_to_terms --->
+                {% include "accounts/agree_to_terms.html" %}
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
+
+
+{% comment %}
+**registration/registration_form.html**
+Used to show the form users will fill out to register. By default, has
+the following context:
+
+``form``
+    The registration form. This will be an instance of some subclass
+    of ``django.forms.Form``; consult `Django's forms documentation
+    <http://docs.djangoproject.com/en/dev/topics/forms/>`_ for
+    information on how to display this in a template.
+{% endcomment %}

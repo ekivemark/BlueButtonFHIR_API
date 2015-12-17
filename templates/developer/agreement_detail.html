@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block pretitle %}Agreement Detail{% endblock %}
+{% block extra_head %}
+    <style>
+        div.terms {
+            width: 800px;
+            height: 400px;
+            border: 1px solid #ccc;
+            background: #f2f2f2;
+            padding: 6px;
+            overflow: scroll;
+        }
+
+        div.terms p,
+        div.terms li {
+            font: normal 11px/15px arial;
+            color: #333;
+        }
+
+        div.terms h3 {
+            font: bold 14px/19px arial;
+            color: #000;
+        }
+
+        div.terms h4 {
+            font: bold 12px/17px arial;
+            color: #000;
+        }
+
+        div.terms strong {
+            color: #000;
+        }
+    </style>
+
+{% endblock %}
+
+{% block pagename %}Agreement{% endblock %}
+
+{% for field in object %}
+    {{ field }}
+{% endfor %}
+
+{% block content %}
+    <form class="form-horizontal" role="form" action="" method="post">
+        <div class="form-group">
+            <label form="agreement" class="col-sm-2 control-label">Description</label>
+
+            <div class="col-sm-10">
+                <input type="{{ agreement.description }}"
+                       class="form-control"
+                       id="description"
+                       value="{{ agreement.description }}"/>
+            </div>
+        </div>
+
+        <div class="row clearfix">
+            <div class="col-sm-1 ">
+                <button type="submit" class="btn btn-lg btn-success">
+                    Save
+                </button>
+            </div>
+            <div class="col-md-6">
+                <a href="/developer/agreement/{{ agreement.id }}/">
+                    <button type="button" class="btn btn-lg btn-danger">
+                        Cancel
+                    </button>
+                </a>
+            </div>
+        </div>
+        {% csrf_token %}
+    </form>
+
+    <form method="post" action="">
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <a href="/"><input type="button" class="btn-danger"
+                           value="Cancel"/></a>
+
+        <input class="btn-success" type="submit"
+               value="{% trans 'I Agree to the terms - Register Me' %}"/>
+
+    </form>
+
+
+{% endblock %}

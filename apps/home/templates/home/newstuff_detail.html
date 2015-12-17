@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load staticfiles %}
+
+{% block pretitle %}Viewing {{ object }}{% endblock %}
+{% block extra_head %}
+
+{% endblock %}
+
+{% block pagename%}{% if object == None %}Adding {% else %}Viewing {{ object }}{% endif %}{% endblock %}
+{% block breadcrumbs %}
+    <div class="container">
+        <ul class="breadcrumb">
+            <li><a href="{% url 'home' %}">Home</a></li>
+            <li><a href="{% url 'base:new_stuff' %}">What's New</a></li>
+            <li>View {{ object }}</li>
+        </ul>
+    </div>
+
+{% endblock %}
+{% block content %}
+
+ <div class="section"
+     <div class="row-fluid">
+        <div class="col-lg-8">
+         {% if object %}
+             <div class="col-lg-12 well well-large">
+                <h4>{{ object.title }}</h4>
+                <p style="font-style: italic;">
+                    <strong>Dateline:</strong> {{ object.modified }}
+                    <strong>by:</strong> {{ object.author }}</p>
+                <p>
+                    <span class="col-sm-12 well">
+                        {{ object.body }}
+                    </span>
+                    <span class="col-lg-6">Created:{{ object.created }}</span>
+                    <span class="col-lg-6">Last Modified:{{ object.modified }}</span>
+                </p>
+             </div>
+         {% else %}
+             <div class="col-lg-8 well well-large">
+                 <p>hmmm.... nothing new found</p>
+             </div>
+         {% endif %}
+         <a href="{% url 'base:new_stuff' %}"
+                            class="btn btn-success">
+                            <i class="fa fa-list fa-1x"></i>
+                            {% trans 'Back to list' %}</a>
+        </div>
+        <div class="col-md-4">
+            {% if object and is_staff %}
+                <div class="col-md-12">
+                <div class="col-md-4">
+                    <a href="{% url 'base:new_stuff_update' object.id %}"
+                            class="btn btn-success">
+                            <i class="fa fa-pencil fa-1x"></i>
+                            {% trans 'Edit' %}</a>
+                </div>
+                <div class="col-md-4">
+                    <a href="{% url 'base:new_stuff_delete' object.id %}"
+                            class="btn btn-danger">
+                            <i class="fa fa-trash fa-1x"></i>
+                            {% trans 'Delete' %}</a>
+                </div>
+                </div>
+            {% endif %}
+
+         <img src="{% static 'img/layout/blue-button.png' %}" style="height:300px">
+        </div>
+
+        </div>
+
+        </div>
+
+    </div>
+ </div>
+
+{% endblock %}

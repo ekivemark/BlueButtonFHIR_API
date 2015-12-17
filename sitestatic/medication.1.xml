@@ -1,0 +1,21 @@
+<Medication xmlns="http://hl7.org/fhir">
+    <name value="Ambien"/>
+    <code>A12345678</code>
+    <isBrand value="true"/>
+    <manufacturer>Ambien Manufacturing Inc.</manufacturer>
+    <kind value="A123"/>
+    <product>
+        <form>tablet</form>
+        <ingredient>
+            <item>sleeping powder</item>
+            <amount>50%</amount>
+        </ingredient>
+    </product>
+    <package>
+        <container>Blister Pack</container>
+        <content>
+            <item>Ambien</item>
+            <amount>30</amount>
+        </content>
+    </package>
+</Medication>

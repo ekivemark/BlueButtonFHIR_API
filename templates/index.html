@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load staticfiles %}
+{% load url from future %}
+{% block pretitle %}{% endblock %}
+{% block extra_head %}
+{% endblock %}
+
+{% block breadcrumbs %}
+       <div class="container">
+        <ul class="breadcrumb">
+            <li class="active">Home</li>
+        </ul>
+    </div>
+{% endblock %}
+{% block pagename %}Welcome{% endblock %}
+{% block content %}
+
+
+    <div class="hero-unit">
+
+        <h2>{{ settings.APPLICATION_TITLE }}</h2>
+
+        <div class="container-fluid">
+                <p>
+
+                </p>
+            <div class="col-md-8">
+                <p>
+                    BlueButton 2.0 provides you, our Medicare Beneficiaries,
+                    with the ability to access your Medicare information with
+                    greater flexibility and enhanced security.
+                </p>
+                <p>
+                    Some of the new features include:
+                    <li>
+                        An advanced interface that provides the ability to
+                        search your claims information. You no longer have
+                        to download a large file of claims information and
+                        manually sift through it to find the information
+                        you need.
+                    </li>
+                    <li>
+                        Choose to use your mobile phone to receive a
+                        temporary pin code that you enter as part of your
+                        account login.
+                    </li>
+                    <li>
+                        Add your own secret questions and answers that we
+                        can use as login challenges when we detect that
+                        your account is being accessed from a new
+                        location or device.
+                    </li>
+                    <li>
+                        Create device specific login credentials. This lets
+                        you create custom credentials that you can use to
+                        access the BlueButton 2.0 advanced interface.
+                    </li>
+                    <li>
+                        A device dashboard that lets you manage your devices.
+                        Disable the credentials, reset device passwords or
+                        change when device credentials expire.
+                    </li>
+                </p>
+            </div>
+
+            <div class="col-md-4"><img
+                    src="{% static 'img/layout/blue-button.png' %}"
+                    style="height:300px">
+            </div>
+
+        </div>
+    </div>
+
+
+{% endblock %}

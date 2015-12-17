@@ -1,0 +1,55 @@
+{% if profile.fhir_human_name %}"name": {
+  "resourceType" : "HumanName",
+  "use": "{{ profile.fhir_human_name.use }}"{%  if profile.fhir_human_name.text.strip %},
+  "text": "{{ profile.fhir_human_name.text }}"{% endif %},
+  "family": [{% for item in profile.fhir_human_name.family %}"{{ item }}"{% if forloop.last %}{% else %},{% endif %}{% endfor %}],
+  "given": [{% for item in profile.fhir_human_name.given %}"{{ item }}"{% if forloop.last %}{% else %},{% endif %}{% endfor %}]{% if profile.fhir_human_name.prefix %},
+  "prefix": [{% for item in profile.fhir_human_name.prefix %}"{{ item }}"{% if forloop.last %}{% else %},{% endif %}{% endfor %}]{% endif %}{% if profile.fhir_human_name.suffix %},
+  "suffix": [{% for item in profile.fhir_human_name.suffix %}"{{ item }}"{% if forloop.last %}{% else %},{% endif %}{% endfor %}]{% endif %}{% if profile.fhir_human_name.period %},
+  "period": { {% for item, date in profile.fhir_human_name.period.items %}
+            "{{ item }}" : "{{ date }}"{% if forloop.last %}{% else %},{% endif %}{% endfor %}
+            }{% endif %}
+  },
+{% endif %}{% comment %}
+JSON: http://hl7-fhir.github.io/datatypes.html#HumanName
+{
+  "resourceType" : "HumanName",
+  // from Element: extension
+  "use" : "<code>", // usual | official | temp | nickname | anonymous | old | maiden
+  "text" : "<string>", // Text representation of the full name
+  "family" : ["<string>"], // Family name (often called 'Surname')
+  "given" : ["<string>"], // Given names (not always 'first'). Includes middle names
+  "prefix" : ["<string>"], // Parts that come before the name
+  "suffix" : ["<string>"], // Parts that come after the name
+  "period" : { Period } // Time period when name was/is in use
+}
+
+Period:
+{
+  // from Element: extension
+  "start" : "<dateTime>", // C? Starting time with inclusive boundary
+  "end" : "<dateTime>" // C? End time with inclusive boundary, if not ongoing
+}
+
+{% endcomment %}{% comment %}
+
+XML:
+<[name] xmlns="http://hl7.org/fhir">
+ <!-- from Element: extension -->
+ <use value="[code]"/><!-- 0..1 usual | official | temp | nickname | anonymous | old | maiden -->
+ <text value="[string]"/><!-- 0..1 Text representation of the full name -->
+ <family value="[string]"/><!-- 0..* Family name (often called 'Surname') -->
+ <given value="[string]"/><!-- 0..* Given names (not always 'first'). Includes middle names -->
+ <prefix value="[string]"/><!-- 0..* Parts that come before the name -->
+ <suffix value="[string]"/><!-- 0..* Parts that come after the name -->
+ <period><!-- 0..1 Period Time period when name was/is in use --></period>
+</[name]>
+
+Period:
+<[name] xmlns="http://hl7.org/fhir">
+ <!-- from Element: extension -->
+ <start value="[dateTime]"/><!-- ?? 0..1 Starting time with inclusive boundary -->
+ <end value="[dateTime]"/><!-- ?? 0..1 End time with inclusive boundary, if not ongoing -->
+</[name]>
+
+{% endcomment %}
