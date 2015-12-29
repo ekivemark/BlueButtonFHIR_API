@@ -19,8 +19,8 @@ urlpatterns = patterns('',
                        # url(r'^$', 'bbonfhiruser.views.home', name='home'),
                        url(r'^$', 'apps.home.views.home_index',
                            name='home'),
-                       url(r'^about/$', 'apps.home.views.about',
-                           name='about'),
+                       # url(r'^about/$', 'apps.home.views.about',
+                       #     name='about'),
                        url(r'^base/',
                            include('apps.home.urls', namespace='base')),
 
@@ -45,6 +45,10 @@ urlpatterns = patterns('',
                        # url(r'^eob_upload/', include('apps.eob_upload.urls',
                        #                         namespace='eob_upload')),
 
+                       # Registration Options:
+                       # 1. Developer
+                       # 2. Beneficiary - Not Authenticated
+                       # 3. Beneficiary - Authenticated but not activated
                        url(r'^registration/register/$',
                            RegistrationView.as_view(),
                            name='register'),

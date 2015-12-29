@@ -40,14 +40,6 @@ from apps.v1api.utils import (get_format,
                               build_params)
 
 
-# TODO: Setup DJANGO REST Framework
-# DONE: Apply user scope to FHIR Pass through
-# DONE: Test Pass through to FHIR Server
-# DONE: Create api:vi namespace in urls.py.py
-# TODO: Detect url of accessing apps. Store in Connected_from of Device field
-# TODO: Extract site domain from querying url in Connected_From
-
-
 # @login_required
 def get_patient(request, *args, **kwargs):
     """

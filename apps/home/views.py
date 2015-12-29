@@ -14,7 +14,8 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.utils import timezone
 
-from django.views.generic import (ListView,
+from django.views.generic import (TemplateView,
+                                  ListView,
                                   CreateView,
                                   DetailView,
                                   UpdateView,
@@ -47,6 +48,10 @@ def home_index(request):
 
     return render_to_response('index.html',
                               RequestContext(request, context, ))
+
+
+class AboutView(TemplateView):
+    template_name = 'about.html'
 
 
 def about(request):
@@ -91,8 +96,8 @@ class WhatIsNewListView(ListView):
     paginate_by = '5'
     queryset = NewStuff.objects.all().order_by('-modified')
     # remove [:5] to allow more items to be returned.
-    if settings.DEBUG:
-        print("queryset:", queryset)
+    # if settings.DEBUG:
+    #     print("queryset:", queryset)
 
     context_object_name = "news"
     template_name = "whatsnew.html"

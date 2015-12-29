@@ -290,24 +290,29 @@ def build_params(get, skip_parm=['_id','_format']):
 
     pass_to = ""
 
-   # Check for _format and process in this section
-    get_fmt = get_format(get)
-    if settings.DEBUG:
-        print("get_Format returned:", get_fmt)
-
-    #get_fmt_type = "?_format=xml"
-    #get_fmt_type = "?_format=json"
-
-    if get_fmt:
-        get_fmt_type = "_format=" + get_fmt
-        pass_to = get_fmt_type
-    else:
-        if settings.DEBUG:
-            print("Get Format:[", get_fmt, "]")
-        in_fmt_type = "_format=" + in_fmt
-        pass_to = pass_to + in_fmt_type
-
     url_param = get_url_query_string(get, skip_parm)
+
+    if "_format" in skip_parm:
+        print("skip_parm dropped _format - url_param now:", url_param)
+
+        # Check for _format and process in this section
+        get_fmt = get_format(get)
+        if settings.DEBUG:
+            print("get_Format returned:", get_fmt)
+
+        #get_fmt_type = "?_format=xml"
+        #get_fmt_type = "?_format=json"
+
+        if get_fmt:
+            get_fmt_type = "_format=" + get_fmt
+
+            pass_to = "?" + get_fmt_type
+        else:
+            if settings.DEBUG:
+                print("Get Format:[", get_fmt, "]")
+            in_fmt_type = "_format=" + in_fmt
+            pass_to = "?" + in_fmt_type
+
     if len(url_param) > 1:
         if settings.DEBUG:
             print("URL Params = ", url_param)

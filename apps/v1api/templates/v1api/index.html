@@ -31,11 +31,7 @@
                         Get <a href="{% url "api:v1:eob" %}">your Explanation of Benefit records</a>.
                     </div>
                 {% else %}
-                    <a href="{% url "subacc:device_login" %}?next=/api"><input
-                            type="button"
-                            class="active btn btn-large btn-success"
-                            value="{% trans "login" %}"/>
-                    </a>
+
                 {% endif %}
                 </p>
 

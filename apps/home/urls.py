@@ -17,7 +17,8 @@ from django.contrib import admin
 from apps.home.views import (WhatIsNewListView,
                              WhatIsNewDetailView,
                              WhatIsNewUpdateView,
-                             WhatIsNewDeleteView)
+                             WhatIsNewDeleteView,
+                             AboutView)
 
 
 from .views import (what_is_new_create, )
@@ -25,6 +26,8 @@ from .views import (what_is_new_create, )
 admin.autodiscover()
 
 urlpatterns = patterns('',
+                       url(r'^about/$', AboutView.as_view(),
+                           name="about"),
                        url(r'^$', WhatIsNewListView.as_view(),
                            name="new_stuff"),
                        url(r'^create/$',

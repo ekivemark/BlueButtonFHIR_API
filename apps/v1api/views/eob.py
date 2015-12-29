@@ -1,8 +1,11 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
+# vim: ai ts=4 sts=4 et sw=4
+
 """
-bbofuser: apps.v1api.views
-FILE: ogets
-Created: 9/27/15 7:04 PM
+BlueButtonFHIR_API
+FILE: apps.v1api.views.eob
+Created: 12/28/15 9:33 PM
 
 
 """
@@ -29,24 +32,27 @@ from apps.v1api.views.patient import get_patient
 from apps.v1api.views.crosswalk import lookup_xwalk
 from apps.v1api.utils import (build_params)
 
-class Hello(View):
-    def get(self, request, *args, **kwargs):
-        return HttpResponse('Hello, OAuth2!')
 
 
-class Patients(ListView):
+
+class EOB(ListView):
     if settings.DEBUG:
-        print("in apps.v1api.ogets.Patients")
+        print("in apps.v1api.views.eob")
 
-    def get(self, request, patient_id, *args, **kwargs):
-        # This is a patient profile GET
+    def get(self, request, eob_id, *args, **kwargs):
+        # This is an ExplanationOfBenefit profile GET
         #
         # use request.user to lookup a crosswalk
         # get the FHIR Patient ID
         # Call the FHIR Patient Profile
         # Return the result
+        # EOB will need to look up request.user and apply a filter on the EOB
+        # The filter in search Parameters will be the GUID
+        # We need to load the GUID when we are loading EOBs and
+        # Patient Records.
+
         if settings.DEBUG:
-            print("in Patients.get with", patient_id)
+            print("in EOB.get with", eob_id)
 
         xwalk_id = lookup_xwalk(request, )
         if settings.DEBUG:
@@ -61,17 +67,17 @@ class Patients(ListView):
             print("GET Parameters:", request.GET, ":")
 
         if patient_id == xwalk_id:
-            key = patient_id
+            key = eob_id
         else:
             key = xwalk_id.strip()
 
         in_fmt = "json"
-        Txn = {'name': "Patient",
-           'display': 'Patient',
+        Txn = {'name': "ExplanationOfBenefit",
+           'display': 'ExplanationOfBenefit',
            'mask': True,
            'server': settings.FHIR_SERVER,
-           'locn': "/baseDstu2/Patient/",
-           'template': 'v1api/patient.html',
+           'locn': "/baseDstu2/ExplanationOfBenefit/",
+           'template': 'v1api/eob.html',
            'in_fmt': in_fmt,
            }
 
@@ -100,39 +106,9 @@ class Patients(ListView):
         else:
             text_out = r.json()
 
-        return HttpResponse('This is the Patient Pass Thru %s using %s '
+        return HttpResponse('This is the EOB Pass Thru %s using %s '
                             'and with response of %s' % (xwalk_id,
                                                          pass_to,
                                                          text_out))
 
-    # """
-    # Class-based view for Patient Resource
-    #
-    # GET needs to mask patient elements.
-    # GET must use the user info to lookup in a CrossWalk
-    #
-    # """
 
-    # @cache_page(60 * 15)
-    # @csrf_protect
-    # def post(self, request,patient_id, *args, **kwargs):
-    #
-    #     messages.info(request, "POST not implemented")
-    #     if settings.DEBUG:
-    #         print("We are in the apps.v1api.views.oget.Patients.post")
-    #     return HttpResponseRedirect(reverse_lazy('ap:v1:home'))
-
-
-@protected_resource()
-def patient(request, *args, **kwargs):
-    # TODO: get this working
-
-    if settings.DEBUG:
-        print("in apps.v1api.views.ogets.Patient")
-        print("request:", request)
-
-    result = get_patient(request, *args, **kwargs)
-    if settings.DEBUG:
-        print("Results:", result)
-
-    return result

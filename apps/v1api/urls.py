@@ -22,9 +22,10 @@ from django.contrib import admin
 from apps.v1api.views.home import *
 from apps.v1api.views.patient import (get_patient,
                                       get_eob,
-                                      get_eob_view)
+                                      get_eob_view,)
 from apps.v1api.views.ogets import (Hello,
-                                    Patient)
+                                    patient,
+                                    Patients,)
 
 admin.autodiscover()
 
@@ -46,8 +47,10 @@ urlpatterns = patterns('',
                        # These will only be used by OAuth authorized apps
                        # These are the resource servers
                        url(r'^o/hello', Hello.as_view()),
+                       url(r'^o/Patients/(?P<patient_id>\w+|)$', Patients.as_view(), name='fhir_patient'),
+
                        # Add more oauth endpoints here
-                       url(r'^o/patient', 'apps.v1api.views.ogets.Patient'),
+                       url(r'^o/patient', 'apps.v1api.views.ogets.patient'),
 
                        url(r'^admin/', include(admin.site.urls)),
 
