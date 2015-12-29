@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Verify Mobile Phone" %}{% endblock %}
+{% block breadcrumbs %}
+    <div class="container">
+        <ul class="breadcrumb">
+            <li><a href="{% url 'home' %}">Home</a></li>
+            <li><a href="{% url 'accounts:manage_account' %}">My Dashboard</a></li>
+            <li class="active">Verify Phone</li>
+        </ul>
+    </div>
+{% endblock %}
+{% block pagename %}Verify Phone{% endblock %}
+
+{% block content %}
+
+    <form method="post" action="">
+        {% csrf_token %}
+
+
+        <p>Verification Code:</p>
+
+        <p>{{ form.verify_code }}</p>
+        <p>Enter the code that you should have received on your mobile phone.</p>
+        <p>
+            <input type="submit" class="active btn btn-lg btn-success"
+                   name="Confirm" value="{% trans 'Confirm' %}"/>
+        </p>
+        <p><a href="{% url 'accounts:verify_phone' %}"
+                       class="btn btn-info">
+                        {% trans 'Resend Verification Code' %}
+                        </a>
+                    </p>
+        <input type="hidden" name="next" value="{% url 'accounts:manage_account' %}"/>
+    </form>
+
+{% endblock %}

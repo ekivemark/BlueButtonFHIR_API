@@ -188,7 +188,8 @@ THIRD_PARTY_APPS = (
 LOCAL_APPS = (
     'apps.home',
     # Add custom apps here
-    # 'accounts',
+    'accounts',
+    'appmgmt',
     # 'apps.uploader',
     # 'apps.subacc',
     # 'apps.secretqa',
@@ -202,7 +203,9 @@ LOCAL_APPS = (
 
 INSTALLED_APPS = DEFAULT_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
-# AUTH_USER_MODEL = "accounts.User"
+AUTH_USER_MODEL = "accounts.User"
+# USERNAME_FIELD should be "email" or "username"
+USERNAME_FIELD = "username"
 # USERNAME_FIELD = "email"
 # AUTHENTICATION_BACKENDS = ['accounts.backends.EmailAuthBackend',]
 AUTHENTICATION_BACKENDS = (

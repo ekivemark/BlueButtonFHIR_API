@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load staticfiles %}
+{% block extrahead %}
+    <script src="{% static 'js/switch_content.js' %}"></script>
+{% endblock %}
+{% block title %}{% trans "Register for an account" %}{% endblock %}
+{% block breadcrumbs %}
+    <div class="container">
+        <ul class="breadcrumb">
+            <li><a href="{% url 'home' %}">Home</a></li>
+
+            <li class="active">Learn</li>
+        </ul>
+    </div>
+{% endblock %}
+{% block pagename %}Register{% endblock %}
+{% block content %}
+
+<div class="section">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <h1>It's Your Data</h1>
+
+                <h3>Taking Your Data with you</h3>
+
+                <p>When you switch on BlueButton 2.0 you are giving
+                    MyMedicare.gov permission
+                    to &nbsp;send your data to a third party application.
+                    &nbsp;
+                    <br>
+                    <br>Once your data leaves MyMedicare.gov and is sent to
+                    an application you
+                    have chosen we no longer control that information. You
+                    do. Before you connect
+                    an application to your MyMedicare information make sure
+                    that you trust
+                    that application to take good care of your information.&nbsp;
+                    <br>
+                    <br>Don't worry. If you change your mind you can come
+                    back to your account
+                    dashboard on MyMedicare.gov and disconnect the
+                    applications you want to
+                    stop using. Your dashboard also gives you the option to
+                    control how long
+                    an application has access to your information. When
+                    that time limit is
+                    reached we will ask you if you want to extend the time.
+                </p>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class="section">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <ul class="pagination pagination-lg">
+                    <li>
+                        <a href="{% url 'accounts:learn_0' %}">Prev</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'accounts:learn_0' %}">1</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'accounts:learn_1' %}">2</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'accounts:learn_2' %}">3</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'accounts:learn_2' %}">Next</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{%  endblock %}

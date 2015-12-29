@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block pretitle %}Edit Profile{% endblock %}
+{% block extra_head %}
+
+
+{% endblock %}
+{% block breadcrumbs %}
+       <div class="container">
+        <ul class="breadcrumb">
+            <li><a href="{% url 'home' %}">Home</a></li>
+            <li><a href="{% url 'accounts:manage_account' %}">My Dashboard</a></li>
+            <li class="active">Edit Profile</li>
+        </ul>
+    </div>
+{% endblock %}
+
+{% block pagename %}Edit Profile ({{ user }}){% endblock %}
+{% block content %}
+
+    <div class="section">
+        <div class="container">
+            <div class="row">
+                <form class="form-horizontal" method="post" action=""
+                      xmlns="http://www.w3.org/1999/html">
+                    <fieldset>
+                        <div class="form-group">
+                            <div class="col-lg-6">
+                    {% csrf_token %}
+
+                                <table class="table table-hover table-striped">
+                                {{ form.as_table }}
+                                </table>
+                                <div class="row">
+                                    <div class="col-lg-10">
+                                        <input class="btn-success btn-lg" type="submit"
+                                            value="Save"/>
+                                    </div>
+                                    <div class="col-lg-2 right">
+                                        <a href="{% url "accounts:manage_account" %}"><input
+                                            type="button" class="btn-danger"
+                                            value="Cancel"/></a>
+                                    </div>
+                                </div>
+                             </div>
+                        </div>
+                    </fieldset>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+{% endblock %}

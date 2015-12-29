@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block pretitle %}Get Trust Credentials{% endblock %}
+{% block extra_head %}
+
+{% endblock %}
+
+{% block pagename %}Trust Credentials{% endblock %}
+{% block content %}
+
+
+    <div class="container col-lg-12 well">
+        <form method="post" action="" xmlns="http://www.w3.org/1999/html">
+            {% csrf_token %}
+            <table>
+                <tr>
+                    <td>
+                        {{ form.as_table }}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <a href="{% url "appmgmt:organization_view" %}"><input
+                                type="button" class="btn-danger"
+                                value="Cancel"/></a>
+
+                        <input class="btn-success btn-lg" type="submit"
+                               value="Prove my Trust Credentials"/>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+
+{% endblock %}

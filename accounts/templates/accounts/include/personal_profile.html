@@ -1,0 +1,65 @@
+{% load i18n %}
+{% if user.is_authenticated %}
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="col-lg-10">
+                 <h2>My Profile</h2>
+            </div>
+             <div class="col-lg-2 align-right">
+                <a href="{% url "accounts:user_edit" %}"
+                   class="btn btn-success">
+                    <i class="fa fa-pencil-square-o fa-1x"></i> {% trans 'Edit' %}</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid">
+
+            <div class="list-group">
+                <a href="#" class="list-group-item">
+                    <h4 class="list-group-item-heading">Name:</h4>
+                    <p class="list-group-item-text">{{ user.first_name }}&nbsp; {{ user.last_name }}
+                    </p>
+                </a>
+                <a href="#" class="list-group-item">
+                    <h4 class="list-group-item-heading">Email Address:{% if user.notify_activity == "E" %}
+                        <i class="fa fa-paper-plane-o" style="color:green"></i>
+                        {% endif %}</h4>
+                    <p class="list-group-item-text"> {{ user.email }}
+                    </p>
+                </a>
+
+                {% if user.mobile %}
+                <div class="list-group-item">
+                    <h4 class="list-group-item-heading">Mobile Phone: {% if user.notify_activity == "T" %}
+                        <i class="fa fa-paper-plane-o" style="color:green"></i>
+                        {% endif %}</h4>
+
+                    <p class="list-group-item-text">
+                            {{ user.mobile }} on {{ user.carrier | upper }}
+                        [{% if user.verified_mobile %}Verified
+                        {% else %}Unverified{% endif %}]
+                    </p>
+                    <p class="text-muted">
+                            email to text address: {{ mfa_address }}
+                    </p>
+
+                    <p>
+                        Send PIN Code at Login:
+                        {% if user.mfa %}YES{% else %}no{% endif %}
+                    </p>
+                    <p><a href="{% url 'accounts:verify_phone' %}"
+                       class="btn btn-success">
+                        <i class="fa fa-mobile fa-2x"></i> {% trans ' Verify My Phone' %}
+                        </a>
+                    </p>
+
+                </div>
+                {% endif %}
+            </div>
+
+    </div>
+{% else %}
+
+{% endif %}
+

@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block pretitle %}Add Team members{% endblock %}
+{% block extra_head %}{% endblock %}
+
+{% block pagename %}My Development Team{% endblock %}
+{% block breadcrumbs %}
+    <div class="container">
+        <ul class="breadcrumb">
+            <li><a href="{% url 'home' %}">Home</a></li>
+            <li><a href="{% url 'accounts:manage_account' %}">Dashboard</a></li>
+            <li><a href="{% url 'appmgmt:organization_view' %}">Organization</a></li>
+            <li class="active">Team members</li>
+        </ul>
+    </div>
+
+{% endblock %}
+{% block content %}
+
+        <div class="container col-lg-12 well">
+
+            <table class="col-lg-12 table-bordered table-hover table-striped table-responsive">
+                <thead>
+                <tr>
+                    <td>Manage</td>
+                    <td>Username</td>
+                    <td>email</td>
+                    <td>Name</td>
+
+                </tr>
+                </thead>
+
+                {% for user in object_list %}
+                <tr>
+                    <td>{% if user.id in extra_content.developer_list %}HELLO!{% else %}NO{% endif %}
+                        [ADD] / [REMOVE]</td>
+                    <td>{{ user.username }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.first_name }} {{ user.last_name }}</td>
+
+                </tr>
+                {% endfor %}
+
+            </table>
+
+        </div>
+
+{% endblock %}

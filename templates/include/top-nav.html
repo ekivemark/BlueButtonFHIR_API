@@ -90,27 +90,33 @@ Just to avoid confusion...
                 </ul>
             </li>
         </ul>
-        {%  if user.is_authenticated %}
-        <ul class="nav navbar-nav navbar-right">
-            {% if request.session.auth_master %}
-                {% comment %}<li>
-                    <a href="{%  url 'accounts:manage_account' %}" title="My Account Dashboard">
-                        [<i class="fa fa-cogs"></i> {{ user.first_name }} {{ user.last_name }} ]</a>
-                </li>{% endcomment %}
-            {% else %}
-               {% comment %} <li>
-                    <a href="{%  url 'accounts:account_access' %}">
-                    [<i class="fa fa-cogs"></i> {{ user.first_name }} {{ user.last_name }} {% if request.session.auth_device %}
-                        <br>via {{ request.session.auth_device }} {% endif %}]</a>
-                </li>{% endcomment %}
-            {% endif %}
-            {% comment %}<li>
-                <a href="{% url "accounts:logout" %}?next=/{% if request.session.auth_device %}api/{% endif %}" title="Logout">
-                    {% trans "Logout" %} <i class="fa fa-sign-out"></i>&nbsp;&nbsp;&nbsp;</a>
-            </li>{% endcomment %}
 
+        <ul class="nav navbar-nav navbar-right">
+            {%  if user.is_authenticated %}
+                {% if request.session.auth_master %}
+                    <li>
+                        <a href="{%  url 'accounts:manage_account' %}" title="My Account Dashboard">
+                            [<i class="fa fa-cogs"></i> {{ user.first_name }} {{ user.last_name }} ]</a>
+                    </li>
+                {% else %}
+                    <li>
+                        <a href="{%  url 'accounts:account_access' %}">
+                        [<i class="fa fa-cogs"></i> {{ user.first_name }} {{ user.last_name }} {% if request.session.auth_device %}
+                            <br>via {{ request.session.auth_device }} {% endif %}]</a>
+                    </li>
+                {% endif %}
+                <li>
+                    <a href="{% url "accounts:logout" %}?next=/{% if request.session.auth_device %}api/{% endif %}" title="Logout">
+                        {% trans "Logout" %} <i class="fa fa-sign-out"></i>&nbsp;&nbsp;&nbsp;</a>
+                </li>
+            {% else %}
+                <li>
+                    <a href="{% url "accounts:sms_code" %}" title="Login">
+                        {% trans "Login" %} <i class="fa fa-sign-in"></i>&nbsp;&nbsp;&nbsp;</a>
+                </li>
+            {% endif %}
         </ul>
-        {% endif %}
+
     </div>
 </div>
 

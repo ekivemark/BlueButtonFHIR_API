@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block pretitle %}Organization View{% endblock %}
+{% block extra_head %}{% endblock %}
+
+{% block pagename %}My Organization{% endblock %}
+{% block breadcrumbs %}
+    <div class="container">
+        <ul class="breadcrumb">
+            <li><a href="{% url 'home' %}">Home</a></li>
+            <li><a href="{% url 'accounts:manage_account' %}">Dashboard</a></li>
+
+            <li class="active">Organization</li>
+
+        </ul>
+    </div>
+
+{% endblock %}
+{% block content %}
+
+    <div class="container col-lg-12 well">
+
+        {% for organization in object_list %}
+            <h2>
+                {{ organization.name }}  <a href="{% url "appmgmt:organization_update" pk=organization.id %}"
+                   class="btn btn-success">
+                    <i class="fa fa-pencil-square-o fa-1x"></i> {% trans 'Edit' %}</a>
+            </h2>
+            <table>
+                <tr>
+                    <td>
+                        Owner:
+                    </td>
+                    <td>
+                        {{ request.user }} / {{ organization.owner_id }}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Domain:
+                    </td>
+                    <td>
+                        {{ organization.domain }}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Trusted:
+                    </td>
+                    <td>
+                        {% if organization.trusted %}YES
+                        {% else %}no
+                        {% endif %}
+
+                    </td>
+                </tr>
+                {% if organization.trusted %}
+                    <tr>
+                        <td>
+                            Trusted Until:&nbsp;&nbsp;
+                        </td>
+                        <td>
+                            {%  if organization.trusted_until %}
+                                {{ organization.trusted_until }}
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endif %}
+                <tr>
+                    <td>
+                        Developers for this organization:
+                    </td>
+                    <td>
+                        Add Team member
+                    </td>
+                </tr>
+                {% for developer in extra_content.developer_list %}
+                <tr>
+                    <td></td>
+                    <td>
+                        {{ developer.member }} [{{ developer.role }}]
+                    </td>
+                </tr>
+                {% endfor %}
+                </tr>
+
+                <tr>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                </tr>
+
+            </table>
+
+
+            <div class="col-lg-12">
+                {% if organization.trusted %}
+                    <a href="{% url "appmgmt:application_view" %}"
+                    class="btn btn-success col-lg-12 align-right">
+                    <i class="fa fa-pencil-square-o fa-1x"></i> My Applications</a>
+
+                {% else %}
+                    <a href="{% url "appmgmt:trustdata" %}"
+                    class="btn btn-success col-lg-12 align-right">
+                    <i class="fa fa-shield fa-1x"></i> Confirm Trusted Application</a>
+
+                {% endif %}
+            </div>
+        {%  endfor %}
+
+    </div>
+
+{% endblock %}

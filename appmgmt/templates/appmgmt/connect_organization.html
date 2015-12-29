@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block pretitle %}Add An Organization{% endblock %}
+{% block extra_head %}
+
+{% endblock %}
+
+{% block pagename %}Connect an Organization{% endblock %}
+{% block content %}
+
+    <div class="container col-lg-4 well">
+        <form method="post" action="" xmlns="http://www.w3.org/1999/html">
+            {% csrf_token %}
+            <table>
+                <tr>
+                    <td>
+
+                        {{ form.as_p }}
+
+                        <a href="{% url "accounts:manage_account" %}"><input
+                                type="button" class="btn-danger"
+                                value="Cancel"/></a>
+
+                        <input class="btn-success" type="submit"
+                               value="{% trans 'Make the Connection' %}"/>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+
+{% endblock %}

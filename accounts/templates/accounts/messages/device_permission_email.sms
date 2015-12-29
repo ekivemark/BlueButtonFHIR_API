@@ -1,0 +1,34 @@
+{% load i18n %}
+{% if msg %}{{ msg }}{% else %}From {{ settings.APPLICATION_TITLE }}:{{ user }} just gave access permission to {{ device|safe }} at {{ settings.URL_PRE }}{{ site.name }}.
+If it was you no action is needed.
+{% endif %}
+{% comment %}
+**accounts/messages/account_activity_email.sms**
+
+Used to generate the text body of the account activity email. Should display a
+link the user can click to check their account. This template has the
+following context:
+
+``site``
+    An object representing the site on which the user registered;
+    depending on whether ``django.contrib.sites`` is installed, this
+    may be an instance of either ``django.contrib.sites.models.Site``
+    (if the sites application is installed) or
+    ``django.contrib.sites.models.RequestSite`` (if not). Consult `the
+    documentation for the Django sites framework
+    <http://docs.djangoproject.com/en/dev/ref/contrib/sites/>`_ for
+    details regarding these objects' interfaces.
+
+``user``
+    The new user account
+
+``request``
+    ``HttpRequest`` instance for better flexibility.
+    For example it can be used to compute absolute register URL:
+
+        http{% if request.is_secure %}s{% endif %}://{{ request.get_host }}{% url 'registration_activate' activation_key %}
+
+    or when using Django >= 1.7:
+
+        {{ request.scheme }}://{{ request.get_host }}{% url 'registration_activate' activation_key %}
+{% endcomment %}

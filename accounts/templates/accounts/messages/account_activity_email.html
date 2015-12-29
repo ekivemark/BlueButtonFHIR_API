@@ -1,0 +1,74 @@
+{% load i18n %}
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>{{ site.name }} {% trans "Account Activity" %}
+        for {{ user.first_name|capfirst }} {{ user.last_name|capfirst }}</title>
+</head>
+
+<body>
+{% if msg %}{{ msg }}{% else %}
+<p>
+    <b>{{ user.first_name|capfirst }} {{ user.last_name|capfirst }}</b>
+    ,<br/>
+        <p>This is a courtesy message from
+        <span style="font-style:italic;">{{ settings.APPLICATION_TITLE }}</span>
+
+        {% blocktrans %} to inform you that your account ({{ user }}) with the email address ({{ email }})
+        just connected to our service.<br>
+        </p>
+        <p>
+        If it is not you making the connection you may want to
+        log in and review your account at {% endblocktrans %}{{ settings.URL_PRE }}{{ site.domain }}.
+        <br>
+
+</p>
+
+<p style="font-size:5;">
+    <a href="{{ settings.URL_PRE }}{{ site.domain }}">
+        {{ site.name }}</a>
+</p>
+{%  endif %}
+<p>
+        <br>
+        <br>Sincerely,<br>
+        Your Support Team at
+        {{ settings.APPLICATION_TITLE }}
+
+</p>
+</body>
+
+</html>
+
+
+{% comment %}
+**accounts/messages/account_activity_email.html**
+
+Used to generate the html body of the account activity email. Should display a
+link the user can click to connect back to the site. This template has the
+following context:
+
+``site``
+    An object representing the site on which the user registered;
+    depending on whether ``django.contrib.sites`` is installed, this
+    may be an instance of either ``django.contrib.sites.models.Site``
+    (if the sites application is installed) or
+    ``django.contrib.sites.models.RequestSite`` (if not). Consult `the
+    documentation for the Django sites framework
+    <http://docs.djangoproject.com/en/dev/ref/contrib/sites/>`_ for
+    details regarding these objects' interfaces.
+
+``user``
+    The new user account
+
+``request``
+    ``HttpRequest`` instance for better flexibility.
+    For example it can be used to compute absolute register URL:
+
+        http{% if request.is_secure %}s{% endif %}://{{ request.get_host }}{% url 'registration_activate' activation_key %}
+
+    or when using Django >= 1.7:
+
+        {{ request.scheme }}://{{ request.get_host }}{% url 'registration_activate' activation_key %}
+{% endcomment %}

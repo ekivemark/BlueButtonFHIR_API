@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block pretitle %}Editing {{ organization }}{% endblock %}
+{% block extra_head %}
+
+{% endblock %}
+
+{% block pagename%}Editing {{ organization }}{% endblock %}
+{% block breadcrumbs %}
+    <div class="container">
+        <ul class="breadcrumb">
+            <li><a href="{% url 'home' %}">Home</a></li>
+            <li><a href="{% url 'accounts:manage_account' %}">Dashboard</a></li>
+
+            <li class="active">My Organization</li>
+
+        </ul>
+    </div>
+
+{% endblock %}
+{% block content %}
+
+
+    <div class="container col-lg-8 well">
+        <form method="post" action="" xmlns="http://www.w3.org/1999/html">
+            {% csrf_token %}
+            <table>
+                <tr>
+                    <td>
+                        {{ form.as_p }}
+
+                        <a href="{% url "accounts:manage_account" %}"><input
+                                type="button" class="btn-danger"
+                                value="Cancel"/></a>
+
+                        <input class="btn-success btn-lg" type="submit"
+                               value="Save"/>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+
+{% endblock %}

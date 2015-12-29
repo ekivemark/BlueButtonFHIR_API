@@ -1,0 +1,45 @@
+{% load i18n %}
+
+{% if user.is_authenticated %}
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="col-lg-12">
+                 <a name="devteam_list"></a><h4>{{ org.name}} Developer Team</h4>
+            </div>
+        </div>
+
+    </div>
+
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                {% if org_owner %}<th>Action</th>{% endif %}
+                <th>Member [Username]</th>
+                <th>email</th>
+                <th>Role</th>
+            </tr>
+        </thead>
+        {% for developer in my_team %}
+            <tr>
+                {% if org_owner %}
+                <td style="text-align:center;">
+                    <a href="/appmanagement/devteam/edit/{{ developer.id }}/" data-toggle="tooltip" class="tip-top" title="Edit Role"><i class="fa fa-wrench fa-lg"></i></a>
+                    <a href="/appmanagement/devteam/delete/{{ developer.id }}/" style="color:red" data-toggle="tooltip" class="tip-top" title="Remove developer from Team"><i class="fa fa-trash-o fa-fw fa-lg"></i></a>
+
+                </td>
+                {% endif %}
+                 <td>
+                    {{ developer.member.first_name }} {{ developer.member.last_name }} [{{ developer.member }}]
+                </td>
+                <td>
+                    {{ developer.member.email }}
+                </td>
+                <td>
+                    {{ developer.get_role_display }}
+                </td>
+
+            </tr>
+        {% endfor %}
+    </table>
+{% endif %}
+

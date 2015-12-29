@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Log in - step 1" %}{% endblock %}
+{% block breadcrumbs %}
+    <div class="container">
+        <ul class="breadcrumb">
+            <li><a href="{% url 'home' %}">Home</a></li>
+
+            <li class="active">Login</li>
+        </ul>
+    </div>
+{% endblock %}
+{% block pagename %}Welcome{% endblock %}
+{% block content %}
+
+    <div class="login-box">
+
+        <form action='' method='POST'>
+
+            {% if form.errors %}
+                <div class="container">
+                    <div class="alert alert-dismissible alert-danger">
+                        <h4>There was a problem</h4>
+                        <button type="button" class="close" data-dismiss="alert">×</button>
+                        <p>
+                            {{ form.errors }}
+                        </p>
+                    </div>
+                </div>
+            {% endif %}
+            <div class="row">
+                <div class="col-lg-3">
+                    <p>{{ form.username.label }}</p>
+                </div>
+                <div class="col-lg-4">
+                    <p>{{ form.username }}</p>
+                </div>
+            </div>
+            <p>{{ form.username.help_text }}</p>
+
+            <p>&nbsp;</p>
+            <p>
+            <input type="submit" class="active btn btn-lg btn-success"
+                   name="login" value="{% trans 'Login' %}"/>
+            </p>
+            <input type="hidden" name="next" value="{{ next|escape }}"/>
+            {% csrf_token %}
+
+        </form>
+
+    </div>
+{% endblock %}

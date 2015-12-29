@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block pretitle %}{% if application.name == None %}{{ verb|capfirst }} Application
+{% else %}{{ verb|capfirst }} {{ application.name }}{% endif %}{% endblock %}
+{% block extra_head %}
+
+{% endblock %}
+
+{% block pagename%}{% if application.name == None %}{{ verb|capfirst }} Application{% else %}{% if application.logo %}
+    <img src="{{ MEDIA_URL }}{{ application.logo }}" width="50" height="50">{% endif %}
+    {{ verb|capfirst }} {{ application.name }}{% endif %}
+{% endblock %}
+{% block breadcrumbs %}
+    <div class="container">
+        <ul class="breadcrumb">
+            <li><a href="{% url 'home' %}">Home</a></li>
+            <li><a href="{% url 'accounts:manage_account' %}">Dashboard</a></li>
+            <li><a href="{% url 'appmgmt:manage_applications' %}" >Application</a></li>
+
+            <li class="active">{% if application.name == None %}Delete {% else %}{{ verb|capfirst }} {% endif %}Application</li>
+        </ul>
+    </div>
+
+{% endblock %}
+{% block content %}
+
+    <div class="container col-lg-12 well">
+        <form method="post" action="" enctype="multipart/form-data" xmlns="http://www.w3.org/1999/html">
+            {% csrf_token %}
+
+            <p>Are you sure you want to delete "{{ application }}"?</p>
+            <input type="submit" class="btn-danger" value="Confirm {{ verb|capfirst}}" />
+
+            <a href="{% url "appmgmt:manage_applications" %}"
+               class="btn btn-success">
+                Cancel</a>
+
+        </form>
+    </div>
+
+
+{% endblock %}

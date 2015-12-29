@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block pretitle %}Edit Organization{% endblock %}
+{% block extra_head %}
+
+{% endblock %}
+{% block breadcrumbs %}
+    <div class="container">
+        <ul class="breadcrumb">
+            <li><a href="{% url 'home' %}">Home</a></li>
+            <li><a href="{% url 'accounts:manage_account' %}">Dashboard</a></li>
+
+            <li class="active">My Organization</li>
+
+        </ul>
+    </div>
+
+{% endblock %}
+{% block pagename %}Edit Organization ({{ organization }}){% endblock %}
+{% block content %}
+    <div class="section">
+        <div class="container">
+            <div class="row">
+                <form method="post" action=""
+                      xmlns="http://www.w3.org/1999/html">
+                    {% csrf_token %}
+                    <table>
+                        <tr>
+                            <td>
+
+                                {{ form.as_p }}
+
+                                <a href="{% url "accounts:manage_account" %}"><input
+                                        type="button" class="btn-danger"
+                                        value="Cancel"/></a>
+
+                                <input class="btn-success btn-lg" type="submit"
+                                       value="Save"/>
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="row clearfix">
+
+        <div class="col-md-12 column">
+            <!--- Template is in bofhirdev/templates/developer --->
+            <p>Close and Delete Account. All your application keys will be
+                deleted if you close your account.
+            </p>
+            {#  TODO: Link to Delete Account process  #}
+            <p> Apply for access to the CMS Live BlueButton API Platform.
+            </p>
+            {#  TODO: Link to Production Platform Access approval  #}
+            {#  DONE: Link to Manage Application Keys  #}
+        </div>
+    </div>
+
+
+{% endblock %}

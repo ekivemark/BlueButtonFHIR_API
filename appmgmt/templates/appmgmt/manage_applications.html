@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block pretitle %}Manage Your Applications{% endblock %}
+{% block extra_head %}
+{% endblock %}
+{% block breadcrumbs %}
+    <div class="container">
+        <ul class="breadcrumb">
+            <li><a href="{% url 'home' %}">Home</a></li>
+            <li><a href="{% url 'accounts:manage_account' %}">My Dashboard</a></li>
+            <li class="active">Applications</li>
+        </ul>
+    </div>
+{% endblock %}
+{% block pagename %}{{ org.name }}: Applications{% endblock %}
+{% block content %}
+    <div class="section">
+        <div class="container">
+            <div class="row col-sm-12 well">
+                <div class="col-sm-2">
+                    <a href="{% url 'accounts:manage_account' %}#personal_profile" class="btn btn-success col-md-12 align-left">
+                                <i class="fa fa-user fa-1x"></i> My Profile </a>
+                </div>
+                <div class="col-sm-2">
+                    <a href="{% url 'accounts:manage_account' %}#organization_profile" class="btn btn-success col-md-12 align-left">
+                                <i class="fa fa-users fa-1x"></i> Organization </a>
+                </div>
+                <div class="col-sm-2">
+                    <a href="{% url 'accounts:manage_account' %}#devteam_list" class="btn btn-success col-md-12 align-left">
+                                <i class="fa fa-user-plus fa-1x"></i> My Developers </a>
+                </div>
+                <div class="col-sm-2">
+                    <a href="#applications" class="btn btn-success col-md-12 align-left">
+                                <i class="fa fa-file-code-o fa-1x"></i> Applications </a>
+                </div>
+            </div>
+
+            <a name="#applications"></a>
+             <div class="row col-lg-12 well">
+
+                 {% include 'appmgmt/application_list.html' %}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

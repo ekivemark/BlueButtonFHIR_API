@@ -1,0 +1,43 @@
+{% load i18n %}
+
+{% if user.is_authenticated %}
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="col-lg-10">
+                 <h4>Team Candidates</h4>
+            </div>
+
+        </div>
+
+    </div>
+
+    <table class="col-lg-6 table table-striped table-hover ">
+        <thead>
+            <tr>
+                {% if org_owner %}<th>Add</th>{% endif %}
+                <th>Developer [Username]</th>
+                <th>email</th>
+
+            </tr>
+        </thead>
+        {% for candidate in candidates %}
+            {% if candidate.id != user.id %}
+            <tr>
+                {% if org_owner %}
+                <td style="text-align:left;">
+                    <a href="/appmanagement/devteam/add/{{ candidate.id }}/" data-toggle="tooltip" class="tip-top" title="Add Candidate to the Team"><i class="fa fa-plus-circle fa-lg"></i></a>
+                </td>
+                {% endif %}
+                 <td>
+                    {{ candidate.first_name }} {{ candidate.last_name }} [{{ candidate.username }}]
+                </td>
+                <td>
+                    {{ candidate.email }}
+                </td>
+
+            </tr>
+            {% endif %}
+        {% endfor %}
+    </table>
+{% endif %}
+

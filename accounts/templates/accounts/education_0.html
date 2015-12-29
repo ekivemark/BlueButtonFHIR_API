@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load staticfiles %}
+{% block extrahead %}
+    <script src="{% static 'js/switch_content.js' %}"></script>
+{% endblock %}
+{% block title %}{% trans "Register for an account" %}{% endblock %}
+{% block breadcrumbs %}
+    <div class="container">
+        <ul class="breadcrumb">
+            <li><a href="{% url 'home' %}">Home</a></li>
+
+            <li class="active">Learn</li>
+        </ul>
+    </div>
+{% endblock %}
+{% block pagename %}Register{% endblock %}
+{% block content %}
+
+            <div class="jqueryOptions col-md-6">
+                <h1>A New Generation of BlueButton</h1>
+
+                <h3>Put your health information to work for you</h3>
+
+                <p>MyMedicare.gov introduces a new and advanced BlueButton
+                    service. The new
+                    features allow you to connect your Medicare information
+                    to third party
+                    applications that you have chosen to trust.
+                    <br>
+                    <br>BlueButton 2.0 lets you choose where you want to
+                    save and manage your
+                    health information. We then make it easy for you to
+                    connect your data and
+                    keep it up to date.
+                    <br>
+                </p>
+            </div>
+<div class="section">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <ul class="pagination pagination-lg">
+                    <li>
+                        <a href="#">&nbsp;&nbsp;&nbsp;&nbsp;</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'accounts:learn_0' %}">1</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'accounts:learn_1' %}">2</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'accounts:learn_2' %}">3</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'accounts:learn_1' %}">Next</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

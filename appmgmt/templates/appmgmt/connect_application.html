@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block pretitle %}Add An Application{% endblock %}
+{% block extra_head %}
+
+
+{% endblock %}
+
+{% block pagename %}Add Application{% endblock %}
+{% block content %}
+
+    <div class="container col-lg-8 well">
+        <form method="post" action="" xmlns="http://www.w3.org/1999/html">
+            {% csrf_token %}
+            <table>
+                <tr>
+                    <td>
+
+                        {{ form.as_p }}
+
+                        <a href="{% url "accounts:manage_account" %}"><input
+                                type="button" class="btn-danger"
+                                value="Cancel"/></a>
+
+                        <input class="btn-success" type="submit"
+                               value="{% trans 'Save' %}"/>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+
+{% endblock %}

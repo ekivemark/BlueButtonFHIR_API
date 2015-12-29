@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block pretitle %}Add Developers to your Organization{% endblock %}
+{% block extra_head %}{% endblock %}
+
+{% block pagename %}Development Team{% endblock %}
+{% block breadcrumbs %}
+    <div class="container">
+        <ul class="breadcrumb">
+            <li><a href="{% url 'home' %}">Home</a></li>
+            <li><a href="{% url 'accounts:manage_account' %}">Dashboard</a></li>
+            <li><a href="{% url 'appmgmt:organization_view' %}">Organization</a></li>
+            <li class="active">Development Team</li>
+        </ul>
+    </div>
+
+{% endblock %}
+{% block content %}
+    <p>
+        <a href="{% url "appmgmt:developer_create" %}"
+            class="btn btn-success col-lg-6 align-left">
+            <i class="fa fa-pencil-square-o fa-1x"></i>Add Developer</a>
+    </p>
+    <p>
+        <ul>
+            {% for developer in object_list %}
+                <li>{{ developer.user.username }} [Role:{{ developer.role }}]</li>
+            {% endfor %}
+        </ul>
+    </p>
+{% endblock %}

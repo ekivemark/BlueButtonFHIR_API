@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+
+{% block pretitle %}{% if application.name == None %}Adding Application
+{% else %}Editing {{ application.name }}{% endif %}{% endblock %}
+{% block extra_head %}
+
+{% endblock %}
+
+{% block pagename%}{% if application.name == None %}Add Application{% else %}{% if application.logo %}<img src="{{ MEDIA_URL }}{{ application.logo }}" width="50" height="50">{% endif %} Editing {{ application.name }}{% endif %}{% endblock %}
+{% block breadcrumbs %}
+    <div class="container">
+        <ul class="breadcrumb">
+            <li><a href="{% url 'home' %}">Home</a></li>
+            <li><a href="{% url 'accounts:manage_account' %}">Dashboard</a></li>
+            <li><a href="{% url 'appmgmt:manage_applications' %}" >Application</a></li>
+
+            <li class="active">{% if application.name == None %}Add{% else %}Edit {% endif %}Application</li>
+        </ul>
+    </div>
+
+{% endblock %}
+{% block content %}
+
+    <div class="container col-lg-12 well">
+        <form method="post" action="" enctype="multipart/form-data" xmlns="http://www.w3.org/1999/html">
+            {% csrf_token %}
+            <table>
+                <tr>
+                    <td>
+                        {{ form.as_table }}
+
+                    </td>
+                <tr>
+                    <td>
+                        <input class="btn-success btn-lg" type="submit"
+                               value="Save"/>
+                    </td>
+                    <td>
+                        <a href="{% url "appmgmt:manage_applications" %}"><input
+                                type="button" class="btn-danger"
+                                value="Cancel"/></a>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+    <h2>Other Fields</h2>
+    <div class="container col-lg-10 well">
+
+        <table>
+            <tr>
+                <td>Terms Agreed:&nbsp;&nbsp;  </td>
+                <td>
+                    {% if application.agree %}YES&nbsp;
+                        (Version:
+                            {%  if application.agree_version %}:
+                        {{ application.agree_date }}
+                            {% endif %})
+                    {% else %}no
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Client_Id:
+                </td>
+                <td>
+                    <div
+style="width:660px;
+min-height:19px;
+height:auto!important;
+color:darkred; padding: 1%; background-color: ivory;
+font-size: 18px;
+font-weight: normal;
+word-wrap: break-word;
+text-align: left" >{{ application.client_id }}
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                Client Secret:
+                </td>
+                <td>
+                    <div
+style="width:600px;
+min-height:19px;
+height:auto!important;
+color:darkgreen; padding: 1%; background-color: ivory;
+font-size: 18px;
+font-weight: normal;
+word-wrap: break-word;
+text-align: left" >{{ application.client_secret }}
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>Ownership:</td>
+                <td>{% if application.owner %}{{ application.owner }}{% else %}{{ owner }}{% endif %} of
+                    {% if application.organization %}{{ application.organization }}{% else %}{{ organization }}{% endif %}</td>
+            </tr>
+        </table>
+
+    </div>
+
+{% endblock %}

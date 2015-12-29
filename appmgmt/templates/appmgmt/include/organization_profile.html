@@ -1,0 +1,76 @@
+{% load i18n %}
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="col-lg-10">
+            <h4>My Organization</h4>
+        </div>
+        <div class="col-lg-2">
+            {% if org and org_owner %}
+                <a href="/appmanagement/updateorganization/{{ org.id }}/"
+                   class="btn btn-success">
+                    <i class="fa fa-pencil-square-o fa-1x"></i>{% trans 'Edit' %}</a>
+            {% else %}
+                {% if not org %}
+                    <a href="{% url "appmgmt:organization_create" %}"
+                        class="btn btn-primary btn-large">
+                        <i class="fa fa-plus-square-o fa-1x"></i>Create Organization</a>
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+    {% if org %}
+    <h4>{{ org.name }}</h4>
+    <div class="row-fluid col-lg-12">
+    <table class="table table-hover col-lg-12 white">
+        <tr>
+            <th>Domain</th>
+            <th>Owner</th>
+
+            <th>Trust Status</th>
+
+        </tr>
+            <tr>
+                <td>
+                    {{ org.domain }}
+                </td>
+                <td>
+                    {{ org.owner.first_name }} {{ org.owner.last_name }} [{{ org.owner }}]
+                </td>
+
+                <td>
+                    {% if org.trusted %}
+                        Expires: {{ org.trusted_until }}
+                    {% else %}
+                        No Trust Relationship
+                    {% endif %}
+                </td>
+
+            </tr>
+
+    </table>
+    </div>
+    {% if not org.trusted and org_owner%}
+        <p>
+            Your organization has to go through a process of Trust Verification
+            before OAUTH application keys and secrets can be created.
+        </p>
+        <p>
+            Use the "Establish Trust" link to start the Trust process.
+        </p>
+         <a href="{% url "appmgmt:trustdata" %}"
+            class="btn btn-success col-lg-12 align-right">
+             <i class="fa fa-shield fa-1x"></i>
+             Establish Trust</a>
+    {% endif %}
+{% else %}
+    <table>
+        <tr>
+            <td>
+                <p>Create an Organization Profile and link it to your account. <br/>
+                    An email can only be connected to one organization</p>
+
+            </td>
+        </tr>
+    </table>
+{% endif %}
+</div>
