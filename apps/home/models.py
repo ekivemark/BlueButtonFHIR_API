@@ -22,7 +22,8 @@ class NewStuff(models.Model):
 
     title = models.CharField(max_length=250)
     body = models.TextField(max_length=4000,)
-    author = models.ForeignKey(settings.AUTH_USER_MODEL, default=get_current_user)
+    author = models.ForeignKey(settings.AUTH_USER_MODEL,
+                               default=get_current_user)
     created = models.DateTimeField()
     modified = models.DateTimeField()
 

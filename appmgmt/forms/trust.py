@@ -25,7 +25,9 @@ class TrustForm(forms.Form):
     trust_domain = forms.CharField(max_length=100,
                                    label="Trusted Application Domain")
     owner_email = forms.EmailField(label="Trusted Application Owner Email")
-    shared_secret = forms.CharField(max_length=5124,widget=forms.Textarea(attrs={'cols': 80, 'rows': 10}),
+    shared_secret = forms.CharField(max_length=5124,
+                                    widget=forms.Textarea(attrs={'cols': 80,
+                                                                 'rows': 10}),
                                     label="Trust Bundle Entity Secret")
 
     # class Meta:

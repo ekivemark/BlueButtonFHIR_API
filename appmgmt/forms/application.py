@@ -11,10 +11,8 @@ __author__ = 'Mark Scrimshire:@ekivemark'
 from django import forms
 from django.forms import ModelForm
 from django.conf import settings
-
+from accounts.choices import BOOLEAN_CHOICES
 from appmgmt.models import BBApplication
-
-BOOLEAN_CHOICES = (('1', 'Update'), ('0', 'Keep unchanged'))
 
 class ApplicationForm(forms.ModelForm):
     """

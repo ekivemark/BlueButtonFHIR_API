@@ -7,15 +7,7 @@
 from django.conf import settings
 from django.db import models
 from oauth2_provider.models import AbstractApplication
-
-# 1 = Top level account access
-# 2 = Backup level account access
-# 9 or Standard Team member access
-DEVELOPER_ROLE_CHOICES = (('1', 'Account Owner'),
-                          ('2', 'Backup Owner'),
-                          ('9', 'Team Member'),
-                          ('-', 'None' ),
-                         )
+from accounts.choices import DEVELOPER_ROLE_CHOICES
 
 
 # Modify settings.py wih OAUTH2_PROVIDER_APPLICATION_MODEL=
@@ -72,8 +64,8 @@ class BBApplication(AbstractApplication):
 
     def terms_signed(self):
         if self.agree:
-            terms = "Agreed to Terms and Conditions (v.%s) on %s" % (self.agree_version,
-                                                                     self.agree_date)
+            terms = "Agreed to Terms and Conditions " \
+                    "(v.%s) on %s" % (self.agree_version,self.agree_date)
             return terms
         return None
 

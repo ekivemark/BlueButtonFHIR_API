@@ -22,7 +22,9 @@ class Email(forms.EmailField):
         try:
             User.objects.get(email=value)
             raise forms.ValidationError(mark_safe(
-                "This email is already registered. <br/>Use <a href='/password/reset'>this forgot password</a> link or on the <a href ='/accounts/login?next=/'>login page</a>."))
+                "This email is already registered. <br/>Use "
+                "<a href='/password/reset'>this forgot password</a> link "
+                "or on the <a href ='/accounts/login?next=/'>login page</a>."))
         except User.DoesNotExist:
             return value
 

@@ -9,9 +9,11 @@ __author__ = 'Mark Scrimshire:@ekivemark'
 
 from django.contrib import messages
 
-from .models import DEVELOPER_ROLE_CHOICES
+from accounts.choices import DEVELOPER_ROLE_CHOICES
 
 from django.conf import settings
+
+
 def Choice_Display(role):
     """
     Receive a string of the current role

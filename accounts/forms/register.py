@@ -39,7 +39,8 @@ class RegistrationForm(forms.ModelForm):
         """
         Verifies that the values entered into the password fields match
 
-        NOTE: Errors here will appear in ``non_field_errors()`` because it applies to more than one field.
+        NOTE: Errors here will appear in ``non_field_errors()``
+        because it applies to more than one field.
         """
         cleaned_data = super(RegistrationForm, self).clean()
         if 'password1' in self.cleaned_data and 'password2' in self.cleaned_data:

@@ -33,8 +33,6 @@ from apps.v1api.views.crosswalk import lookup_xwalk
 from apps.v1api.utils import (build_params)
 
 
-
-
 class EOB(ListView):
     if settings.DEBUG:
         print("in apps.v1api.views.eob")

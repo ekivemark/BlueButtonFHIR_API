@@ -41,7 +41,8 @@ def verify_phone(request):
     if request.POST:
         form = Verify_Mobile(request.POST)
         if form.is_valid():
-            vc = ValidSMSCode.objects.get(user=u, sms_code=form.cleaned_data['verify_code'])
+            vc = ValidSMSCode.objects.get(user=u,
+                                          sms_code=form.cleaned_data['verify_code'])
             if settings.DEBUG:
                 print("compare codes",
                       vc.sms_code,"|",
@@ -64,7 +65,8 @@ def verify_phone(request):
             status = "Text Message Sent"
         else:
             messages.error(request,
-                       "There was a problem sending your pin code. Please try again.")
+                       "There was a problem sending your pin code. "
+                       "Please try again.")
             status = "Send Error"
 
         if settings.DEBUG:
@@ -202,7 +204,8 @@ def account_access(request):
     """
 
     if settings.DEBUG:
-        print(settings.APPLICATION_TITLE, "in accounts.views.user.account_access")
+        print(settings.APPLICATION_TITLE,
+              "in accounts.views.user.account_access")
 
     context = {}
     return render_to_response('account_access.html',

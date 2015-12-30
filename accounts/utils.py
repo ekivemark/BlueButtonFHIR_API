@@ -19,141 +19,7 @@ from django.template import (RequestContext,
 from django.template.loader import render_to_string
 from django.utils.safestring import mark_safe
 
-# Carrier Selection shows carriers with their email address
-# All names must be unique
-CARRIER_SELECTION = (('NONE', 'None'),
-                     ('3 river wireless', '3 river wireless(@sms.3rivers.net)'),
-                     ('acs wireless', 'acs wireless(@paging.acswireless.com)'),
-                     ('alltel', 'alltel(@message.alltel.com)'),
-                     ('at&t', 'at&t(@txt.att.net)'),
-                     ('bell canada', 'bell canada(@bellmobility.ca)'),
-                     ('bell mobility txt', 'bell mobility(@txt.bellmobility.ca)'),
-                     ('bell mobility (canada)', 'bell mobility (canada)(@txt.bell.ca)'),
-                     ('blue sky frog', 'blue sky frog(@blueskyfrog.com)'),
-                     ('bluegrass cellular', 'bluegrass cellular(@sms.bluecell.com)'),
-                     ('boost mobile', 'boost mobile(@myboostmobile.com)'),
-                     ('bpl mobile', 'bpl mobile(@bplmobile.com)'),
-                     ('carolina west wireless', 'carolina west wireless(@cwwsms.com)'),
-                     ('cellular one', 'cellular one(@mobile.celloneusa.com)'),
-                     ('cellular south', 'cellular south(@csouth1.com)'),
-                     ('centennial wireless', 'centennial wireless(@cwemail.com)'),
-                     ('centurytel', 'centurytel(@messaging.centurytel.net)'),
-                     ('cingular (now at&t)', 'cingular (now at&t)(@txt.att.net)'),
-                     ('clearnet', 'clearnet(@msg.clearnet.com)'),
-                     ('comcast', 'comcast(@comcastpcs.textmsg.com)'),
-                     ('corr wireless communications', 'corr wireless communications(@corrwireless.net)'),
-                     ('dobson', 'dobson(@mobile.dobson.net)'),
-                     ('edge wireless', 'edge wireless(@sms.edgewireless.com)'),
-                     ('fido', 'fido(@fido.ca)'),
-                     ('golden telecom', 'golden telecom(@sms.goldentele.com)'),
-                     ('helio', 'helio(@messaging.sprintpcs.com)'),
-                     ('houston cellular', 'houston cellular(@text.houstoncellular.net)'),
-                     ('idea cellular', 'idea cellular(@ideacellular.net)'),
-                     ('illinois valley cellular', 'illinois valley cellular(@ivctext.com)'),
-                     ('inland cellular telephone', 'inland cellular telephone(@inlandlink.com)'),
-                     ('mci', 'mci(@pagemci.com)'),
-                     ('metro pcs', 'metro pcs(@mymetropcs.com)'),
-                     ('metrocall', 'metrocall(@page.metrocall.com)'),
-                     ('metrocall 2-way', 'metrocall 2-way(@my2way.com)'),
-                     ('microcell', 'microcell(@fido.ca)'),
-                     ('midwest wireless', 'midwest wireless(@clearlydigital.com)'),
-                     ('mobilcomm', 'mobilcomm(@mobilecomm.net)'),
-                     ('mts', 'mts(@text.mtsmobility.com)'),
-                     ('nextel', 'nextel(@messaging.nextel.com)'),
-                     ('onlinebeep', 'onlinebeep(@onlinebeep.net)'),
-                     ('pcs one', 'pcs one(@pcsone.net)'),
-                     ('presidents choice', 'presidents choice(@txt.bell.ca)'),
-                     ('public service cellular', 'public service cellular(@sms.pscel.com)'),
-                     ('qwest', 'qwest(@qwestmp.com)'),
-                     ('rogers at&t wireless', 'rogers at&t wireless(@pcs.rogers.com)'),
-                     ('rogers canada', 'rogers canada(@pcs.rogers.com)'),
-                     ('satellink', 'satellink(@satellink.net)'),
-                     ('solo mobile', 'solo mobile(@txt.bell.ca)'),
-                     ('southwestern bell', 'southwestern bell(@email.swbw.com)'),
-                     ('sprint', 'sprint(@messaging.sprintpcs.com)'),
-                     ('sumcom', 'sumcom(@tms.suncom.com)'),
-                     ('surewest communications', 'surewest communications(@mobile.surewest.com)'),
-                     ('t-mobile', 't-mobile(@tmomail.net)'),
-                     ('telus', 'telus(@msg.telus.com)'),
-                     ('tracfone', 'tracfone(@txt.att.net)'),
-                     ('triton', 'triton(@tms.suncom.com)'),
-                     ('unicel', 'unicel(@utext.com)'),
-                     ('us cellular', 'us cellular(@email.uscc.net)'),
-                     ('us west', 'us west(@uswestdatamail.com)'),
-                     ('verizon', 'verizon(@vtext.com)'),
-                     ('virgin mobile', 'virgin mobile(@vmobl.com)'),
-                     ('virgin mobile canada', 'virgin mobile canada(@vmobile.ca)'),
-                     ('west central wireless', 'west central wireless(@sms.wcc.net)'),
-                     ('western wireless', 'western wireless(@cellularonewest.com)'),
-                     )
-
-# Use unique Carrier name to get email domain information
-CARRIER_EMAIL_GATEWAY = (('None', 'NONE'),
-                         ('3 river wireless', '@sms.3rivers.net'),
-                         ('acs wireless', '@paging.acswireless.com'),
-                         ('alltel', '@message.alltel.com'),
-                         ('at&t', '@txt.att.net'),
-                         ('bell canada', '@bellmobility.ca'),
-                         ('bell canada', '@txt.bellmobility.ca'),
-                         ('bell mobility txt', '@txt.bellmobility.ca'),
-                         ('bell mobility (canada)', '@txt.bell.ca'),
-                         ('blue sky frog', '@blueskyfrog.com'),
-                         ('bluegrass cellular', '@sms.bluecell.com'),
-                         ('boost mobile', '@myboostmobile.com'),
-                         ('bpl mobile', '@bplmobile.com'),
-                         ('carolina west wireless', '@cwwsms.com'),
-                         ('cellular one', '@mobile.celloneusa.com'),
-                         ('cellular south', '@csouth1.com'),
-                         ('centennial wireless', '@cwemail.com'),
-                         ('centurytel', '@messaging.centurytel.net'),
-                         ('cingular (now at&t)', '@txt.att.net'),
-                         ('clearnet', '@msg.clearnet.com'),
-                         ('comcast', '@comcastpcs.textmsg.com'),
-                         ('corr wireless communications', '@corrwireless.net'),
-                         ('dobson', '@mobile.dobson.net'),
-                         ('edge wireless', '@sms.edgewireless.com'),
-                         ('fido', '@fido.ca'),
-                         ('golden telecom', '@sms.goldentele.com'),
-                         ('helio', '@messaging.sprintpcs.com'),
-                         ('houston cellular', '@text.houstoncellular.net'),
-                         ('idea cellular', '@ideacellular.net'),
-                         ('illinois valley cellular', '@ivctext.com'),
-                         ('inland cellular telephone', '@inlandlink.com'),
-                         ('mci', '@pagemci.com'),
-                         ('metro pcs', '@mymetropcs.com'),
-                         ('metrocall', '@page.metrocall.com'),
-                         ('metrocall 2-way', '@my2way.com'),
-                         ('microcell', '@fido.ca'),
-                         ('midwest wireless', '@clearlydigital.com'),
-                         ('mobilcomm', '@mobilecomm.net'),
-                         ('mts', '@text.mtsmobility.com'),
-                         ('nextel', '@messaging.nextel.com'),
-                         ('onlinebeep', '@onlinebeep.net'),
-                         ('pcs one', '@pcsone.net'),
-                         ('presidents choice', '@txt.bell.ca'),
-                         ('public service cellular', '@sms.pscel.com'),
-                         ('qwest', '@qwestmp.com'),
-                         ('rogers at&t wireless', '@pcs.rogers.com'),
-                         ('rogers canada', '@pcs.rogers.com'),
-                         ('satellink', '@satellink.net'),
-                         ('solo mobile', '@txt.bell.ca'),
-                         ('southwestern bell', '@email.swbw.com'),
-                         ('sprint', '@messaging.sprintpcs.com'),
-                         ('sumcom', '@tms.suncom.com'),
-                         ('surewest communications', '@mobile.surewest.com'),
-                         ('t-mobile', '@tmomail.net'),
-                         ('telus', '@msg.telus.com'),
-                         ('tracfone', '@txt.att.net'),
-                         ('triton', '@tms.suncom.com'),
-                         ('unicel', '@utext.com'),
-                         ('us cellular', '@email.uscc.net'),
-                         ('us west', '@uswestdatamail.com'),
-                         ('verizon', '@vtext.com'),
-                         ('virgin mobile', '@vmobl.com'),
-                         ('virgin mobile canada', '@vmobile.ca'),
-                         ('west central wireless', '@sms.wcc.net'),
-                         ('western wireless', '@cellularonewest.com'),
-                         )
+from accounts.choices import (CARRIER_EMAIL_GATEWAY,CARRIER_SELECTION)
 
 
 def build_message_text(request,context={},
@@ -419,7 +285,13 @@ def string_to_ordereddict(txt):
     # String_To_OrderedDict
     # Convert String to OrderedDict
     # Example String
-    #    txt = "OrderedDict([('width', '600'), ('height', '100'), ('left', '1250'), ('top', '980'), ('starttime', '4000'), ('stoptime', '8000'), ('startani', 'random'), ('zindex', '995'), ('type', 'text'), ('title', '#WXR#@TU@@Izmir@@brief_txt@'), ('backgroundcolor', 'N'), ('borderstyle', 'solid'), ('bordercolor', 'N'), ('fontsize', '35'), ('fontfamily', 'Ubuntu Mono'), ('textalign', 'right'), ('color', '#c99a16')])"
+    #    txt = "OrderedDict([('width', '600'), ('height', '100'),
+    # ('left', '1250'), ('top', '980'), ('starttime', '4000'),
+    # ('stoptime', '8000'), ('startani', 'random'), ('zindex', '995'),
+    # ('type', 'text'), ('title', '#WXR#@TU@@Izmir@@brief_txt@'),
+    # ('backgroundcolor', 'N'), ('borderstyle', 'solid'), ('bordercolor', 'N'),
+    # ('fontsize', '35'), ('fontfamily', 'Ubuntu Mono'),
+    # ('textalign', 'right'), ('color', '#c99a16')])"
     #######################################
 
     tempDict = OrderedDict()
@@ -475,3 +347,49 @@ def strip_url(domain, www=None):
         result = result.replace(www.lower() + ".", "")
 
     return result
+
+
+def User_From_Request(request_user=None):
+    # Receive request.user
+    # Get user model
+    # get user key fieldname
+    # return user
+
+    if request_user == None:
+        return None
+
+    else:
+        User = get_user_model()
+        access_field = settings.USERNAME_FIELD
+
+        u = User.objects.get(**{access_field:request_user})
+        if settings.DEBUG:
+            print("User:", u)
+
+        return u
+
+
+def get_user_record(user):
+    """
+    Get User using indirect references
+
+    :return:
+    """
+
+    if user.is_authenticated():
+
+        access_field = settings.USERNAME_FIELD
+        Access_Model = get_user_model()
+
+        u =  Access_Model.objects.get(**{access_field: user})
+        if settings.DEBUG:
+            print("user field:%s from %s (%s) = %s" % (access_field,
+                                                  Access_Model,
+                                                  settings.AUTH_USER_MODEL,
+                                                  u.get_username()))
+
+    else:
+
+        u = None
+
+    return u

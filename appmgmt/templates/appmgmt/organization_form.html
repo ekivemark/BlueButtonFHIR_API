@@ -27,7 +27,11 @@
             <table>
                 <tr>
                     <td>
-                        {{ form.as_p }}
+                        {{ form.as_table }}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
 
                         <a href="{% url "accounts:manage_account" %}"><input
                                 type="button" class="btn-danger"

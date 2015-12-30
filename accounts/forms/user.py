@@ -9,7 +9,8 @@ __author__ = 'Mark Scrimshire:@ekivemark'
 
 from django import forms
 
-from accounts.models import User, ACTIVITY_NOTIFY_CHOICES
+from accounts.models import User
+from accounts.choices import ACTIVITY_NOTIFY_CHOICES
 
 
 class User_EditForm(forms.ModelForm):

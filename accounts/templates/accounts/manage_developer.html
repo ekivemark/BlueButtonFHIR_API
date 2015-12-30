@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block pretitle %}Manage Your Developer Account{% endblock %}
+{% block extra_head %}
+{% endblock %}
+{% block breadcrumbs %}
+    <div class="container">
+        <ul class="breadcrumb">
+            <li><a href="{% url 'home' %}">Home</a></li>
+            <li class="active">My Dashboard</li>
+        </ul>
+    </div>
+{% endblock %}
+{% block pagename %}Developer Dashboard{% endblock %}
+{% block content %}
+    <div class="section">
+        <div class="container">
+            <div class="row col-sm-12 well">
+                <div class="col-sm-2">
+                    <a href="#personal_profile" class="btn btn-success col-md-12 align-left">
+                                <i class="fa fa-user fa-1x"></i> My Profile </a>
+                </div>
+                <div class="col-sm-2">
+                    <a href="#organization_profile" class="btn btn-success col-md-12 align-left">
+                                <i class="fa fa-users fa-1x"></i> Organization </a>
+                </div>
+                <div class="col-sm-2">
+                    <a href="#devteam_list" class="btn btn-success col-md-12 align-left">
+                                <i class="fa fa-user-plus fa-1x"></i> My Developers </a>
+                </div>
+                <div class="col-sm-2">
+                    <a href="/appmanagement/myapplications/" class="btn btn-success col-md-12 align-left">
+                                <i class="fa fa-file-code-o fa-1x"></i> Applications </a>
+                </div>
+
+
+            </div>
+            <div class="row col-lg-12 well">
+                <a name="personal_profile"></a><div class="col-lg-4 well">
+                    {% include 'accounts/include/personal_profile.html' %}
+                </div>
+                <a name="organization_profile"></a><div class="col-lg-8 well">
+                    <a name="organization_profile"></a><div class="col-lg-12">
+                        {% if org %}
+                             {% include 'appmgmt/include/organization_profile.html' %}
+
+                        {% else %}
+                            <a href="{% url "appmgmt:organization_create" %}"
+                                class="btn btn-success col-lg-6 align-left">
+                                <i class="fa fa-pencil-square-o fa-1x"></i>Create Organization</a>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="row-fluid">
+                    <div class="row col-lg-12">
+                        <div class="col-lg-7 well">
+                            {% include 'appmgmt/include/devteam_list.html' %}
+                        </div>
+                        <div class="col-lg-5 well">
+                            {% include 'appmgmt/include/candidate_list.html' %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+         </div>
+    </div>
+
+
+
+    <div class="row clearfix">
+
+        <div class="col-md-12 column">
+            <!--- Template is in
+                  bluebuttondev/accounts/templates/accounts --->
+            <p>Close your Account (All your application keys will be
+                deleted if you close your {{ settings.APPLICATION_TITLE }}
+                account).
+            </p>
+
+        </div>
+    </div>
+
+
+{% endblock %}

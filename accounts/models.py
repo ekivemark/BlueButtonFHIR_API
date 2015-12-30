@@ -34,7 +34,12 @@ from django.contrib.auth.models import AbstractBaseUser
 from jsonfield import JSONField
 from phonenumber_field.modelfields import PhoneNumberField
 
-from accounts.utils import CARRIER_SELECTION, cell_email, send_sms_pin
+from accounts.choices import (ACTIVITY_NOTIFY_CHOICES,
+                              CARRIER_SELECTION,
+                              USER_ROLE_CHOICES,
+                              USERTYPE_CHOICES,
+                              )
+from accounts.utils import (cell_email, send_sms_pin)
 from appmgmt.models import Organization
 
 # Extending Application with OAuth Toolkit
@@ -43,19 +48,6 @@ from oauth2_provider.models import AbstractApplication
 # Create models here.
 
 # Pre-defined Values
-
-USERTYPE_CHOICES = (('owner', 'Account Owner'))
-
-USER_ROLE_CHOICES = (('primary', 'Account Owner'),
-                     ('backup', 'Backup Owner'),
-                     ('none', 'NONE'),
-                     )
-
-# DONE: Add Activity Notification Choices
-ACTIVITY_NOTIFY_CHOICES = (('N', "No Notifications"),
-                           ('E', "Email Message"),
-                           ('T', "Text Message")
-                           )
 
 # class Application(models.Model):
 # @login_required()

@@ -20,7 +20,7 @@ from django.conf import settings
 from django.template import RequestContext
 from django.template.loader import render_to_string
 
-FORMAT_OPTIONS = ['json', 'xml']
+FORMAT_OPTIONS_CHOICES = ['json', 'xml']
 
 
 def get_to_lower(in_get):
@@ -74,7 +74,7 @@ def get_format(in_get):
             print("Format Returned:", fmt)
 
         # Check for a valid lower case value
-        if fmt in FORMAT_OPTIONS:
+        if fmt in FORMAT_OPTIONS_CHOICES:
             result = fmt
         else:
             if settings.DEBUG:
