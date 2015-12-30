@@ -10,3 +10,8 @@ This is one part of a three part application suite:
 0. BlueButtonFHIR_API - Public API providing authenticated pass-through to back-end FHIR Services. 
    ( https://github.com/ekivemark/BlueButtonFHIR_API ) 
  
+In the current iteration the Developer and User Accounts are handled in this single application. 
+User Model has is_developer and is_user boolean settings. 
+User mode should be chosen if both are True.
+
+
