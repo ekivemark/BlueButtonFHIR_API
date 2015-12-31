@@ -15,6 +15,7 @@ from django.conf.urls import (patterns,
                               include,
                               url)
 from django.contrib import admin
+from django.views.generic import TemplateView
 
 from apps.api.views import *
 
@@ -36,6 +37,8 @@ urlpatterns = patterns('',
                        url(r'^v1/',
                            include('apps.v1api.urls',
                                    namespace='v1')),
+                       url(r'^documentation/$',
+                           TemplateView.as_view(template_name='api/documentation.html')),
 
                        url(r'^admin/', include(admin.site.urls)),
 

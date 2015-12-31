@@ -4,7 +4,11 @@ from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.core.urlresolvers import reverse_lazy
 
-# from accounts.forms.other import RegistrationFormUserTOSAndEmail
+from django.views.generic import TemplateView
+
+from accounts.forms.other import (RegistrationFormUserTOSAndEmail,
+                                  RegistrationFormDeveloperTOSAndEmail)
+
 # from apps.secretqa.views import *
 # from apps.subacc.views import *
 from apps.api.views import *
@@ -53,8 +57,11 @@ urlpatterns = patterns('',
                        # 2. Beneficiary - Not Authenticated
                        # 3. Beneficiary - Authenticated but not activated
                        url(r'^registration/register/$',
-                           RegistrationView.as_view(),
+                           RegistrationView.as_view(form_class=RegistrationFormUserTOSAndEmail),
                            name='register'),
+                       url(r'^registration/registerdeveloper/$',
+                           RegistrationView.as_view(form_class=RegistrationFormDeveloperTOSAndEmail),
+                           name='register_developer'),
                        # url(r'^logout$',
                        #     'accounts.views.logout',
                        #     name='logout'),
@@ -82,6 +89,8 @@ urlpatterns = patterns('',
                        # OAuth2 Provider Library
                        url(r'^o/', include('oauth2_provider.urls',
                                            namespace='oauth2_provider')),
+                       url(r'^support/$', TemplateView.as_view(template_name='support.html')),
+
                        url(r'^admin/', include(admin.site.urls)),
                        # Uncomment the admin/doc line below to enable admin
                        # documentation:

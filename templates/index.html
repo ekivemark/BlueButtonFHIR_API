@@ -13,17 +13,15 @@
         </ul>
     </div>
 {% endblock %}
-{% block pagename %}Welcome{% endblock %}
+{% block pagename %}Welcome to BlueButton On FHIR{% endblock %}
 {% block content %}
 
 
     <div class="hero-unit">
 
-        <h2>{{ settings.APPLICATION_TITLE }}</h2>
-
         <div class="container-fluid">
                 <p>
-
+                {% include "include/login_register.html" %}
                 </p>
             <div class="col-md-8">
                 <p>
@@ -51,17 +49,16 @@
                         your account is being accessed from a new
                         location or device.
                     </li>
-                    <li>
-                        Create device specific login credentials. This lets
-                        you create custom credentials that you can use to
-                        access the BlueButton 2.0 advanced interface.
-                    </li>
-                    <li>
-                        A device dashboard that lets you manage your devices.
-                        Disable the credentials, reset device passwords or
-                        change when device credentials expire.
-                    </li>
                 </p>
+
+                <h4>Are you a Software Developer?</h4>
+                    <p>
+                        Check out the
+                        <a href="{% url "appmgmt:developer_intro" %}">
+                            Introduction for Developers</a> and
+                        learn how you can enable Medicare Beneficiaries to connect their
+                        data to your application, service or research program.
+                    </p>
             </div>
 
             <div class="col-md-4"><img

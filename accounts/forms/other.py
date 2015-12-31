@@ -33,6 +33,10 @@ class UserRegistrationForm(forms.ModelForm):
     """
     A form for creating new users. Includes all the required
     fields, plus a repeated password.
+
+    is_user set to True (Default in the User Model)
+    is_developer set to False (Default in the User Model
+
     """
     # email will be no longer become username
     email = Email()
@@ -44,10 +48,58 @@ class UserRegistrationForm(forms.ModelForm):
 
     fields = ['username', 'email', 'password1', 'password2' ]
 
+
+    # is_user = forms.BooleanField(widget=forms.HiddenInput(), initial=True,)
+    # is_developer = forms.BooleanField(widget=forms.HiddenInput(), initial=False, required=False)
+
     def clean_password(self):
         if self.data['password1'] != self.data['password2']:
             raise forms.ValidationError('Passwords are not the same')
         return self.data['password1']
+
+    def save(self):
+        u = super(UserRegistrationForm, self).save(commit=False)
+        u.is_user = True
+        u.is_developer = False
+        u.save()
+        return u
+
+
+
+
+class DeveloperRegistrationForm(forms.ModelForm):
+    """
+    A form for creating new Developer users. Includes all the required
+    fields, plus a repeated password.
+
+    is_user should be set to false
+    is_developer should be set to True
+
+    """
+    # email will be no longer become username
+    email = Email()
+
+    password1 = forms.CharField(widget=forms.PasswordInput(),
+                                label="Password")
+    password2 = forms.CharField(widget=forms.PasswordInput(),
+                                label="Repeat your password")
+
+    fields = ['username', 'email', 'password1', 'password2' ]
+
+    # is_user = forms.BooleanField(widget=forms.HiddenInput(), initial=False)
+    # is_developer = forms.BooleanField(widget=forms.HiddenInput(), initial=True)
+
+    def clean_password(self):
+        if self.data['password1'] != self.data['password2']:
+            raise forms.ValidationError('Passwords are not the same')
+        return self.data['password1']
+
+    def save(self):
+        u = super(DeveloperRegistrationForm, self).save(commit=False)
+        u.is_user = False
+        u.is_developer = True
+        u.save()
+        return u
 
 
 class RegistrationFormUserTOSAndEmail(UserRegistrationForm,
@@ -55,6 +107,14 @@ class RegistrationFormUserTOSAndEmail(UserRegistrationForm,
                                       RegistrationFormTermsOfService,
                                       ):
     pass
+
+
+class RegistrationFormDeveloperTOSAndEmail(DeveloperRegistrationForm,
+                                      RegistrationFormUniqueEmail,
+                                      RegistrationFormTermsOfService,
+                                      ):
+    pass
+
 
 
 class RegistrationFormTOSAndEmail(

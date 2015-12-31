@@ -73,14 +73,16 @@ Just to avoid confusion...
                     <li><a href="/api/documentation" class="">Documentation</a>
                     </li>
                     {# TODO: /accounts/support page  #}
-                    <li><a href="/api/support" class="">Support</a>
+                    <li><a href="/support" class="">Support</a>
                     </li>
                     <li class="divider"></li>
                     <li>
                         <a href="{% url 'api:home' %}" class=""
                                 contenteditable="false">API
                         </a>
-
+                    </li>
+                    <li><a href="{% url "appmgmt:developer_intro" %}"
+                           class="" contenteditable="false">Developer Intro</a>
                     </li>
                     {# DONE: /admin access page  #}
                     {% if user.is_admin and request.session.auth_master%}

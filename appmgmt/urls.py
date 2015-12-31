@@ -10,6 +10,7 @@ __author__ = 'Mark Scrimshire:@ekivemark'
 
 from django.conf.urls import patterns, include, url
 from django.core.urlresolvers import reverse_lazy
+from django.views.generic import TemplateView
 
 from appmgmt.models import BBApplication
 
@@ -45,6 +46,10 @@ urlpatterns = patterns('',
 
                        url(r'^$','appmgmt.views.main.home_index',
                            name='home'),
+# Intro
+                       url(r'^intro/$',
+                           TemplateView.as_view(template_name='appmgmt/developer_intro.html'),
+                           name="developer_intro"),
 # Organization
                        url(r'^myorganizations/$',
                            MyOrganizationListView.as_view(),

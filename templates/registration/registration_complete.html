@@ -6,14 +6,14 @@
 {% block breadcrumbs %}
        <div class="container">
         <ul class="breadcrumb">
-            <li><a href="{% url 'apps.home' %}">Home</a></li>
+            <li><a href="{% url 'home' %}">Home</a></li>
             <li class="active">Account Activation</li>
         </ul>
     </div>
 {% endblock %}
 {% block content %}
     <p>{% trans "Please check your email to complete the registration process." %}</p>
-    <p><a href="{% url 'apps.home' %}"><i class="fa fa-home fa-lg"></i> Go to Home Page</a></p>
+    <p><a href="{% url 'home' %}"><i class="fa fa-home fa-lg"></i> Go to Home Page</a></p>
 {% endblock %}
 
 
