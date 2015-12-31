@@ -102,5 +102,11 @@ urlpatterns = patterns('',
                        # documentation:
                        url(r'^admin/doc/',
                            include('django.contrib.admindocs.urls')),
-                       ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+                       )
+              # + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
+# Django 1.8 method for serving static media files
+if settings.DEBUG:
+  urlpatterns.append(url(r'^media/(?P<path>.*)$',
+                         'django.views.static.serve',
+                         {'document_root': settings.MEDIA_ROOT}))
