@@ -17,10 +17,15 @@
                     <td>
                         {{ form.as_p }}
 
+                    </td>
+                </tr>
+                <tr>
+                    <td>
                         <a href="{% url "accounts:manage_account" %}"><input
                                 type="button" class="btn-danger"
                                 value="Cancel"/></a>
-
+                    </td>
+                    <td>
                         <input class="btn-success btn-lg" type="submit"
                                value="Save"/>
                     </td>

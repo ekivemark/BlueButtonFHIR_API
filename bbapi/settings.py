@@ -618,3 +618,14 @@ if DEBUG_SETTINGS:
 #                 print(r['dn'], r['attributes'])
 #
     print("=========================================")
+MEDIA_URL = "/media/"
+if DB_PLATFORM == 'sqlite3':
+    MEDIA_ROOT = "/Users/mark/PycharmProjects/media/bb/"
+else:
+    MEDIA_ROOT = "/data/pyapps/media/"
+
+if DEBUG_SETTINGS:
+    print("FHIR_SERVER:", FHIR_SERVER)
+    print("MEDIA_URL:", MEDIA_URL)
+    print("MEDIA_ROOT:", MEDIA_ROOT)
+    print("=========================================")

@@ -1,6 +1,12 @@
 from django.conf import *
 from registration.backends.default.urls import *
 from django.contrib import admin
+
+# Add next two lines to display static and media files
+# then add +static statement at the end of the urlpatterns
+from django.conf import settings
+from django.conf.urls.static import static
+
 from django.contrib.auth import views as auth_views
 from django.core.urlresolvers import reverse_lazy
 
@@ -96,4 +102,5 @@ urlpatterns = patterns('',
                        # documentation:
                        url(r'^admin/doc/',
                            include('django.contrib.admindocs.urls')),
-                       )
+                       ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
