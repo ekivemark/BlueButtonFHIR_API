@@ -9,10 +9,18 @@ __author__ = 'Mark Scrimshire:@ekivemark'
 from threading import local
 
 
-def str2int(inp):
-    output = 0 + int(inp)
+_user = local()
 
-    return output
+class CurrentUserMiddleware(object):
+    ###
+    ### Add to MIDDLEWARE_CLASSES after Authentication middleware
+    ###
+    def process_request(selfself,request):
+        _user.value = request.user
+
+
+def get_current_user():
+    return _user.value
 
 
 def str2bool(inp):
@@ -24,14 +32,10 @@ def str2bool(inp):
 
     return output
 
-_user = local()
 
-class CurrentUserMiddleware(object):
-    ###
-    ### Add to MIDDLEWARE_CLASSES after Authentication middleware
-    ###
-    def process_request(selfself,request):
-        _user.value = request.user
+def str2int(inp):
+    output = 0 + int(inp)
 
-def get_current_user():
-    return _user.value
+    return output
+
+

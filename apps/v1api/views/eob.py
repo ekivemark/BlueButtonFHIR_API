@@ -24,7 +24,9 @@ from django.views.generic import ListView
 from django.conf import settings
 from django.contrib import messages
 from django.core.urlresolvers import reverse_lazy
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import (HttpResponse,
+                         HttpResponseRedirect,
+                         HttpRequest)
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 
@@ -109,4 +111,29 @@ class EOB(ListView):
                                                          pass_to,
                                                          text_out))
 
+
+#@protected_resource(scopes=['read'])
+def ExplanationOfBenefit(request, *args, **kwargs):
+    """
+    Function-based interface to ExplanationOfBenefit
+    :param request:
+    :return:
+    """
+
+
+    if settings.DEBUG:
+        print("In apps.v1api.views.eob.ExplanationOfBenefit Function")
+
+        print("request:", request.GET)
+
+    process_mode = request.META['REQUEST_METHOD']
+
+    send_back = 'Hello, %s' % request.user
+    send_back += ':ExplanationOfBenefit [mode=%s]' % process_mode
+    if args:
+        send_back += '[args=%s]' % (args)
+    if kwargs:
+        send_back += '[kwargs=%s]' % (kwargs)
+
+    return HttpResponse(send_back)
 

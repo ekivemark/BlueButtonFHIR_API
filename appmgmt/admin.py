@@ -4,11 +4,14 @@ from django.contrib import admin
 # Register your models here.
 
 from django.conf import settings
+from django.core.exceptions import ImproperlyConfigured
 from appmgmt.models import (BBApplication,
                             Organization,
                             Developer,
                             )
 
+from oauth2_provider.models import get_application_model
+from oauth2_provider.settings import oauth2_settings
 
 # class BBApplicationCreationForm(forms.ModelForm):
 #     """
@@ -34,7 +37,9 @@ class BBApplicationAdmin(admin.ModelAdmin):
     """
 
     """
-    list_display = ('name','organization', 'owner',
+    # model = BBApplication
+    list_display = ('name', 'owner',
+                    'client_id', 'client_secret',
                     'client_type', 'authorization_grant_type' )
 
 
@@ -66,6 +71,7 @@ class DeveloperAdmin(admin.ModelAdmin):
 
     list_display = ('id', 'member', 'linked_user', 'role', 'organization' )
 
+
 class DeveloperCreationForm(forms.ModelForm):
     class Meta:
         model = Developer
@@ -82,8 +88,16 @@ class DeveloperUpdateForm(forms.ModelForm):
 
         fields = ('role', 'organization')
 
-# admin.site.register(Account)
+
+Application = get_application_model()
+
 
 admin.site.register(Organization, OrganizationAdmin)
-admin.site.register(BBApplication, BBApplicationAdmin)
+
+# BBApplication is already registered via oauth2_provider and settings.py
+# So we have to unregister and reregister to voerride the default admin view applied
+# in oauth2_provider (RawIDAdmin) which just defines 'user' for list view
+
+admin.site.unregister(Application)
+admin.site.register(Application, BBApplicationAdmin)
 admin.site.register(Developer, DeveloperAdmin)

@@ -176,6 +176,7 @@ THIRD_PARTY_APPS = (
     'debug_toolbar',
     # 'ldap3',
     'requests',
+    'fhir',
 
 )
 ###############
@@ -199,6 +200,7 @@ LOCAL_APPS = (
     # 'apps.getbb',
     # 'apps.eob_upload',
     # 'apps.bluebutton',
+    'fhir_data',
 )
 
 INSTALLED_APPS = DEFAULT_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -433,8 +435,27 @@ CORS_ORIGIN_ALLOW_ALL = True
 
 # End of CORSHEADERS Section
 
-# Change to OAuth2 Provider Application Model
+# Change to OAuth2_Provider Application Model
 # OAUTH2_PROVIDER_APPLICATION_MODEL='accounts.MyApplication'
+# Override settings in oauth2_provider.settings
+
+OAUTH2_PROVIDER_APPLICATION_MODEL='appmgmt.BBApplication'
+
+OAUTH2_PROVIDER = {
+    #'APPLICATION_MODEL': 'appmgmt.BBApplication',
+    'READ_SCOPE': 'read',
+    #'SCOPES': {"read": "Reading scope", "write": "Writing scope"},
+    'SCOPES': {"read": "Download my claims data and bluebutton profile information", "write_consent": "Write a record of this consent to download my data to this app"},
+}
+
+# Configure Django Rest Framework to use OAuth2_Provider Toolkit
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'oauth2_provider.ext.rest_framework.OAuth2Authentication',
+    )
+}
 
 # Add Bootstrap awareness to Crispy Forms
 # CRISPY_TEMPLATE_PACK = "bootstrap3"
@@ -578,6 +599,9 @@ else:
     MEDIA_ROOT = "/data/pyapps/media/"
     NPI_SOURCE_FOLDER = "npi/work/"
     NPI_SOURCE_FILE = "npidata_source.csv"
+
+# Playing with FHIR_DATA
+DJANGO_FHIR_DATA_IO = "fhir_data"
 
 
 if DEBUG_SETTINGS:

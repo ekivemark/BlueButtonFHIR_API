@@ -25,6 +25,7 @@ class ApplicationForm(forms.ModelForm):
         model = BBApplication
         fields = ['name', 'logo',
                   'about',
+                  'redirect_uris',
                   'privacy_url', 'support_url',
                   'client_type', 'authorization_grant_type']
 

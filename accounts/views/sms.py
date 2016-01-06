@@ -14,7 +14,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import (login as django_login,
                                  authenticate)
-from django.core.urlresolvers import reverse
+from django.core.urlresolvers import reverse, reverse_lazy
 from django.http import HttpResponseRedirect
 
 from django.shortcuts import (render_to_response)
@@ -162,6 +162,15 @@ def sms_login(request, *args, **kwargs):
         # print(request.POST)
         print(args)
 
+    next = ""
+
+    # Passing next parameter through to form
+    if request.GET:
+        if 'next' in request.GET:
+            next = request.GET['next']
+
+    if settings.DEBUG:
+        print("We got a next value of:", next)
     if request.method == 'POST':
         form = AuthenticationForm(request.POST)
         if request.POST['login'].lower() == 'resend code':
@@ -176,10 +185,12 @@ def sms_login(request, *args, **kwargs):
             access_key = form.cleaned_data[access_field].lower()
             password = form.cleaned_data['password'].lower()
             sms_code = form.cleaned_data['sms_code']
+
             if not validate_sms(access_key=access_key, smscode=sms_code):
                 messages.error(request, "Invalid Access Code.")
                 return render_to_response('accounts/login.html',
-                                          {'form': AuthenticationForm()},
+                                          {'form': AuthenticationForm(),
+                                           'next': next},
                                           RequestContext(request))
             # DONE: Trying to handle LDAP Errors. eg. Not available
             try:
@@ -191,7 +202,7 @@ def sms_login(request, *args, **kwargs):
                     "\nSASL Prep:", ldap3.LDAPSASLPrepError,
                     "\nSocketOpenError:",ldap3.LDAPSocketOpenError)
                 messages.error(request, "We had a problem reaching the Directory Server")
-                return render_to_response('accounts/login.html',
+                return render_to_response('accounts/login.html', {'next': next},
                                       RequestContext(request))
 
             #######
@@ -212,21 +223,26 @@ def sms_login(request, *args, **kwargs):
                         send_activity_message(request,
                                               user)
                     # Otherwise don't send a message
-
-                    return HttpResponseRedirect(reverse('home'))
+                    if next != "":
+                        return HttpResponseRedirect(next)
+                    else:
+                        return HttpResponseRedirect(reverse('home'))
                 else:
 
                     messages.error(request, "Your account is not active.")
-                    return HttpResponseRedirect(reverse('sms_code'))
+                    args = {'next': next}
+                    return HttpResponseRedirect(reverse('sms_code', args))
             else:
                 messages.error(request, "Invalid username or password.")
                 return render_to_response('accounts/login.html',
-                                          {'form': AuthenticationForm()},
+                                          {'form': AuthenticationForm(),
+                                           'next': next},
                                           RequestContext(request))
         else:
             print("Error with the POST form", )
             return render_to_response('accounts/login.html',
-                                      {'form': form},
+                                      {'form': form,
+                                       'next': next},
                                       RequestContext(request))
     else:
         if access_field in request.session:
@@ -235,11 +251,14 @@ def sms_login(request, *args, **kwargs):
             access_key = ""
         if settings.DEBUG:
             print("in sms_login. Setting up Form [", access_key, "]")
-        form = AuthenticationForm(initial={access_field: access_key, })
+
+        form = AuthenticationForm(initial={access_field: access_key})
     if settings.DEBUG:
         # print(form)
         print("Dropping to render_to_response in sms_login")
-    return render_to_response('accounts/login.html', {'form': form},
+
+    return render_to_response('accounts/login.html', {'form': form,
+                                                      'next': next},
                               RequestContext(request))
 
 
@@ -248,7 +267,6 @@ def sms_code(request):
     # Check session variables to find information carried forward.
     access_field = settings.USERNAME_FIELD
     # This is the key field name. Probably username or email
-
 
     if access_field in request.session:
         if request.session[access_field] != "":
@@ -260,6 +278,13 @@ def sms_code(request):
     status = "NONE"
     if settings.DEBUG:
         print("in accounts.views.sms.sms_code")
+
+    next = ""
+    # We need to carry the next parameter through
+    if request.GET:
+        next = request.GET['next']
+        if settings.DEBUG:
+            print("next parameter is:", next)
 
     if request.method == 'POST':
         if request.POST.__contains__(access_field):
@@ -292,7 +317,7 @@ def sms_code(request):
                     u = User.objects.get(**{access_field:form.cleaned_data[access_field].lower()})
                     if settings.DEBUG:
                         print("returned u:", u)
-                    # u=User.objects.get(username=form.cleaned_data['username'].lower())
+                    # u = User.objects.get(username=form.cleaned_data['username'].lower())
                     mfa_required = u.mfa
                     email = u.email
                     if settings.DEBUG:
@@ -310,8 +335,13 @@ def sms_code(request):
                                 messages.error(request,
                                                "There was a problem sending your pin code. Please try again.")
                                 status = "Send Error"
+                                args = {}
+                                if next != "":
+                                    args['next'] = next
+                                if settings.DEBUG:
+                                    print("redirecting to sms_code with args:", args)
                                 return HttpResponseRedirect(
-                                    reverse('accounts:sms_code'))
+                                    reverse('accounts:sms_code', args))
                         else:
                             messages.success(request,
                                              "Your account is active. Continue Login.")
@@ -355,7 +385,21 @@ def sms_code(request):
             form = AuthenticationForm(initial={access_field: access_key})
             args = {}
             args['form'] = form
-            return HttpResponseRedirect(reverse('accounts:login'), args)
+            if next == "":
+                args['next'] = ""
+            else:
+                args['next'] = next
+            if settings.DEBUG:
+                print("calling accounts:login with args:", args)
+
+            call_with = '/accounts/login?next=%s' % next
+            if settings.DEBUG:
+                print("about to call:", call_with)
+            return HttpResponseRedirect(call_with)
+            #return render_to_response('accounts/login.html',
+            #                          RequestContext(request, {'form': form,
+            #                                                   'next': next}))
+
         else:
             if settings.DEBUG:
                 print("invalid form")
@@ -364,7 +408,8 @@ def sms_code(request):
 
             return render_to_response('accounts/smscode.html',
                                       RequestContext(request,
-                                                     {'form': form}))
+                                                     {'form': form,
+                                                      'next': next}))
     else:
         if access_field in request.session:
             if request.session[access_field] != "":
@@ -375,7 +420,10 @@ def sms_code(request):
             access_key = ""
         if settings.DEBUG:
             print("setting up the POST in sms_code [", access_key, "]")
-        form = SMSCodeForm(initial={access_field: access_key, })
+            print("Passing next parameter to form:", next)
+        form = SMSCodeForm(initial={access_field: access_key})
+
+
         # need to make form.username a variable
         if settings.USERNAME_FIELD == "email":
             form.email = access_key
@@ -387,6 +435,6 @@ def sms_code(request):
 
     if settings.DEBUG:
         print("form:", form)
-        print("Dropping to render_to_response in sms_code")
-    return render_to_response('accounts/smscode.html', {'form': form},
+        print("Dropping to render_to_response in sms_code with next=", next)
+    return render_to_response('accounts/smscode.html', {'form': form, 'next': next},
                               RequestContext(request))

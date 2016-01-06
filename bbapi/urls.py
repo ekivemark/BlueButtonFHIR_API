@@ -25,7 +25,6 @@ from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = patterns('',
-                       # Examples:
                        # url(r'^$', 'bbonfhiruser.views.home', name='home'),
                        url(r'^$', 'apps.home.views.home_index',
                            name='home'),
@@ -36,28 +35,20 @@ urlpatterns = patterns('',
 
                        # url(r'^whatsnew/$', WhatIsNewListView.as_view(),
                        #     name='whatsnew'),
+# Accounts
                        url(r'^accounts/',
                            include('accounts.urls', namespace='accounts')),
+# AppMgmt
                        url(r'^appmanagement/',
                            include('appmgmt.urls', namespace='appmgmt')),
 
-                       # url(r'^upload/', include('apps.uploader.urls',
-                       #                          namespace='upload')),
-                       # url(r'^subaccount/',
-                       #     include('apps.subacc.urls', namespace='subaccount')),
-                       # url(r'^security/',
-                       #     include('apps.secretqa.urls', namespace='security')),
                        # API Entry point
                        # v1api is referenced inside apps.api.urls as v1
+# api
                        url(r'^api/',
                            include('apps.api.urls', namespace='api')),
-                       # url(r'^npi_up/', include('apps.npi_upload.urls',
-                       #                          namespace='npi_upload')),
-                       # url(r'^getbb/', include('apps.getbb.urls',
-                       #                         namespace='getbb')),
-                       # url(r'^eob_upload/', include('apps.eob_upload.urls',
-                       #                         namespace='eob_upload')),
 
+# registration
                        # Registration Options:
                        # 1. Developer
                        # 2. Beneficiary - Not Authenticated
@@ -68,17 +59,14 @@ urlpatterns = patterns('',
                        url(r'^registration/registerdeveloper/$',
                            RegistrationView.as_view(form_class=RegistrationFormDeveloperTOSAndEmail),
                            name='register_developer'),
-                       # url(r'^logout$',
-                       #     'accounts.views.logout',
-                       #     name='logout'),
                        url(r'^registration/', include(
                            'registration.backends.default.urls', )),
+# password
                        url(r'^password/reset/$', auth_views.password_reset,
                            {'post_reset_redirect': reverse_lazy(
                                'password_reset_done')},
                            name='password_reset'),
-                       url(
-                           r'^password/reset/confirm/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>.+)/$',
+                       url(r'^password/reset/confirm/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>.+)/$',
                            auth_views.password_reset_confirm,
                            name='password_reset_confirm'),
                        url(r'^password/reset/complete/$',
@@ -89,14 +77,19 @@ urlpatterns = patterns('',
                        url(r'^password/reset/done/$',
                            auth_views.password_reset_done,
                            name='password_reset_done'),
+# fhir
+                       url(r'^fhir/', include('fhir.urls')),
+# OAuth2_provider
                        url(r'^o/', include('oauth2_provider.urls',
                                            namespace='oauth2_provider')),
 
                        # OAuth2 Provider Library
                        url(r'^o/', include('oauth2_provider.urls',
                                            namespace='oauth2_provider')),
+# Templates
                        url(r'^support/$', TemplateView.as_view(template_name='support.html')),
 
+# Admin
                        url(r'^admin/', include(admin.site.urls)),
                        # Uncomment the admin/doc line below to enable admin
                        # documentation:

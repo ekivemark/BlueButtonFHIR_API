@@ -1,11 +1,28 @@
-{% extends "oauth2_provider/base.html" %}
-
+{% extends "base_minimal.html" %}
 {% load i18n %}
+{% load staticfiles %}
 {% block content %}
     <div class="block-center">
         {% if not error %}
+
+                <h3 class="block-center-heading">
+                    {% if application.logo %}<img src="{{ MEDIA_URL }}{{ application.logo }}"
+                     width="50" height="50">{% endif %}
+                    {% trans "Authorize" %} {{ application.name }}?</h3>
+            <div class="well col-lg-12">
+                <p>{{ application.about }}</p>
+                    <div class="well col-lg-6">
+                        {% if application.privacy_url %}<a href="{{ application.support_url }}" target="_blank">
+                        {{ application.name }} support page</a>
+                        {% endif %}
+                    </div>
+                    <div class="well col-lg-6">
+                        {% if application.privacy_url %}<a href="{{ application.privacy_url }}" target="_blank">
+                        {{ application.name }} privacy page</a>
+                        {% endif %}
+                    </div>
+            </div>
             <form id="authorizationForm" method="post">
-                <h3 class="block-center-heading">{% trans "Authorize" %} {{ application.name }}?</h3>
                 {% csrf_token %}
 
                 {% for field in form %}
@@ -14,7 +31,8 @@
                     {% endif %}
                 {% endfor %}
 
-                <p>{% trans "Application requires following permissions" %}</p>
+                <p>{{ application.name }}
+                    requires that you, {{ request.user }}, give the following permissions for the use of your Blue Button data:</p>
                 <ul>
                     {% for scope in scopes_descriptions %}
                         <li>{{ scope }}</li>

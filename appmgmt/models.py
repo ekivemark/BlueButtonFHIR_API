@@ -69,6 +69,9 @@ class BBApplication(AbstractApplication):
             return terms
         return None
 
+    def admin_list():
+        return ('user', 'client_id', 'client_secret',)
+
 
 class Organization(models.Model):
     # We need an Organization model to coordinate applications for a user

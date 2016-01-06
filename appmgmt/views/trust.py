@@ -101,6 +101,8 @@ def BaseTrust(request, requester_email,
             # We are missing the http(s)://[host] in api_call['endpoint']
             # so add as a prefix
             api_call['endpoint'] = settings.URL_PRE + request.get_host() + api_call['endpoint']
+            if settings.DEBUG:
+                print("endpoint set to:", api_call['endpoint'])
 
     Base_Trust = {
                  "requested_by": requester_email,
