@@ -9,6 +9,7 @@ Created: 1/6/16 3:44 PM
 
 
 """
+from django.conf import settings
 from django.http import HttpResponse
 
 __author__ = 'Mark Scrimshire:@ekivemark'
@@ -23,4 +24,13 @@ def hello(request, *args, **kwargs):
     :return:
     """
 
-    return HttpResponse('Hello, from django-fhir ! %s' % kwargs)
+    if request.method == "POST":
+        get_params = dict(request.POST.items())
+    elif request.method == 'GET':
+        get_params = dict(request.GET.items())
+        if settings.DEBUG:
+            print("Arguments:", get_params)
+    else:
+        get_params = {}
+
+    return HttpResponse('Hello, from django-fhir ! [kwargs:%s][Args:%s]' % (kwargs, get_params))
