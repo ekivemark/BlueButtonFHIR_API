@@ -123,6 +123,7 @@ def read(request, resource_type, id, *arg, **kwargs):
         return error_status(r, r.status_code)
 
     text_out = ""
+    print("r:", r.text)
 
     if '_format=xml' in pass_params:
         text_out= minidom.parseString(r.text).toprettyxml()

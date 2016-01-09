@@ -106,10 +106,18 @@ def error_status(r, status_code=404, reason="undefined error occured"):
     :param status_code:
     :return:
     """
+    error_detail = r.text
+    if settings.DEBUG:
+        print("r content:", r.text)
+        if r.text[0] == "<":
+            error_detail = "xml:"
+            error_detail += r.text
+        else:
+            error_detail = r.json()
 
     response= OrderedDict()
 
-    response["errors"] = [reason,]
+    response["errors"] = [reason, error_detail]
     response["code"] = status_code
 
     return HttpResponse(json.dumps(response, indent = 4),
