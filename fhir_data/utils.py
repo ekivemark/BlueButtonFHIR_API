@@ -108,7 +108,6 @@ def error_status(r, status_code=404, reason="undefined error occured"):
     """
     error_detail = r.text
     if settings.DEBUG:
-        print("r content:", r.text)
         if r.text[0] == "<":
             error_detail = "xml:"
             error_detail += r.text
