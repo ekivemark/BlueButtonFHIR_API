@@ -200,7 +200,7 @@ LOCAL_APPS = (
     # 'apps.getbb',
     # 'apps.eob_upload',
     # 'apps.bluebutton',
-    'fhir_data',
+    #'fhir_io_hapi',
 )
 
 INSTALLED_APPS = DEFAULT_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -601,7 +601,12 @@ else:
     NPI_SOURCE_FILE = "npidata_source.csv"
 
 # Playing with FHIR_DATA
-DJANGO_FHIR_DATA_IO = "fhir_data"
+# default is in fhir.settings
+DJANGO_FHIR_CONFIG = {
+    # Overwrite default pluggable database module
+    "DF_APPS": {'fhir_io_hapi',
+                }
+}
 
 
 if DEBUG_SETTINGS:

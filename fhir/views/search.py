@@ -3,15 +3,17 @@ from ..models import SupportedResourceType
 from collections import OrderedDict
 from django.http import HttpResponse
 import json
-from ..utils import kickout_404, kickout_400
+from ..utils import kickout_400
+from .utils import check_access_interaction_and_resource_type
+from ..settings import FHIR_BACKEND
 
 def search(request, resource_type):
-    try:
-        rt = SupportedResourceType.objects.get(resource_name=resource_type)    
-    except SupportedResourceType.DoesNotExist:
-        msg = "%s is not a supported resource type on this FHIR server." % (resource_type)
-        return kickout_404(msg)
-
+    interaction_type = 'search'
+    #Check if this interaction type and resource type combo is allowed.
+    deny = check_access_interaction_and_resource_type(resource_type, interaction_type)
+    if deny:
+        #If not allowed, return a 4xx error.
+        return deny
 
     """Search Interaction"""
     # Example client use in curl:
@@ -19,7 +21,11 @@ def search(request, resource_type):
     if request.method != 'GET':
         msg = "HTTP method %s not supported at this URL." % (request.method)
         return kickout_400(msg)
-    
+
+    return FHIR_BACKEND.find(request, resource_type)
+
+
+    # Move to fhir_io_mongo (Plugable back-end)
     od = OrderedDict()
     od['request_method']= request.method
     od['interaction_type'] = "search"

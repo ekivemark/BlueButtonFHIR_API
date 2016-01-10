@@ -1,36 +1,45 @@
+import sys
 from django.shortcuts import render
 from ..models import SupportedResourceType
 from collections import OrderedDict
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 import json, uuid
-from jsonschema import validate
+from jsonschema import validate, ValidationError
 import datetime
-from ..utils import kickout_404, kickout_400, kickout_500
+from ..utils import (kickout_404, kickout_403, kickout_400, kickout_500)
 from .hello import hello
 from .search import search
 
 @csrf_exempt
 def create(request, resource_type):
     """Create FHIR Interaction"""
-    
     # Example client use in curl:
     # curl -H "Content-Type: application/json" --data @test.json http://127.0.0.1:8000/fhir/Practitioner
-    
+    interaction_type = 'create'
     #re-route to hello if no resource type is given:
     if not resource_type:
         return hello(request)
+    
     try:
-        rt = SupportedResourceType.objects.get(resource_name=resource_type)    
+        rt = SupportedResourceType.objects.get(resource_name=resource_type)
+        if interaction_type not in rt.get_supported_interaction_types()  and request.method == "GET":
+            #GET means that this is a search so re-route
+            return search(request, resource_type)
+
+        elif interaction_type not in rt.get_supported_interaction_types() :
+            msg = "The interaction %s is not permitted on %s FHIR resources on this FHIR sever." % (interaction_type,
+                                                                           resource_type)
+            return kickout_403(msg)
+
     except SupportedResourceType.DoesNotExist:
         msg = "%s is not a supported resource type on this FHIR server." % (resource_type)
         return kickout_404(msg)
-    
-    #This is a search so re-route 
+
+    # Catch all for GETs to re-direct to search if CREATE permission is valid
     if request.method == "GET":
         return search(request, resource_type)
-    
-    
+
     if request.method == 'POST':
                 #Check if request body is JSON ------------------------
         try:
