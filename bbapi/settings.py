@@ -177,7 +177,7 @@ THIRD_PARTY_APPS = (
     # 'ldap3',
     'requests',
     'fhir',
-
+    'fhir_io_hapi',
 )
 ###############
 # IMPORTANT: If running on Apache you need to
@@ -604,8 +604,7 @@ else:
 # default is in fhir.settings
 DJANGO_FHIR_CONFIG = {
     # Overwrite default pluggable database module
-    "DF_APPS": {'fhir_io_hapi',
-                }
+    "DF_APPS": ('fhir_io_hapi',),
 }
 
 

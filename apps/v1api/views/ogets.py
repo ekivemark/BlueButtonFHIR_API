@@ -39,12 +39,12 @@ class Hello(View):
         return HttpResponse('Hello, OAuth2! %s' % kwargs)
 
 
-#class Patients(ProtectedResourceView):
-class Patients(ListView):
+class Patients(ProtectedResourceView):
+#class Patients(ListView):
 
     scopes = ['read', 'write']
 
-    # @method_decorator(login_required)
+    @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
 
         if settings.DEBUG:
