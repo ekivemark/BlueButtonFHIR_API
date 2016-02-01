@@ -35,7 +35,7 @@
                     requires that you, {{ request.user }}, give the following permissions for the use of your Blue Button data:</p>
                 <ul>
                     {% for scope in scopes_descriptions %}
-                        <li>{{ scope }}</li>
+                        <div style="font-size:1.3em"><i class="fa fa-check-square-o"></i> {{ scope }}</div>
                     {% endfor %}
                 </ul>
 

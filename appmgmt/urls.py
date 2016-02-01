@@ -112,4 +112,7 @@ urlpatterns = patterns('',
                        url(r'^trust_test/$',
                            'appmgmt.views.trust.TrustTest',
                            name='trusttest'),
+                       url(r'^poet_callback/$',
+                           'appmgmt.views.poet.CallBack',
+                           name='post_callback'),
                        )

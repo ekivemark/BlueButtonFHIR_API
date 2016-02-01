@@ -445,7 +445,7 @@ OAUTH2_PROVIDER = {
     #'APPLICATION_MODEL': 'appmgmt.BBApplication',
     'READ_SCOPE': 'read',
     #'SCOPES': {"read": "Reading scope", "write": "Writing scope"},
-    'SCOPES': {"read": "Download my claims data and bluebutton profile information", "write_consent": "Write a record of this consent to download my data to this app"},
+    'SCOPES': {"read": "Download my claims data and bluebutton profile information", "write_consent": "Record my consent to send data to this app"},
 }
 
 # Configure Django Rest Framework to use OAuth2_Provider Toolkit
@@ -457,13 +457,9 @@ REST_FRAMEWORK = {
     )
 }
 
-# Add Bootstrap awareness to Crispy Forms
-# CRISPY_TEMPLATE_PACK = "bootstrap3"
-# CRISPY_FAIL_SILENTLY = not DEBUG
-
 # Django Debug Toolbar
 INTERNAL_IPS = '127.0.0.1'
-# SHOW_TOOLBAR_CALLBACK = 'bbonfhiruser.debug'
+# SHOW_TOOLBAR_CALLBACK = 'bbapi.debug'
 SHOW_TOOLBAR_CALLBACK = 'debug_toolbar.middleware.show_toolbar'
 
 if DEBUG_SETTINGS:

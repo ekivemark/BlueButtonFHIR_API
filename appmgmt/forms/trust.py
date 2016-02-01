@@ -12,6 +12,7 @@ from django import forms
 
 TRUST_BUNDLE_CHOICE = (('', 'None'),
                        ('TEST','test'),
+                       ('POET', "POET Reference Implementation"),
                        ('NATE', 'National Association for Trusted Exchange'),
                        ('DIRECTTRUST', 'DirectTrust'))
 

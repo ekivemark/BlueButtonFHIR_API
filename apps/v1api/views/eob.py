@@ -23,6 +23,7 @@ from django.views.generic import ListView
 
 from django.conf import settings
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse_lazy
 from django.http import (HttpResponse,
                          HttpResponseRedirect,
@@ -112,14 +113,15 @@ class EOB(ListView):
                                                          text_out))
 
 
-#@protected_resource(scopes=['read'])
+@csrf_exempt
+@login_required
+@protected_resource(scopes=['read write_consent'])
 def ExplanationOfBenefit(request, *args, **kwargs):
     """
     Function-based interface to ExplanationOfBenefit
     :param request:
     :return:
     """
-
 
     if settings.DEBUG:
         print("In apps.v1api.views.eob.ExplanationOfBenefit Function")

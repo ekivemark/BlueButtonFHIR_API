@@ -88,7 +88,7 @@ class Organization(models.Model):
                             unique=True)
     domain = models.URLField(unique=True)
     trusted = models.BooleanField(default=False)
-    trusted_until = models.DateTimeField(blank=True, null=True)
+    trusted_since = models.DateTimeField(blank=True, null=True)
 
     def __str__(self):
         return self.name

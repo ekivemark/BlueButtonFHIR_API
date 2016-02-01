@@ -6,8 +6,14 @@ Created: 10/28/15 5:20pm
 """
 
 import datetime
+import json
+import oauth2 as oauth
 import random
 import requests
+import time
+import urllib.parse as urlparse
+
+from collections import OrderedDict
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
@@ -24,27 +30,19 @@ from django.http import (HttpResponse,
 from django.shortcuts import (render, render_to_response)
 from django.template import RequestContext
 from django.utils.timezone import get_current_timezone
+from django.utils.dateparse import parse_datetime
 
 from appmgmt.forms.trust import TrustForm
 from appmgmt.models import Organization
 
+from .poet import get_authorization
+from ..utils import get_bundle_info
+
+from ..static import REDIRECT_URI, POET_BUNDLE_INFO
 # We need an app management set of transactions here
 
 # Change test line to point to localhost:port
-BUNDLE_INFO = {
-    'TEST': {'bundle_ref': "T001",
-             'endpoint': "/appmanagement/trust_test/",
-             'client_id': "1234567890",
-             'token': 'x12345678'},
-    'NATE': {'bundle_ref': "N001",
-             'endpoint': "https://api.nate.org/trust_test/",
-             'client_id': "1234567890",
-             'token': 'x12345678'},
-    'DIRECTTRUST': {'bundle_ref': "DT001",
-             'endpoint': "https://api.directtrust.org/trust_test/",
-             'client_id': "9876543210",
-             'token': 'x87654321'}
-}
+
 
 @login_required()
 def BaseTrust(request, requester_email,
@@ -70,39 +68,20 @@ def BaseTrust(request, requester_email,
 
     valid = False
 
-    # Get dictionary from BUNDLE_INFO dict using bundle as key
+    # Get dictionary from POET_BUNDLE_INFO dict using bundle as key
     # lookup bundle in dictionary
     # get access parameters for call to api endpoint
 
     trust_info = {}
-    if not bundle.upper() in BUNDLE_INFO:
+    if not bundle.upper() in POET_BUNDLE_INFO:
         messages.error(request, "Invalid information provided")
         valid = False
         return {'trust_info': trust_info, 'valid': valid}
     else:
-        api_call = BUNDLE_INFO[bundle.upper()]
+        api_call = POET_BUNDLE_INFO[bundle.upper()]
         bundle_id = api_call['bundle_ref']
         if settings.DEBUG:
             print("We got the bundle", api_call)
-    # We have a valid bundle dictionary
-    # make api call with dictionary
-
-    if bundle.upper() == "TEST":
-        if settings.DEBUG:
-            print("URL_PRE:", settings.URL_PRE,
-                  " get_host():", request.get_host(),
-                  "updated ", bundle.upper(),
-                  " endpoint to ", api_call['endpoint'])
-
-        if settings.URL_PRE + request.get_host() in api_call['endpoint']:
-            # We have a full url in api_call['endpoint']
-            pass
-        else:
-            # We are missing the http(s)://[host] in api_call['endpoint']
-            # so add as a prefix
-            api_call['endpoint'] = settings.URL_PRE + request.get_host() + api_call['endpoint']
-            if settings.DEBUG:
-                print("endpoint set to:", api_call['endpoint'])
 
     Base_Trust = {
                  "requested_by": requester_email,
@@ -113,28 +92,49 @@ def BaseTrust(request, requester_email,
     }
 
     if settings.DEBUG:
+        print("Registering with POET API", api_call['token_url'])
+
+    my_csrftoken = request.META.get('CSRF_COOKIE', None)
+
+    Base_Trust['csrftoken'] = my_csrftoken
+
+    headers = {"Authorization": 'Bearer ' + api_call['token'],
+               "scope": 'write',
+               "Content-Type": 'application/json',
+               "X-CSRFToken": my_csrftoken,
+               "Referer": api_call['token_url']
+               }
+
+    # registration = OAuthRegister(request, bundle)
+
+    if settings.DEBUG:
         print("calling", api_call['endpoint'], "with", Base_Trust)
     # Make POST call to endpoint with BaseTrust dictionary as payload
 
     print("Running on:",request.get_host())
 
     try:
-        r = requests.get(api_call['endpoint'], data=Base_Trust)
+        r = requests.post(api_call['endpoint'], headers=headers, data=json.dumps(Base_Trust))
         result = r.status_code
         # trust_info = r.json()
 
         if settings.DEBUG:
             print("Result from Trust API Call:", result)
-            print("Returned json:", trust_info)
+            print("Returned json:", r.text)
         # result = 200
 
         if result == 200:
             valid = True
-
+            print("text:", r.text)
             trust_info = r.json()
 
             messages.info(request, "Trust Bundle Validation succeeded")
-            messages.info(request, "Trust valid until %s" % trust_info['expires'])
+            messages.info(request, "Trust valid since %s" % trust_info['joined_bundle'])
+
+        if result == 403:
+            valid = False
+            messages.error(request, "403: Not Authorized")
+            trust_info = {}
 
         if result == 404:
             valid = False
@@ -150,8 +150,10 @@ def BaseTrust(request, requester_email,
         return {'valid': valid, 'trust_info': trust_info}
 
     return HttpResponseRedirect(reverse('home'),
-                                        RequestContext(request, valid,
-                                                       trust_info))
+                                RequestContext(request,
+                                               valid,
+                                               trust_info))
+
 
 @login_required()
 def TrustData(request):
@@ -185,6 +187,8 @@ def TrustData(request):
         form = TrustForm(request.POST)
         if form.is_valid():
 
+            if settings.DEBUG:
+                print("Valid Trust Form. Calling BaseTrust")
             # trust_bundle = forms.ChoiceField(choices=TRUST_BUNDLE_CHOICE)
             # trust_domain = forms.CharField(max_length=100,label="Trusted Application Domain")
             # owner_email = forms.EmailField(label="Trusted Application Owner Email")
@@ -205,9 +209,10 @@ def TrustData(request):
                 trust_info = whitelist['trust_info']
                 org.trusted = whitelist['valid']
                 tz = get_current_timezone()
-                until_dt = datetime.strptime(trust_info['expires'],
-                                             '%Y%m%d.%H%M').replace(tzinfo=tz)
-                org.trusted_until = until_dt
+                since_dt = parse_datetime(trust_info['validation_timestamp'])
+                # since_dt = datetime.strptime(trust_info['validation_timestamp'],
+                #                              '%Y-%m-%dT%H:%M:%S.%f%z').replace(tzinfo=tz)
+                org.trusted_since = since_dt
                 org.save()
 
             if settings.DEBUG:
@@ -273,3 +278,79 @@ def TrustTest(data):
     response = JsonResponse(result)
     response.status_code = ret_val[0]
     return response
+
+
+def OAuthRegister(request, bundle=""):
+    """
+    Get the bundle and register the endpoint using the client_id
+
+    :param bundle:
+    :return:
+    """
+
+    od = OrderedDict()
+    if bundle == "":
+        # No bundle so return
+        return od
+
+    bundle_data = {}
+    bundle_data = get_bundle_info(bundle)
+    if settings.DEBUG:
+        print("type for bundle_data", type(bundle_data))
+
+    if bundle_data == {}:
+        # Empty Dict so return
+        return od
+
+    # We have a BUNDLE Let's register the service
+    #     'POET': {'bundle_ref': "POET001",
+    #              'endpoint': "http://localhost:8002/api/entitycheck/",
+    #              'token_url': "http://localhost:8002/o/token/",
+    #              'client_id': "BBonFHIRclientid",
+    #              'client_secret': "BBonFHIRclientsecret",
+    #              'token': 'x12345678'},
+
+    result = get_authorization(request, bundle)
+
+    if settings.DEBUG:
+        print("Result from get_authorization:", result)
+
+    consumer = oauth.Consumer(key=bundle_data['client_id'],
+                              secret=bundle_data['client_secret'])
+
+    token = oauth.Token(key=bundle_data['token'],secret="")
+
+    params = {
+        'oauth_version': "2.0",
+        'oauh_nonce': oauth.generate_nonce(),
+        'oauth_timestamp': str(int(time.time())),
+        'user': 'cms',
+    }
+
+    url = bundle_data['endpoint']
+
+    params['oauth_token'] = token.key
+    params['oauth_consumer_key'] = consumer.key
+
+    req = oauth.Request(method="POST", url=url, parameters= params)
+    signature_method = oauth.SignatureMethod_HMAC_SHA1()
+    req.sign_request(signature_method, consumer, token)
+
+
+    # request_token_url = bundle_data['token_url']
+    #
+    # client = oauth.Client(consumer, token)
+
+    # resp, content = client.request(access_token_url, "POST")
+    # print("Response:", resp)
+    # print('Content:', content)
+
+    print("req:", req)
+
+    od = OrderedDict()
+    # od['resp'] = resp
+    # od['content'] = content
+
+    return req
+
+

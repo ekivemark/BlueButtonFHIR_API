@@ -55,7 +55,7 @@ def get_patient(request, *args, **kwargs):
     if settings.DEBUG:
         print("Request User Beneficiary(Patient):", request.user)
     try:
-        xwalk = Crosswalk.objects.get(user=request.user)
+        xwalk = Crosswalk.objects.get(user=request.user.id)
     except Crosswalk.DoesNotExist:
         messages.error(request, "Unable to find Patient ID")
         return HttpResponseRedirect(reverse('api:v1:home'))
@@ -127,7 +127,9 @@ def get_patient(request, *args, **kwargs):
     # raw format
 
     get_fmt = get_format(request.GET)
-    pass_to = pass_to + "?" + build_params(request.GET, skip_parm)
+    print("pass_to:", pass_to)
+    pass_to = pass_to + build_params(request.GET, skip_parm)
+    print("pass_to added to:", pass_to)
 
     mask_to = settings.DOMAIN
 
