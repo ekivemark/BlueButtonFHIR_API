@@ -6,7 +6,7 @@ Created: 11/5/15 10:50 PM
 
 
 """
-from PIL import Image
+# from PIL import Image
 from braces.views import MessageMixin
 
 from django.conf import settings
