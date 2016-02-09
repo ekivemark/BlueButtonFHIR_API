@@ -6,6 +6,9 @@ import json
 from django.views.decorators.csrf import csrf_exempt
 from ..utils import (kickout_403, kickout_404)
 from .utils import check_access_interaction_and_resource_type
+
+from ..settings import FHIR_BACKEND
+
 @csrf_exempt
 def delete(request, resource_type, id):
     """Delete FHIR Interaction"""
@@ -17,6 +20,10 @@ def delete(request, resource_type, id):
     if deny:
         #If not allowed, return a 4xx error.
         return deny
+
+    #testing direct response
+    return FHIR_BACKEND.delete(request, resource_type, id)
+
     
     od = OrderedDict()
     od['request_method']= request.method
