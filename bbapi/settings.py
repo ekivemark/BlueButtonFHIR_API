@@ -283,6 +283,8 @@ else: #  DB_PLATFORM == "sqlite3":
         }
     }
 
+if DEBUG_SETTINGS:
+    print("Database Config:", DATABASES)
 # Plan on sqlite3 for development environment
 # Use Postgresql for Production
 
