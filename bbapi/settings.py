@@ -173,7 +173,7 @@ THIRD_PARTY_APPS = (
     'oauth2_provider',
     'corsheaders',
     'django_python3_ldap',
-    'jsonschema',
+    # 'jsonschema',
     # 'PIL',
     'debug_toolbar',
     # 'ldap3',
