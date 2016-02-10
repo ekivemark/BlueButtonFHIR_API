@@ -284,7 +284,12 @@ else: #  DB_PLATFORM == "sqlite3":
     }
 
 if DEBUG_SETTINGS:
-    print("Database Config:", DATABASES)
+    print("Database Config -",
+          " Engine:", DATABASES['default']['ENGINE'],
+          " Name:", DATABASES['default']['NAME'],
+          " User:", DATABASES['default']['USER'],
+          " Host:", DATABASES['default']['HOST'],
+          " Port:",DATABASES['default']['PORT'])
 # Plan on sqlite3 for development environment
 # Use Postgresql for Production
 
