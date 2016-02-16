@@ -31,6 +31,7 @@ class SupportedResourceType(models.Model):
     def __str__(self):
         return self.resource_name
 
+
     def get_supported_interaction_types(self):
         sit = []
         if self.get:
@@ -74,6 +75,7 @@ class SupportedResourceType(models.Model):
         #     return not self.fhir_history
         # else:
         #     return True
+
 
     def access_permitted(self, access_to_check):
         return True

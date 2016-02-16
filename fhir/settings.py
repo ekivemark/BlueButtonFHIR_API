@@ -13,6 +13,7 @@ Create settings that can be overriden with an alternative package
 """
 import os
 from django.conf import settings
+
 from importlib import import_module
 
 __author__ = 'Mark Scrimshire:@ekivemark'

@@ -14,6 +14,7 @@ from .views.oauth import oauth_create, oauth_update
 urlpatterns = patterns('',    
     
     #Hello
+
     url(r'hello', hello,
         name='fhir_hello'),
 
@@ -59,11 +60,5 @@ urlpatterns = patterns('',
     #Search  GET ------------------------------
     url(r'(?P<resource_type>[^/]+)?', search,
         name='fhir_search'),
-    
 
-
-
-
-
-    
     )
