@@ -204,6 +204,7 @@ LOCAL_APPS = (
     # 'apps.eob_upload',
     # 'apps.bluebutton',
     #'fhir_io_hapi',
+    'bbapi',
 )
 
 INSTALLED_APPS = DEFAULT_APPS + THIRD_PARTY_APPS + LOCAL_APPS
