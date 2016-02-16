@@ -259,9 +259,9 @@ if DB_PLATFORM == "postgresql_psycopg2":
         'default' : {
             'ENGINE' : 'django.db.backends.postgresql_psycopg2',
             # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-            'NAME' : 'bbonfhiruser',  # Or path to database file if using sqlite3.
-            'USER' : 'bluebadmin',  # Not used with sqlite3.
-           'PASSWORD' : 'whisky-Washington9876',  # Not used with sqlite3.
+            'NAME' : 'bbonfhirapi',  # Or path to database file if using sqlite3.
+            'USER' : 'bbonfhirapiuser',  # Not used with sqlite3.
+           'PASSWORD' : 'brandy-Baltimore9876',  # Not used with sqlite3.
             'HOST' : '172.31.13.249', # Private IP
             # 'HOST' : '52.4.201.182', # Public IP
             # Set to empty string for localhost. Not used with sqlite3.
