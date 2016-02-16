@@ -160,6 +160,7 @@ DEFAULT_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'mod_wsgi.server',
 )
 
 THIRD_PARTY_APPS = (
@@ -260,7 +261,8 @@ if DB_PLATFORM == "postgresql_psycopg2":
             'NAME' : 'bbonfhiruser',  # Or path to database file if using sqlite3.
             'USER' : 'bluebadmin',  # Not used with sqlite3.
            'PASSWORD' : 'whisky-Washington9876',  # Not used with sqlite3.
-            'HOST' : '172.31.13.249',
+            # 'HOST' : '172.31.13.249',
+            'HOST' : '52.4.201.182',
             # Set to empty string for localhost. Not used with sqlite3.
             'PORT' : '5432',
             # Set to empty string for default. Not used with sqlite3.

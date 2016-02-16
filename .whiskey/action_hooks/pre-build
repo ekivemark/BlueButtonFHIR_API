@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+set -eo pipefail
+
+ls -la /app
+
+# Pre-build section for docker
+# https://github.com/GrahamDumpleton/mod_wsgi-docker/blob/master/3.4/build.sh
+# make sure the package repository is up to date
+apt-get update
+apt-get install -y apt-utils
+
+# install python3 and pip for python3
+apt-get install -y python3-pip
+apt-get install -y libpq-dev
+
+# need dev packages to install lxml later.
+apt-get install -y python3-setuptools
+apt-get install -y python3-lxml
+apt-get install -y libxml2-dev libxslt1-dev python3-dev
+
+# need imaging for Pillow/PIL
+apt-get install -y python-imaging
+apt-get install -y libjpeg62-turbo-dev libfreetype6 libfreetype6-dev
