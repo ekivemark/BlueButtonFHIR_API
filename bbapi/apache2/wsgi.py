@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/1.8/howto/deployment/wsgi/
 
 import os
 
-print("BBAPI Hello World!")
+print("BBAPI Hello World from bbapi.apache2.wsgi.py!")
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "bbapi.settings")
 os.environ['DJANGO_SETTINGS_MODULE'] = 'bbapi.settings'
