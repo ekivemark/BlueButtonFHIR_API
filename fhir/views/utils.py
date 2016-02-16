@@ -2,7 +2,6 @@ from ..models import SupportedResourceType
 from ..utils import (kickout_404, kickout_403)
 
 
-
 def check_access_interaction_and_resource_type(resource_type, interaction_type):
     try:
         rt = SupportedResourceType.objects.get(resource_name=resource_type)

@@ -2,8 +2,11 @@ from django.shortcuts import render
 from ..models import SupportedResourceType
 from collections import OrderedDict
 from django.http import HttpResponse
+
 import json
+
 from django.views.decorators.csrf import csrf_exempt
+
 from ..utils import (kickout_403, kickout_404)
 from .utils import check_access_interaction_and_resource_type
 

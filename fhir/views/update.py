@@ -1,11 +1,18 @@
 from django.shortcuts import render
+
 from collections import OrderedDict
+
 from django.http import HttpResponse
+
 from ..utils import (kickout_403, kickout_404)
+
 import json
+
 from django.views.decorators.csrf import csrf_exempt
+
 from ..models import SupportedResourceType
 from .utils import check_access_interaction_and_resource_type
+
 
 @csrf_exempt
 def update(request, resource_type, id):

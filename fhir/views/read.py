@@ -1,14 +1,22 @@
 from django.shortcuts import render
+
 from ..models import SupportedResourceType
+
 from django.shortcuts import render
+
 from collections import OrderedDict
+
 from ..utils import (kickout_404, kickout_403)
+
 from django.http import HttpResponse
+
 import json
+
 from ..settings import FHIR_BACKEND
 from .utils import check_access_interaction_and_resource_type
 
 from django.conf import settings
+
 
 def read(request, resource_type, id):
     """Read FHIR Interaction"""

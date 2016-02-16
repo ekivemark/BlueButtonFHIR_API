@@ -1,10 +1,11 @@
 from django.shortcuts import render
+
 from ..utils import kickout_404, kickout_400, kickout_500
 from .update import update
 from .delete import delete
 from .read import read
-from django.views.decorators.csrf import csrf_exempt
 
+from django.views.decorators.csrf import csrf_exempt
 
 
 @csrf_exempt

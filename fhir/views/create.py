@@ -1,12 +1,17 @@
 import sys
+
 from django.shortcuts import render
 from ..models import SupportedResourceType
 from collections import OrderedDict
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
+
 import json, uuid
+
 from jsonschema import validate, ValidationError
+
 import datetime
+
 from ..utils import (kickout_404, kickout_403, kickout_400, kickout_500)
 from .hello import hello
 from .search import search
