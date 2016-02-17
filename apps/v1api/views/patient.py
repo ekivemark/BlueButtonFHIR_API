@@ -345,7 +345,7 @@ def get_eob(request, *args, **kwargs):
     pass_to = pass_to + "Patient/"
     pass_to = pass_to + xwalk.fhir_url_id.strip()
 
-    pass_to = pass_to + "&" + build_params(request.GET, skip_parm)
+    pass_to = pass_to + "&" + build_params(request.GET, skip_parm)[1:]
     if settings.DEBUG:
         print("Pass_to from build_params:", pass_to)
 
@@ -393,9 +393,13 @@ def get_eob(request, *args, **kwargs):
             if 'text' in content:
                 context['text'] = content['resource']['text']['div']
             else:
-                if settings.DEBUG:
-                    print("Resource:", convert['entry'])
-                context['text'] = convert['entry']
+                if 'text' in convert:
+                    if settings.DEBUG:
+                        print("Resource:", convert['entry'])
+                    context['text'] = convert['entry']
+                else:
+                    if settings.DEBUG:
+                        print("No resource found in Convert:", convert)
 
             if get_fmt == "json":
                 return JsonResponse(context['result'], )

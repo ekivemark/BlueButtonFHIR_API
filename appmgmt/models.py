@@ -8,7 +8,7 @@ from django.conf import settings
 from django.db import models
 from oauth2_provider.models import AbstractApplication
 from accounts.choices import DEVELOPER_ROLE_CHOICES
-
+from .choices import APPLICATION_TYPE_CHOICES
 
 # Modify settings.py wih OAUTH2_PROVIDER_APPLICATION_MODEL=
 
@@ -53,8 +53,39 @@ class BBApplication(AbstractApplication):
                                       blank=True,
                                       null=True,
                                       default=None)
+    app_type = models.CharField(max_length=8,
+                                choices=APPLICATION_TYPE_CHOICES,
+                                verbose_name="Application Type",
+                                blank=True,
+                                null=True)
     privacy_url = models.URLField(blank=True)
     support_url = models.URLField(blank=True)
+
+    fhir_reference = models.URLField(blank=True,
+                                     null=True)
+
+    # We should create/update a FHIR Device resource each time the Application record is
+    # saved.
+
+    # {
+    #   "resourceType" : "Device",
+    #   "identifier" : [{ Identifier }], // Client_Id
+    #   "type" : { CodeableConcept }, // app_type
+    #   "status" : "<code>", // available | not-available | entered-in-error
+    #   "manufacturer" : "<string>", // Name of device manufacturer
+    #   "model" : "<string>", // Model id assigned by the manufacturer
+    #   "version" : "<string>", // Version number (i.e. software)
+    #   "expiry" : "<dateTime>", // Date and time of expiry of this device (if applicable)
+
+    #   "owner" : { Reference(Organization) }, // Organization responsible for device
+    #   "location" : { Reference(Location) }, // Where the resource is found
+    #   "contact" : [{ ContactPoint }], // Details for human/organization for support
+    #   "url" : "<uri>" // Network address to contact device
+    # }
+
+    # on 201 Created write FHIR_reference using response header location field content
+    # Otherwise use FHIR_Referene to update record on fhir server when application is updated
+
 
     def privacy(self):
         return self.privacy_url
@@ -69,7 +100,7 @@ class BBApplication(AbstractApplication):
             return terms
         return None
 
-    def admin_list():
+    def admin_list(self):
         return ('user', 'client_id', 'client_secret',)
 
 

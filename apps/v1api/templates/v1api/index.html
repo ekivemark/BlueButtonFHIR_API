@@ -2,15 +2,15 @@
 {% load i18n %}
 {% load staticfiles %}
 {% block pretitle %}Welcome to the {% endblock %}
-{% block title %}{{ settings.APPLICATION_TITLE }} api/v1{% endblock %}
+{% block title %}{{ settings.APPLICATION_TITLE }} v1{% endblock %}
 {% block extra_head %}
 {% endblock %}
 {% block breadcrumbs %}
     <div class="container">
         <ul class="breadcrumb">
-            <li>Home</li>
+            <li><a href="{% url 'home' %}">Home</a></li>
             <li><a href="{% url 'api:home' %}">api</a></li>
-            <li class="active">api/v1</li>
+            <li class="active">v1</li>
 
         </ul>
     </div>
