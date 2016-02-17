@@ -22,7 +22,7 @@ PARSE_INI = RawConfigParser()
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
-import ast
+import json
 # import sys
 from platform import python_version
 from .utils import (str2bool,
@@ -160,7 +160,7 @@ DEFAULT_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'mod_wsgi.server',
+    # 'mod_wsgi.server',
 )
 
 THIRD_PARTY_APPS = (
@@ -269,6 +269,11 @@ if DB_PLATFORM == "postgresql_psycopg2":
             # Set to empty string for default. Not used with sqlite3.
         }
     }
+elif DB_PLATFORM == "by_local_ini":
+    print("Setting up Database with:", DB_PLATFORM)
+    defn_dict = PARSE_INI.get('global', 'databases_defn')
+    DATABASES = eval(defn_dict)
+
 else: #  DB_PLATFORM == "sqlite3":
     if DEBUG_SETTINGS:
         print('Setting up Database', DB_PLATFORM)
@@ -286,7 +291,9 @@ else: #  DB_PLATFORM == "sqlite3":
         }
     }
 
+
 if DEBUG_SETTINGS:
+    print("Database Definition:", DB_PLATFORM)
     print("Database Config -",
           " Engine:", DATABASES['default']['ENGINE'],
           " Name:", DATABASES['default']['NAME'],
