@@ -4,6 +4,8 @@
 # Extend the Django OAuth Provider Application Model
 # Author: Mark Scrimshire (c) @ekivemark
 
+from collections import OrderedDict
+
 from django.conf import settings
 from django.db import models
 from oauth2_provider.models import AbstractApplication
@@ -84,7 +86,7 @@ class BBApplication(AbstractApplication):
     # }
 
     # on 201 Created write FHIR_reference using response header location field content
-    # Otherwise use FHIR_Referene to update record on fhir server when application is updated
+    # Otherwise use FHIR_Reference to update record on fhir server when application is updated
 
 
     def privacy(self):
@@ -120,6 +122,50 @@ class Organization(models.Model):
     domain = models.URLField(unique=True)
     trusted = models.BooleanField(default=False)
     trusted_since = models.DateTimeField(blank=True, null=True)
+
+    fhir_reference = models.URLField(blank=True,
+                                     null=True)
+
+    # We need to write an Organization Profile to FHIR and update FHIR_Reference
+# {
+#   "resourceType" : "Organization",
+#   // from Resource: id, meta, implicitRules, and language
+#   // from DomainResource: text, contained, extension, and modifierExtension
+#   "identifier" : [{ Identifier }], // C? Identifies this organization  across multiple systems
+#   "active" : <boolean>, // Whether the organization's record is still in active use
+#   "type" : { CodeableConcept }, // Kind of organization
+#   "name" : "<string>", // C? Name used for the organization
+#   "telecom" : [{ ContactPoint }], // C? A contact detail for the organization
+#   "address" : [{ Address }], // C? An address for the organization
+#   "partOf" : { Reference(Organization) }, // The organization of which this organization forms a part
+#   "contact" : [{ // Contact for the organization for a certain purpose
+#     "purpose" : { CodeableConcept }, // The type of contact
+#     "name" : { HumanName }, // A name associated with the contact
+#     "telecom" : [{ ContactPoint }], // Contact details (telephone, email, etc.)  for a contact
+#     "address" : { Address } // Visiting or postal addresses for the contact
+#   }]
+# }
+
+    # On 201 Created write FHIR_reference using response header location field content
+    # Otherwise use FHIR_Reference to update record on fhir server when application is updated
+
+    def build_fhir(self):
+        # Create a FHIR Organization Record
+        result = False
+
+        resource = OrderedDict()
+        resource['resourceType'] = "Organization"
+        resource['identifier'] = {"system": settings.DOMAIN,
+                                  "type": "Organization",
+                                  "value": self.id}
+        resource['type'] = {"text": "Developer Organization"}
+        resource['name'] = self.name
+        resource['telecom'] = [{'resourceType': "ContactPoint",
+                                'system': "domain",
+                                'value': self.domain}]
+
+
+        return result
 
     def __str__(self):
         return self.name
@@ -191,3 +237,5 @@ class Developer(models.Model):
             return "Changing this damn field name %s" % u.username
         except:
             return "No assigned member"
+
+
