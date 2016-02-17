@@ -1,0 +1,863 @@
+<h1>CMS BlueButton API Terms of Use</h1>
+
+<h2>Status: Draft</h2>
+
+<p>We’re excited that you’ve chosen to use the advanced Medicare BlueButton Service for beneficiaries.
+    This service provides improved flexibility in accessing your BlueButton health data. </p>
+
+<p><b>Important Note: You are agreeing that you are taking ownership for your health information once you export it
+    from Medicare using this BlueButton Service. Medicare does not control the applications or services you
+    connect your data to. Please ensure that the application is trustworthy before giving them permission to
+    use your information.</b>
+</p>
+<p><b>If you choose to share your health information with other people, or applications,
+    make sure that you understand how they will use your information.</b>
+
+</p>
+
+<p style="font-style:italic">Last revised on February 16, 2016.</p>
+
+<h2>1. Introduction</h2>
+
+<h2>About us and these Terms of Use</h2>
+
+<p>You agree that by using the CMS BlueButton
+Platform (“<b style='mso-bidi-font-weight:normal'>Platform</b>”), you
+are entering into a legally binding agreement with <span
+        style='font-size:10.0pt;line-height:136%;color:#333333;background:#E6E1E1'>Centers
+for Medicare &amp; Medicaid Services 7500 Security Boulevard, Baltimore, MD
+21244</span><span style='font-size:10.0pt;line-height:136%;color:#4D4D53'>.
+(“<b style='mso-bidi-font-weight:normal'>we</b>,” “<b style='mso-bidi-font-weight:
+normal'>us</b>,” “<b style='mso-bidi-font-weight:normal'>our</b>,” and “<b
+            style='mso-bidi-font-weight:normal'>CMS</b>”). By registering for an account (a
+“<b style='mso-bidi-font-weight:normal'>Account</b>”) at the CMS
+BlueButton site at bluebutton.cms.gov (the “<b
+            style='mso-bidi-font-weight:normal'>BlueButton Platform</b>”), you acknowledge that
+you have read and understood and agree to be bound by these CMS BlueButton API
+Terms of Use (the “<b style='mso-bidi-font-weight:normal'>Terms</b>”). If you
+are using our Platform on behalf of another pserson, you
+represent and warrant that you have full legal authority to register for an
+Account on behalf of that person and bind them to these Terms. If you
+are not authorized, you may not accept the Terms or register for an
+Account for someone else.</span></p>
+
+<p>These Terms will evolve, so please check back regularly. It
+is your responsibility to remain informed of these Terms. </p>
+
+<h4>Purpose</h4>
+
+<li>
+    The mission of CMS is to strengthen and modernize the
+nation’s health care system to provide access to high quality care and improved
+health at lower cost. To achieve our mission, we make APIs available so that
+    developers can create applications for our beneficiaries and
+business partners.
+</li>
+
+<h4>Scope and Intent</h4>
+
+<li>
+    The CMS BlueButton Platform includes a
+self-service API, where developers can create applications using CMS
+APIs. As soon as you register for an Account and agree to follow these
+Terms you have entered into a signed Data Use agreement with CMS.
+</li>
+
+<li>
+    As used in these Terms, “<b>APIs</b>” means programmatic web APIs and associated tools and
+documentation that CMS provides, and “<b>Application</b>”
+means a software application, website, or product or a service you
+use.
+</li>
+
+<h4>Self-Service Program</h4>
+
+<h4>Limits on Use</h4>
+<li>
+    CMS may throttle data flowing to third party applications. Developers supporting large numbers
+    of beneficiaries downloading their data must talk to us
+directly, as they may be subject to additional Terms, if their Application:
+    <li>have more than 50,000 lifetime members</li>
+    <li>make more than 10,000 daily calls to the CMS BlueButton API</li>
+    <li>relies on access to CMS APIs as a fundamental aspect of their business</li>
+    <li>will store or export any data from CMS other than your personal health data (name,
+contact information, health history, claims history) and share that information
+with other applications and services without your express permission.</li>
+</li>
+
+<h4>Partner Program</h4>
+
+<p>You must apply to our Platform Partner Program and cannot
+use our self-service program if your Application aggregates beneficiary
+personal data and re-sells that information whether or not the data is
+anonymized.
+</p>
+
+<p><b>API License</b></p>
+
+<p>As long as you follow these Terms, we grant you a limited,
+non-exclusive, non-assignable, non-transferable license to use the APIs to
+export your personal information to the applications and services of yor choice.</p>
+
+<p><b>Data Views</b></p>
+
+<p>Your CMS BlueButton data is private to you. You must give you express permission to access
+    your CMS BlueButton data through each Application you connect. In addition, an Application
+    must obtain your express permission before sharing your information with anyone else.</p>
+
+<p><b>Excluded Uses</b></p>
+
+<p>You must never do any of the following under these Terms:</p>
+
+<li>Use someone’s Access Credentials to show his or her Content
+to someone else, e.g., as part of search results. Each user must authenticate
+individually to retrieve his or her Content through the APIs.
+</li>
+
+<li>The Application May Store Tokens</li>
+
+<li>The application may store the alphanumeric user IDs (Member Tokens) that we
+provide for identifying you. The Member Token will be an anonymous
+identifier.</li>
+
+<li>Member Profile Data</li>
+
+<li>The application may store your Profile Data if you your consent to do so.
+    “Profile Data” means the name and other
+identifying information. The process for obtaining
+your consent must meet our specifications set forth at </span>
+    {# TODO: create /accounts/info/obtain_consent_to_store_profile_data    #}
+    <a href="/developer/info/obtain_consent_to_store_profile_data">
+        Specifications for Obtaining Consent To Store Profile Data</a>.</li>
+
+<li>Protection of Stored Data</li>
+
+<li>The application must use commercially reasonable security measures to
+protect the confidentiality of all stored data, which measures are at least as
+secure as those you use to protect your own confidential information. The
+stored data must not be transferred or provided to any third parties without your express
+    permission. CMS may require that the application certifies that stored data has been
+    deleted.</li>
+
+<li>Delete Content When Asked</li>
+
+<li>Delete at User Request</li>
+
+<li>The application must delete all data collected with your consent,
+including the Member Token and the OAuth Token, upon your request, when
+you uninstall your Application, or when you close your
+account. The restrictions of this Section 3.C.1 do not apply to data
+that you provide directly and that is separately entered or uploaded
+to the Application. The application must delete all Profile and
+Statistics Data based on your BlueButton data collected with your
+consent within 10 days of receiving your request.</li>
+
+<li>Delete for Breach</li>
+
+<li>The application must immediately delete all data if we terminate the application's use of
+the APIs for breach of these Terms, except when doing so would cause the application to
+violate any law or obligation imposed by a governmental authority.
+</li>
+
+
+<p class=normalCxSpMiddle style='margin-left:1.5in;mso-add-space:auto;
+text-indent:-17.95pt;mso-list:l0 level3 lfo10'><![if !supportLists]><b
+        style='mso-bidi-font-weight:normal'><span style='font-size:10.0pt;line-height:
+115%;color:#4D4D53'><span style='mso-list:Ignore'>a.<span
+        style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span></b><![endif]><span style='font-size:10.0pt;line-height:
+115%;color:#4D4D53'>CMS does not endorse or support applications that connect to the API
+    platform</span></p>
+
+
+
+<p class=normalCxSpMiddle style='margin-top:0in;margin-right:0in;margin-bottom:
+2.0pt;margin-left:1.0in;mso-add-space:auto;text-indent:-17.95pt;mso-list:l0 level2 lfo10'>
+    <![if !supportLists]><span
+        style='font-size:10.0pt;line-height:115%;color:#4D4D53'><span
+        style='mso-list:
+Ignore'>&#9679;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><![endif]>
+    {# TODO: create /accounts/info/privacy_policy   #}
+    <a href="/developer/info/privacy_policy"><span
+            style='font-size:10.0pt;line-height:115%;color:windowtext;text-decoration:none;
+text-underline:none'>The CMS Privacy Policy</span></a><span style='font-size:
+10.0pt;line-height:115%;color:#4D4D53'>;</span></p>
+
+<p class=normalCxSpMiddle style='margin-top:0in;margin-right:0in;margin-bottom:
+2.0pt;margin-left:1.0in;mso-add-space:auto;text-indent:-17.95pt;mso-list:l0 level2 lfo10'>
+    <![if !supportLists]><span
+        style='font-size:10.0pt;line-height:115%;color:#4D4D53'><span
+        style='mso-list:
+Ignore'>&#9679;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><![endif]>
+    {# TODO: create /accounts/info/platform_guidelines  #}
+    <a href="/developer/info/platform_guidelines"><span
+            style='font-size:10.0pt;line-height:115%;color:windowtext;text-decoration:none;
+text-underline:none'>The BlueButton Platform Guidelines, which are located at the
+Developer Site</span></a><span style='font-size:10.0pt;line-height:115%;
+color:#4D4D53'>; and</span></p>
+
+<p class=normalCxSpMiddle style='margin-top:0in;margin-right:0in;margin-bottom:
+2.0pt;margin-left:1.0in;mso-add-space:auto;text-indent:-17.95pt;mso-list:l0 level2 lfo10'>
+    <![if !supportLists]><span
+        style='font-size:10.0pt;line-height:115%;color:#4D4D53'><span
+        style='mso-list:
+Ignore'>&#9679;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><![endif]>
+    {# TODO: create /accounts/info/branding_guidelines   #}
+    <a href="/developer/info/branding_guidelines"><span
+            style='font-size:10.0pt;line-height:115%;color:windowtext;text-decoration:none;
+text-underline:none'>The BlueButton Branding Guidelines</span></a><span
+        style='font-size:
+10.0pt;line-height:115%;color:#4D4D53'>.</span></p>
+
+<p class=normalCxSpMiddle style='margin-top:8.0pt;margin-right:0in;margin-bottom:
+8.0pt;margin-left:.5in;mso-add-space:auto;text-indent:-17.95pt;mso-list:l0 level1 lfo10'>
+    <![if !supportLists]><b
+        style='mso-bidi-font-weight:normal'><span style='font-size:10.0pt;line-height:
+115%;color:#4D4D53'><span style='mso-list:Ignore'>I.<span
+        style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span></b><![endif]><span style='font-size:10.0pt;line-height:
+115%;color:#4D4D53'>In the event of any conflict between the content in this
+document and the above documents, this document controls your use of the APIs.
+If you disagree with any of the provisions in these Terms, do not access or use
+the APIs.</span></p>
+
+
+<h2 style='margin-top:11.0pt;margin-right:0in;margin-bottom:11.0pt;margin-left:
+0in;line-height:136%'><a name=h.72afo737f7rs></a><span style='font-size:18.0pt;
+mso-bidi-font-size:10.0pt;line-height:136%;font-family:Arial;mso-fareast-font-family:
+Arial;mso-bidi-font-family:Arial;color:#333333;font-weight:normal'>4. Safety
+and Abuse</span></h2>
+
+<p class=normalCxSpFirst style='margin-left:.5in;mso-add-space:auto;text-indent:
+-17.95pt;mso-list:l8 level1 lfo1'><![if !supportLists]><b style='mso-bidi-font-weight:
+normal'><span style='font-size:10.0pt;line-height:115%;color:#4D4D53'><span
+        style='mso-list:Ignore'>A.<span
+        style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;
+</span></span></span></b><![endif]><b
+        style='mso-bidi-font-weight:normal'><span
+        style='font-size:10.0pt;line-height:115%;color:#4D4D53'>Security Measures</span></b>
+</p>
+
+<h2 style='margin-top:11.0pt;margin-right:0in;margin-bottom:11.0pt;margin-left:
+0in;line-height:136%'><a name=h.8zo70vwh7sg3></a><span style='font-size:18.0pt;
+mso-bidi-font-size:10.0pt;line-height:136%;font-family:Arial;mso-fareast-font-family:
+Arial;mso-bidi-font-family:Arial;color:#333333;font-weight:normal'>5. Rights We
+Reserve</span></h2>
+
+<p class=normalCxSpFirst style='margin-left:.5in;mso-add-space:auto;text-indent:
+-17.95pt;mso-list:l5 level1 lfo5'><![if !supportLists]><b style='mso-bidi-font-weight:
+normal'><span style='font-size:10.0pt;line-height:115%;color:#4D4D53'><span
+        style='mso-list:Ignore'>A.<span
+        style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;
+</span></span></span></b><![endif]><b
+        style='mso-bidi-font-weight:normal'><span
+        style='font-size:10.0pt;line-height:115%;color:#4D4D53'>Support and
+Modifications</span></b></p>
+
+<p class=normalCxSpMiddle style='margin-top:8.0pt;margin-right:0in;margin-bottom:
+8.0pt;margin-left:.5in;mso-add-space:auto;text-indent:-17.95pt;mso-list:l5 level1 lfo5'>
+    <![if !supportLists]><b
+        style='mso-bidi-font-weight:normal'><span style='font-size:10.0pt;line-height:
+115%;color:#4D4D53'><span style='mso-list:Ignore'>B.<span
+        style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;
+</span></span></span></b><![endif]><span style='font-size:10.0pt;line-height:
+115%;color:#4D4D53'>We may provide you with support or modifications for the
+APIs in our sole discretion. We may stop providing support or modifications to
+you at any time without notice or liability to you. We may release subsequent
+versions of the APIs and require that you use those subsequent versions. Your
+continued use of the APIs following a subsequent release will be deemed your
+acceptance of modifications.</span></p>
+
+<p class=normalCxSpMiddle style='margin-left:.5in;mso-add-space:auto;
+text-indent:-17.95pt;mso-list:l5 level1 lfo5'><![if !supportLists]><b
+        style='mso-bidi-font-weight:normal'><span style='font-size:10.0pt;line-height:
+115%;color:#4D4D53'><span style='mso-list:Ignore'>C.<span
+        style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;
+</span></span></span></b><![endif]><b
+        style='mso-bidi-font-weight:normal'><span
+        style='font-size:10.0pt;line-height:115%;color:#4D4D53'>Fees</span></b>
+</p>
+
+<p class=normalCxSpMiddle style='margin-top:8.0pt;margin-right:0in;margin-bottom:
+8.0pt;margin-left:.5in;mso-add-space:auto;text-indent:-17.95pt;mso-list:l5 level1 lfo5'>
+    <![if !supportLists]><b
+        style='mso-bidi-font-weight:normal'><span style='font-size:10.0pt;line-height:
+115%;color:#4D4D53'><span style='mso-list:Ignore'>D.<span
+        style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;
+</span></span></span></b><![endif]><span style='font-size:10.0pt;line-height:
+115%;color:#4D4D53'>The APIs are currently provided for free, but CMS reserves
+the right to charge for the APIs in the future. If we do charge a fee for use
+of the APIs or any developer tools and features, you do not have any obligation
+to continue to use CMS’s developer resources.</span></p>
+
+
+<h2 style='margin-top:11.0pt;margin-right:0in;margin-bottom:11.0pt;margin-left:
+0in;line-height:136%'><a name=h.3hz4nkfbre4q></a><span style='font-size:18.0pt;
+mso-bidi-font-size:10.0pt;line-height:136%;font-family:Arial;mso-fareast-font-family:
+Arial;mso-bidi-font-family:Arial;color:#333333;font-weight:normal'>6. Ownership</span>
+</h2>
+
+<p class=normalCxSpFirst style='margin-left:.5in;mso-add-space:auto;text-indent:
+-17.95pt;mso-list:l1 level1 lfo3'><![if !supportLists]><b style='mso-bidi-font-weight:
+normal'><span style='font-size:10.0pt;line-height:115%;color:#4D4D53'><span
+        style='mso-list:Ignore'>A.<span
+        style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;
+</span></span></span></b><![endif]><b
+        style='mso-bidi-font-weight:normal'><span
+        style='font-size:10.0pt;line-height:115%;color:#4D4D53'>CMS Property</span></b>
+</p>
+
+<p class=normalCxSpMiddle style='margin-top:8.0pt;margin-right:0in;margin-bottom:
+8.0pt;margin-left:.5in;mso-add-space:auto;text-indent:-17.95pt;mso-list:l1 level1 lfo3'>
+    <![if !supportLists]><b
+        style='mso-bidi-font-weight:normal'><span style='font-size:10.0pt;line-height:
+115%;color:#4D4D53'><span style='mso-list:Ignore'>B.<span
+        style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;
+</span></span></span></b><![endif]><span style='font-size:10.0pt;line-height:
+115%;color:#4D4D53'>As between you and us, we own all rights, title, and
+interest, including all intellectual property rights, in and to, the (a) APIs,
+and all elements, components, and executables of the APIs; (b) the Content
+available through the APIs; (c) our Website; and (d) our Brand Features
+(clauses (a)-(d) collectively, the “CMS Materials”). Except for the express
+licenses granted in these Terms, CMS does not grant you any right, title, or
+interest in the CMS Materials. You agree to take such actions, including executing
+affidavits or other documents, as CMS may reasonably request to effect,
+perfect, or confirm CMS’ rights to the CMS Materials.</span></p>
+
+<p class=normalCxSpMiddle style='margin-left:.5in;mso-add-space:auto;
+text-indent:-17.95pt;mso-list:l1 level1 lfo3'><![if !supportLists]><b
+        style='mso-bidi-font-weight:normal'><span style='font-size:10.0pt;line-height:
+115%;color:#4D4D53'><span style='mso-list:Ignore'>C.<span
+        style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;
+</span></span></span></b><![endif]><b
+        style='mso-bidi-font-weight:normal'><span
+        style='font-size:10.0pt;line-height:115%;color:#4D4D53'>Your Property</span></b>
+</p>
+
+<p class=normalCxSpMiddle style='margin-left:1.0in;mso-add-space:auto;
+text-indent:-17.95pt;mso-list:l1 level2 lfo3'><![if !supportLists]><b
+        style='mso-bidi-font-weight:normal'><span style='font-size:10.0pt;line-height:
+115%;color:#4D4D53'><span style='mso-list:Ignore'>1.<span
+        style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span></b><![endif]><b
+        style='mso-bidi-font-weight:normal'><span
+        style='font-size:10.0pt;line-height:115%;color:#4D4D53'>Contributions to CMS</span></b>
+</p>
+
+<p class=normalCxSpMiddle style='margin-top:8.0pt;margin-right:0in;margin-bottom:
+8.0pt;margin-left:1.0in;mso-add-space:auto;text-indent:-17.95pt;mso-list:l1 level2 lfo3'>
+    <![if !supportLists]><b
+        style='mso-bidi-font-weight:normal'><span style='font-size:10.0pt;line-height:
+115%;color:#4D4D53'><span style='mso-list:Ignore'>2.<span
+        style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span></b><![endif]><span style='font-size:10.0pt;line-height:
+115%;color:#4D4D53'>By submitting suggestions or other
+    feedback regarding the
+CMS Materials (&quot;Contributions&quot;) in any way to CMS, you acknowledge
+and agree that: (a) your Contributions do not contain confidential or
+proprietary information; (b) CMS is not under any obligation of
+confidentiality, express or implied, with respect to the Contributions; (c) CMS
+shall be entitled to use or disclose (or choose not to use or disclose) such
+Contributions for any purpose, in any way, in any media worldwide; (d) CMS may
+have something similar to the Contributions already under consideration or in
+development; (e) you irrevocably non-exclusively license to CMS rights to
+exploit your Contributions; and (f) you are not entitled to any compensation or
+reimbursement of any kind from CMS under any circumstances.</span></p>
+
+
+<h2 style='margin-top:11.0pt;margin-right:0in;margin-bottom:11.0pt;margin-left:
+0in;line-height:136%'><a name=h.an4zrvu04e07></a><span style='font-size:18.0pt;
+mso-bidi-font-size:10.0pt;line-height:136%;font-family:Arial;mso-fareast-font-family:
+Arial;mso-bidi-font-family:Arial;color:#333333;font-weight:normal'>7. Term and
+Termination</span></h2>
+
+<p class=normalCxSpFirst style='margin-left:.5in;mso-add-space:auto;text-indent:
+-17.95pt;mso-list:l9 level1 lfo2'><![if !supportLists]><b style='mso-bidi-font-weight:
+normal'><span style='font-size:10.0pt;line-height:115%;color:#4D4D53'><span
+        style='mso-list:Ignore'>A.<span
+        style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;
+</span></span></span></b><![endif]><b
+        style='mso-bidi-font-weight:normal'><span
+        style='font-size:10.0pt;line-height:115%;color:#4D4D53'>Term</span></b>
+</p>
+
+<p class=normalCxSpMiddle style='margin-top:8.0pt;margin-right:0in;margin-bottom:
+8.0pt;margin-left:.5in;mso-add-space:auto;text-indent:-17.95pt;mso-list:l9 level1 lfo2'>
+    <![if !supportLists]><b
+        style='mso-bidi-font-weight:normal'><span style='font-size:10.0pt;line-height:
+115%;color:#4D4D53'><span style='mso-list:Ignore'>B.<span
+        style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;
+</span></span></span></b><![endif]><span style='font-size:10.0pt;line-height:
+115%;color:#4D4D53'>The term of these Terms will commence on the date upon
+which you agree to these Terms and will continue until: you discontinue using
+our APIs, you close your Account, or we terminate your access to the
+APIs, these Terms, or both.</span></p>
+
+<p class=normalCxSpMiddle style='margin-left:1.0in;mso-add-space:auto;
+text-indent:-17.95pt;mso-list:l9 level2 lfo2'><![if !supportLists]><b
+        style='mso-bidi-font-weight:normal'><span style='font-size:10.0pt;line-height:
+115%;color:#4D4D53'><span style='mso-list:Ignore'>1.<span
+        style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span></b><![endif]><b
+        style='mso-bidi-font-weight:normal'><span
+        style='font-size:10.0pt;line-height:115%;color:#4D4D53'>Suspension; Termination</span></b>
+</p>
+
+<p class=normalCxSpMiddle style='margin-top:8.0pt;margin-right:0in;margin-bottom:
+8.0pt;margin-left:1.0in;mso-add-space:auto;text-indent:-17.95pt;mso-list:l9 level2 lfo2'>
+    <![if !supportLists]><b
+        style='mso-bidi-font-weight:normal'><span style='font-size:10.0pt;line-height:
+115%;color:#4D4D53'><span style='mso-list:Ignore'>2.<span
+        style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span></b><![endif]><span style='font-size:10.0pt;line-height:
+115%;color:#4D4D53'>We may suspend or terminate your use of
+    all or any of the
+APIs at any time if we believe you have violated these Terms.
+    We may discontinue the availability of some or all of the APIs
+at any time for any reason. We may also impose limits on certain features and
+services or restrict your access to some or all of the APIs or our Website. All
+of our rights in these Terms may be exercised without prior notice or liability
+to you.</span></p>
+
+<p class=normalCxSpMiddle style='margin-left:1.0in;mso-add-space:auto;
+text-indent:-17.95pt;mso-list:l9 level2 lfo2'><![if !supportLists]><b
+        style='mso-bidi-font-weight:normal'><span style='font-size:10.0pt;line-height:
+115%;color:#4D4D53'><span style='mso-list:Ignore'>3.<span
+        style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span></b><![endif]><b
+        style='mso-bidi-font-weight:normal'><span
+        style='font-size:10.0pt;line-height:115%;color:#4D4D53'>Effect of Termination</span></b>
+</p>
+
+<p class=normalCxSpMiddle style='margin-top:8.0pt;margin-right:0in;margin-bottom:
+8.0pt;margin-left:1.0in;mso-add-space:auto;text-indent:-17.95pt;mso-list:l9 level2 lfo2'>
+    <![if !supportLists]><b
+        style='mso-bidi-font-weight:normal'><span style='font-size:10.0pt;line-height:
+115%;color:#4D4D53'><span style='mso-list:Ignore'>4.<span
+        style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span></b><![endif]><span style='font-size:10.0pt;line-height:
+115%;color:#4D4D53'>Upon termination of the agreement between
+    you and us under these Terms:</span></p>
+
+<p class=normalCxSpMiddle style='margin-left:1.5in;mso-add-space:auto;
+text-indent:-17.95pt;mso-list:l9 level3 lfo2'><![if !supportLists]><b
+        style='mso-bidi-font-weight:normal'><span style='font-size:10.0pt;line-height:
+115%;color:#4D4D53'><span style='mso-list:Ignore'>a.<span
+        style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span></b><![endif]><span style='font-size:10.0pt;line-height:
+115%;color:#4D4D53'>all rights and licenses granted to you
+    will terminate immediately;</span></p>
+
+<p class=normalCxSpMiddle style='margin-left:1.5in;mso-add-space:auto;
+text-indent:-17.95pt;mso-list:l9 level3 lfo2'><![if !supportLists]><b
+        style='mso-bidi-font-weight:normal'><span style='font-size:10.0pt;line-height:
+115%;color:#4D4D53'><span style='mso-list:Ignore'>b.<span
+        style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span></b><![endif]><span style='font-size:10.0pt;line-height:
+115%;color:#4D4D53'>you will promptly destroy CMS confidential
+    information in your possession or control;</span></p>
+
+<p class=normalCxSpMiddle style='margin-left:1.5in;mso-add-space:auto;
+text-indent:-17.95pt;mso-list:l9 level3 lfo2'><![if !supportLists]><b
+        style='mso-bidi-font-weight:normal'><span style='font-size:10.0pt;line-height:
+115%;color:#4D4D53'><span style='mso-list:Ignore'>c.<span
+        style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span></b><![endif]><span style='font-size:10.0pt;line-height:
+115%;color:#4D4D53'>neither party is liable to the other party just because
+these Terms have been terminated; and</span></p>
+
+<p class=normalCxSpMiddle style='margin-left:1.5in;mso-add-space:auto;
+text-indent:-17.95pt;mso-list:l9 level3 lfo2'><![if !supportLists]><b
+        style='mso-bidi-font-weight:normal'><span style='font-size:10.0pt;line-height:
+115%;color:#4D4D53'><span style='mso-list:Ignore'>d.<span
+        style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span></b><![endif]><span style='font-size:10.0pt;line-height:
+115%;color:#4D4D53'>unless we agree otherwise in writing or as stated in these
+Terms, you must permanently delete all Content or other data which you stored
+pursuant to your use of the APIs.CMS may request that you certify in writing
+your compliance with this section.</span></p>
+
+<p class=normalCxSpMiddle style='margin-left:1.0in;mso-add-space:auto;
+text-indent:-17.95pt;mso-list:l9 level2 lfo2'><![if !supportLists]><b
+        style='mso-bidi-font-weight:normal'><span style='font-size:10.0pt;line-height:
+115%;color:#4D4D53'><span style='mso-list:Ignore'>5.<span
+        style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span></b><![endif]><b
+        style='mso-bidi-font-weight:normal'><span
+        style='font-size:10.0pt;line-height:115%;color:#4D4D53'>Survival</span></b>
+</p>
+
+
+<h2 style='margin-top:11.0pt;margin-right:0in;margin-bottom:11.0pt;margin-left:
+0in;line-height:136%'><a name=h.s8ipkg9k1w2d></a><span style='font-size:18.0pt;
+mso-bidi-font-size:10.0pt;line-height:136%;font-family:Arial;mso-fareast-font-family:
+Arial;mso-bidi-font-family:Arial;color:#333333;font-weight:normal'>10. Dispute
+Resolution</span></h2>
+
+<p class=normalCxSpFirst style='margin-left:.5in;mso-add-space:auto;text-indent:
+-17.95pt;mso-list:l4 level1 lfo8'><![if !supportLists]><b style='mso-bidi-font-weight:
+normal'><span style='font-size:10.0pt;line-height:115%;color:#4D4D53'><span
+        style='mso-list:Ignore'>A.<span
+        style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;
+</span></span></span></b><![endif]><b
+        style='mso-bidi-font-weight:normal'><span
+        style='font-size:10.0pt;line-height:115%;color:#4D4D53'>Law and Forum for Legal
+Disputes</span></b></p>
+
+<p class=normalCxSpMiddle style='margin-top:8.0pt;margin-right:0in;margin-bottom:
+8.0pt;margin-left:.5in;mso-add-space:auto;text-indent:-17.95pt;mso-list:l4 level1 lfo8'>
+    <![if !supportLists]><b
+        style='mso-bidi-font-weight:normal'><span style='font-size:10.0pt;line-height:
+115%;color:#4D4D53'><span style='mso-list:Ignore'>B.<span
+        style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;
+</span></span></span></b><![endif]><span style='font-size:10.0pt;line-height:
+115%;color:#4D4D53'>These Terms and any claim, cause of action or dispute
+(“claim”) arising out of or related to these Terms shall be governed by the
+laws of the District of Columbia, United States, regardless of your country of
+origin or where you access CMS, and notwithstanding of any conflicts of law
+principles and the United Nations Convention for the International Sale of
+Goods. You and CMS agree that all claims arising out of or related to these
+Terms must be resolved exclusively by a state or federal court located in the
+District of Columbia, except as otherwise agreed by the parties or as described
+in the Arbitration Option paragraph below. You and CMS agree to submit to the
+personal jurisdiction of the courts located within the District of Ciolumbia
+for the purpose of litigating all such claims. Notwithstanding the above, you
+agree that CMS shall still be allowed to apply for injunctive remedies (or an
+equivalent type of urgent legal relief) in any jurisdiction.</span></p>
+
+<p class=normalCxSpMiddle style='margin-left:.5in;mso-add-space:auto;
+text-indent:-17.95pt;mso-list:l4 level1 lfo8'><![if !supportLists]><b
+        style='mso-bidi-font-weight:normal'><span style='font-size:10.0pt;line-height:
+115%;color:#4D4D53'><span style='mso-list:Ignore'>C.<span
+        style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;
+</span></span></span></b><![endif]><b
+        style='mso-bidi-font-weight:normal'><span
+        style='font-size:10.0pt;line-height:115%;color:#4D4D53'>Arbitration Option</span></b>
+</p>
+
+<p class=normalCxSpLast style='margin-top:8.0pt;margin-right:0in;margin-bottom:
+8.0pt;margin-left:.5in;mso-add-space:auto;text-indent:-17.95pt;mso-list:l4 level1 lfo8'>
+    <![if !supportLists]><b
+        style='mso-bidi-font-weight:normal'><span style='font-size:10.0pt;line-height:
+115%;color:#4D4D53'><span style='mso-list:Ignore'>D.<span
+        style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;
+</span></span></span></b><![endif]><span style='font-size:10.0pt;line-height:
+115%;color:#4D4D53'>For any claim (excluding claims for
+    injunctive or other
+equitable relief) where the total amount of the award sought is less than
+$10,000, the party requesting relief may elect to resolve the dispute in a cost
+effective manner through binding non-appearance-based arbitration. In the event
+a party elects arbitration, they shall initiate such arbitration through an
+established alternative dispute resolution (“ADR”) provider mutually agreed
+upon by the parties. The ADR provider and the parties must comply with the
+following rules: (a) the arbitration shall be conducted by telephone, online
+and/or be solely based on written submissions, the specific manner shall be
+chosen by the party initiating the arbitration; (b) the arbitration shall not
+involve any personal appearance by the parties or witnesses unless otherwise
+mutually agreed by the parties; and (c) any judgment on the award rendered by
+the arbitrator shall be final and may be entered in any court of competent
+jurisdiction.</span></p>
+
+<h2 style='margin-top:11.0pt;margin-right:0in;margin-bottom:11.0pt;margin-left:
+0in;line-height:136%'><a name=h.cs6o7fbzi3b1></a><span style='font-size:18.0pt;
+mso-bidi-font-size:10.0pt;line-height:136%;font-family:Arial;mso-fareast-font-family:
+Arial;mso-bidi-font-family:Arial;color:#333333;font-weight:normal'>11. General
+Terms</span></h2>
+
+<p class=normal style='margin-top:8.0pt;margin-right:0in;margin-bottom:8.0pt;
+margin-left:0in;line-height:136%'><span style='font-size:10.0pt;line-height:
+136%;color:#4D4D53'>Here are some important details about how to
+    read these Terms.</span></p>
+
+<p class=normalCxSpMiddle style='margin-left:.5in;mso-add-space:auto;
+text-indent:-17.95pt;mso-list:l7 level1 lfo7'><![if !supportLists]><b
+        style='mso-bidi-font-weight:normal'><span style='font-size:10.0pt;line-height:
+115%;color:#4D4D53'><span style='mso-list:Ignore'>A.<span
+        style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;
+</span></span></span></b><![endif]><b
+        style='mso-bidi-font-weight:normal'><span
+        style='font-size:10.0pt;line-height:115%;color:#4D4D53'>Severability</span></b>
+</p>
+
+<p class=normalCxSpMiddle style='margin-top:8.0pt;margin-right:0in;margin-bottom:
+8.0pt;margin-left:.5in;mso-add-space:auto;text-indent:-17.95pt;mso-list:l7 level1 lfo7'>
+    <![if !supportLists]><b
+        style='mso-bidi-font-weight:normal'><span style='font-size:10.0pt;line-height:
+115%;color:#4D4D53'><span style='mso-list:Ignore'>B.<span
+        style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;
+</span></span></span></b><![endif]><span style='font-size:10.0pt;line-height:
+115%;color:#4D4D53'>If any provision of these Terms is found
+    by a court of
+competent jurisdiction or arbitrator to be illegal, void, or unenforceable, the
+unenforceable provision will be modified so as to render it enforceable and
+effective to the maximum extent possible in order to effect the intention of
+the provision; if a court or arbitrator finds the modified provision invalid,
+illegal, void or unenforceable, the validity, legality and enforceability of
+the remaining provisions of these Terms will not be affected in any way.</span>
+</p>
+
+<p class=normalCxSpMiddle style='margin-left:.5in;mso-add-space:auto;
+text-indent:-17.95pt;mso-list:l7 level1 lfo7'><![if !supportLists]><b
+        style='mso-bidi-font-weight:normal'><span style='font-size:10.0pt;line-height:
+115%;color:#4D4D53'><span style='mso-list:Ignore'>C.<span
+        style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;
+</span></span></span></b><![endif]><b
+        style='mso-bidi-font-weight:normal'><span
+        style='font-size:10.0pt;line-height:115%;color:#4D4D53'>Language</span></b>
+</p>
+
+<p class=normalCxSpMiddle style='margin-top:8.0pt;margin-right:0in;margin-bottom:
+8.0pt;margin-left:.5in;mso-add-space:auto;text-indent:-17.95pt;mso-list:l7 level1 lfo7'>
+    <![if !supportLists]><b
+        style='mso-bidi-font-weight:normal'><span style='font-size:10.0pt;line-height:
+115%;color:#4D4D53'><span style='mso-list:Ignore'>D.<span
+        style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;
+</span></span></span></b><![endif]><span style='font-size:10.0pt;line-height:
+115%;color:#4D4D53'>Where CMS has provided you with a
+    translation of the
+English language version of these Terms, the Privacy Policy, or any other
+documentation, you agree that the translation is provided for your convenience
+only and that the English language versions of these Terms, the Privacy Policy,
+and any other documentation, including additional terms of service for Premium
+Services, will govern your relationship with CMS.</span></p>
+
+<p class=normalCxSpMiddle style='margin-left:.5in;mso-add-space:auto;
+text-indent:-17.95pt;mso-list:l7 level1 lfo7'><![if !supportLists]><b
+        style='mso-bidi-font-weight:normal'><span style='font-size:10.0pt;line-height:
+115%;color:#4D4D53'><span style='mso-list:Ignore'>E.<span
+        style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;
+</span></span></span></b><![endif]><b
+        style='mso-bidi-font-weight:normal'><span
+        style='font-size:10.0pt;line-height:115%;color:#4D4D53'>Notices and Service of
+Process</span></b></p>
+
+<p class=normalCxSpMiddle style='margin-top:8.0pt;margin-right:0in;margin-bottom:
+8.0pt;margin-left:.5in;mso-add-space:auto;text-indent:-17.95pt;mso-list:l7 level1 lfo7'>
+    <![if !supportLists]><b
+        style='mso-bidi-font-weight:normal'><span style='font-size:10.0pt;line-height:
+115%;color:#4D4D53'><span style='mso-list:Ignore'>F.<span
+        style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span></b><![endif]><span style='font-size:10.0pt;line-height:
+115%;color:#4D4D53'>In addition to Section 11.C.
+    (“Notices and Service
+Messages”), we may notify you via postings on Developer Site. You may contact
+us here. Or via mail or courier at: Center for Medicare and Medicaid Services
+ATTN: Legal Department 7500 Security Boulevard, MD 21244, USA.<span
+            style="mso-spacerun:yes">&nbsp; </span>Additionally, CMS accepts service of
+process at this address. Any notices that you provide without compliance with
+this section shall have no legal effect.</span></p>
+
+<p class=normalCxSpMiddle style='margin-left:.5in;mso-add-space:auto;
+text-indent:-17.95pt;mso-list:l7 level1 lfo7'><![if !supportLists]><b
+        style='mso-bidi-font-weight:normal'><span style='font-size:10.0pt;line-height:
+115%;color:#4D4D53'><span style='mso-list:Ignore'>G.<span
+        style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;
+</span></span></span></b><![endif]><b
+        style='mso-bidi-font-weight:normal'><span
+        style='font-size:10.0pt;line-height:115%;color:#4D4D53'>Entire Agreement</span></b>
+</p>
+
+<p class=normalCxSpMiddle style='margin-top:8.0pt;margin-right:0in;margin-bottom:
+8.0pt;margin-left:.5in;mso-add-space:auto;text-indent:-17.95pt;mso-list:l7 level1 lfo7'>
+    <![if !supportLists]><b
+        style='mso-bidi-font-weight:normal'><span style='font-size:10.0pt;line-height:
+115%;color:#4D4D53'><span style='mso-list:Ignore'>H.<span
+        style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;
+</span></span></span></b><![endif]><span style='font-size:10.0pt;line-height:
+115%;color:#4D4D53'>You agree that these Terms constitutes
+    the entire, complete
+and exclusive agreement between you and CMS regarding the CMS APIs and
+supersedes all prior agreements and understandings, whether written or oral, or
+whether established by custom, practice, policy or precedent, with respect to
+the subject matter of these Terms. You also may be subject to additional terms
+and conditions that may apply when you use or purchase or use certain other CMS
+services, third-party content or third party software.</span></p>
+
+<p class=normalCxSpMiddle style='margin-left:.5in;mso-add-space:auto;
+text-indent:-17.95pt;mso-list:l7 level1 lfo7'><![if !supportLists]><b
+        style='mso-bidi-font-weight:normal'><span style='font-size:10.0pt;line-height:
+115%;color:#4D4D53'><span style='mso-list:Ignore'>I.<span
+        style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span></b><![endif]><b
+        style='mso-bidi-font-weight:normal'><span
+        style='font-size:10.0pt;line-height:115%;color:#4D4D53'>Amendments to these
+Terms</span></b></p>
+
+<p class=normalCxSpMiddle style='margin-top:8.0pt;margin-right:0in;margin-bottom:
+8.0pt;margin-left:.5in;mso-add-space:auto;text-indent:-17.95pt;mso-list:l7 level1 lfo7'>
+    <![if !supportLists]><b
+        style='mso-bidi-font-weight:normal'><span style='font-size:10.0pt;line-height:
+115%;color:#4D4D53'><span style='mso-list:Ignore'>J.<span
+        style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span></b><![endif]><span style='font-size:10.0pt;line-height:
+115%;color:#4D4D53'>We reserve the right to modify,
+    supplement, or replace the
+terms of these Terms, effective prospectively upon posting on the Developer
+Site or notifying you otherwise. For example, we may present a banner on the
+Developer Site when we have amended these Terms so that you may access and
+review the changes prior to your continued use of the CMS APIs and developer
+platform. If you do not want to agree to changes to these Terms, you can
+terminate these Terms at any time by ceasing use of the APIs and/or closing
+your Developer Account.</span></p>
+
+<p class=normalCxSpMiddle style='margin-left:.5in;mso-add-space:auto;
+text-indent:-17.95pt;mso-list:l7 level1 lfo7'><![if !supportLists]><b
+        style='mso-bidi-font-weight:normal'><span style='font-size:10.0pt;line-height:
+115%;color:#4D4D53'><span style='mso-list:Ignore'>K.<span
+        style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;
+</span></span></span></b><![endif]><b
+        style='mso-bidi-font-weight:normal'><span
+        style='font-size:10.0pt;line-height:115%;color:#4D4D53'>No informal waivers,
+agreements or representations</span></b></p>
+
+<p class=normalCxSpMiddle style='margin-top:8.0pt;margin-right:0in;margin-bottom:
+8.0pt;margin-left:.5in;mso-add-space:auto;text-indent:-17.95pt;mso-list:l7 level1 lfo7'>
+    <![if !supportLists]><b
+        style='mso-bidi-font-weight:normal'><span style='font-size:10.0pt;line-height:
+115%;color:#4D4D53'><span style='mso-list:Ignore'>L.<span
+        style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span></b><![endif]><span style='font-size:10.0pt;line-height:
+115%;color:#4D4D53'>Our failure to act with respect
+    to a breach of these Terms
+by you or others does not waive our right to act with respect to that breach or
+subsequent similar or other breaches. Except as expressly and specifically
+contemplated by these Terms, no representations, statements, consents, waivers
+or other acts or omissions by any CMS affiliate shall be deemed legally binding
+on any CMS Affiliate, unless documented in a physical writing hand signed by a
+duly appointed representative of CMS.</span></p>
+
+<p class=normalCxSpMiddle style='margin-left:.5in;mso-add-space:auto;
+text-indent:-17.95pt;mso-list:l7 level1 lfo7'><![if !supportLists]><b
+        style='mso-bidi-font-weight:normal'><span style='font-size:10.0pt;line-height:
+115%;color:#4D4D53'><span style='mso-list:Ignore'>M.<span
+        style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
+</span></span></span></b><![endif]><b
+        style='mso-bidi-font-weight:normal'><span
+        style='font-size:10.0pt;line-height:115%;color:#4D4D53'>No Injunctive Relief</span></b>
+</p>
+
+<p class=normalCxSpMiddle style='margin-top:8.0pt;margin-right:0in;margin-bottom:
+8.0pt;margin-left:.5in;mso-add-space:auto;text-indent:-17.95pt;mso-list:l7 level1 lfo7'>
+    <![if !supportLists]><b
+        style='mso-bidi-font-weight:normal'><span style='font-size:10.0pt;line-height:
+115%;color:#4D4D53'><span style='mso-list:Ignore'>N.<span
+        style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;
+</span></span></span></b><![endif]><span style='font-size:10.0pt;line-height:
+115%;color:#4D4D53'>In no event shall you seek or
+    be entitled to rescission,
+injunctive or other equitable relief, or to enjoin or restrain the operation of
+the CMS developer platform or any APIs, content or other material used or
+displayed through the CMS developer platform.</span></p>
+
+<p class=normalCxSpMiddle style='margin-left:.5in;mso-add-space:auto;
+text-indent:-17.95pt;mso-list:l7 level1 lfo7'><![if !supportLists]><b
+        style='mso-bidi-font-weight:normal'><span style='font-size:10.0pt;line-height:
+115%;color:#4D4D53'><span style='mso-list:Ignore'>O.<span
+        style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;
+</span></span></span></b><![endif]><b
+        style='mso-bidi-font-weight:normal'><span
+        style='font-size:10.0pt;line-height:115%;color:#4D4D53'>Beneficiaries</span></b>
+</p>
+
+<p class=normalCxSpMiddle style='margin-top:8.0pt;margin-right:0in;margin-bottom:
+8.0pt;margin-left:.5in;mso-add-space:auto;text-indent:-17.95pt;mso-list:l7 level1 lfo7'>
+    <![if !supportLists]><b
+        style='mso-bidi-font-weight:normal'><span style='font-size:10.0pt;line-height:
+115%;color:#4D4D53'><span style='mso-list:Ignore'>P.<span
+        style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;
+</span></span></span></b><![endif]><span style='font-size:10.0pt;line-height:
+115%;color:#4D4D53'>Entities other than CMS are not parties,
+    but intended third
+party beneficiaries of these Terms, with a right to enforce these Terms
+directly against you.</span></p>
+
+<p class=normalCxSpMiddle style='margin-left:.5in;mso-add-space:auto;
+text-indent:-17.95pt;mso-list:l7 level1 lfo7'><![if !supportLists]><b
+        style='mso-bidi-font-weight:normal'><span style='font-size:10.0pt;line-height:
+115%;color:#4D4D53'><span style='mso-list:Ignore'>Q.<span
+        style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;
+</span></span></span></b><![endif]><b
+        style='mso-bidi-font-weight:normal'><span
+        style='font-size:10.0pt;line-height:115%;color:#4D4D53'>Assignment and
+Delegation</span></b></p>
+
+<p class=normalCxSpMiddle style='margin-top:8.0pt;margin-right:0in;margin-bottom:
+8.0pt;margin-left:.5in;mso-add-space:auto;text-indent:-17.95pt;mso-list:l7 level1 lfo7'>
+    <![if !supportLists]><b
+        style='mso-bidi-font-weight:normal'><span style='font-size:10.0pt;line-height:
+115%;color:#4D4D53'><span style='mso-list:Ignore'>R.<span
+        style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;
+</span></span></span></b><![endif]><span style='font-size:10.0pt;line-height:
+115%;color:#4D4D53'>You may not assign or delegate any
+    rights or obligations
+under these Terms. Any purported assignment and delegation shall be
+ineffective. We may freely assign or delegate all rights and obligations under
+these Terms, fully or partially without notice to you. We may also substitute,
+by way of unilateral novation, effective upon notice to you, CMS for any third
+party that assumes our rights and obligations under these Terms.</span></p>
+
+<p class=normalCxSpMiddle style='margin-left:.5in;mso-add-space:auto;
+text-indent:-17.95pt;mso-list:l7 level1 lfo7'><![if !supportLists]><b
+        style='mso-bidi-font-weight:normal'><span style='font-size:10.0pt;line-height:
+115%;color:#4D4D53'><span style='mso-list:Ignore'>S.<span
+        style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;
+</span></span></span></b><![endif]><b
+        style='mso-bidi-font-weight:normal'><span
+        style='font-size:10.0pt;line-height:115%;color:#4D4D53'>Potential Other Rights
+and Obligations</span></b></p>
+
+<p class=normalCxSpLast style='margin-top:8.0pt;margin-right:0in;margin-bottom:
+8.0pt;margin-left:.5in;mso-add-space:auto;text-indent:-17.95pt;mso-list:l7 level1 lfo7'>
+    <![if !supportLists]><b
+        style='mso-bidi-font-weight:normal'><span style='font-size:10.0pt;line-height:
+115%;color:#4D4D53'><span style='mso-list:Ignore'>T.<span
+        style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span></b><![endif]><span style='font-size:10.0pt;line-height:
+115%;color:#4D4D53'>You may have rights or obligations
+    under local law other
+than those enumerated here if you are located outside the United States.</span>
+</p>
+
+<h2 style='margin-top:11.0pt;margin-right:0in;margin-bottom:11.0pt;margin-left:
+0in;line-height:136%'><a name=h.sl7mwh4d3srl></a><span style='font-size:18.0pt;
+mso-bidi-font-size:10.0pt;line-height:136%;font-family:Arial;mso-fareast-font-family:
+Arial;mso-bidi-font-family:Arial;color:#333333;font-weight:normal'>How To
+Contact Us</span></h2>
+
+<p class=normal style='margin-top:8.0pt;margin-right:0in;margin-bottom:8.0pt;
+margin-left:0in;line-height:136%'><span style='font-size:10.0pt;line-height:
+136%;color:#4D4D53'>If you have questions or comments about
+    these CMS BlueButton API Terms of Use, please contact us </span>
+    {# TODO: create /accounts/ask/terms_of_use   #}
+    <a href="/developer/ask/terms_of_use"><span style='font-size:
+10.0pt;line-height:136%;color:#006699;text-decoration:none;text-underline:none'>online</span></a><span
+            style='font-size:10.0pt;line-height:136%;color:#4D4D53'> or by physical mail
+at:</span></p>
+
+<p class=normal style='line-height:136%'><i
+        style='mso-bidi-font-style:normal'><span
+        style='font-size:10.0pt;line-height:136%;color:#4D4D53'>Centers for Medicare and
+Medicaid Services</span></i></p>
+
+<p class=normal style='line-height:136%'><i
+        style='mso-bidi-font-style:normal'><span
+        style='font-size:10.0pt;line-height:136%;color:#4D4D53'>Attn: BlueButton API
+Terms of Use Issues</span></i></p>
+
+<p class=normal style='line-height:136%'><i
+        style='mso-bidi-font-style:normal'><span
+        style='font-size:10.0pt;line-height:136%;color:#4D4D53'>7500 Security Boulevard
+</span></i></p>
+
+<p class=normal style='line-height:136%'><i
+        style='mso-bidi-font-style:normal'><span
+        style='font-size:10.0pt;line-height:136%;color:#4D4D53'>Baltimore, MD 21244 </span></i>
+</p>
+
+<p class=normal style='line-height:136%'><i
+        style='mso-bidi-font-style:normal'><span
+        style='font-size:10.0pt;line-height:136%;color:#4D4D53'>USA </span></i>
+</p>

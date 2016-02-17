@@ -46,7 +46,8 @@ class UserRegistrationForm(forms.ModelForm):
     password2 = forms.CharField(widget=forms.PasswordInput(),
                                 label="Repeat your password")
 
-    fields = ['username', 'email', 'password1', 'password2' ]
+    applicant_role = "User"
+    fields = ['username', 'email', 'password1', 'password2', 'applicant_role' ]
 
 
     # is_user = forms.BooleanField(widget=forms.HiddenInput(), initial=True,)
@@ -84,7 +85,9 @@ class DeveloperRegistrationForm(forms.ModelForm):
     password2 = forms.CharField(widget=forms.PasswordInput(),
                                 label="Repeat your password")
 
-    fields = ['username', 'email', 'password1', 'password2' ]
+    applicant_role = "Developer"
+
+    fields = ['username', 'email', 'password1', 'password2', 'applicant_role' ]
 
     # is_user = forms.BooleanField(widget=forms.HiddenInput(), initial=False)
     # is_developer = forms.BooleanField(widget=forms.HiddenInput(), initial=True)

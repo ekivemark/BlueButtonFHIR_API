@@ -141,7 +141,7 @@ def agree_to_terms(request):
         form = UserCreationForm()
 
     context = {'form': form, }
-    #   return render_to_response('developer/agree_to_terms.html', RequestContext(request, context,))
+    #   return render_to_response('developer/agree_to_terms_user.html', RequestContext(request, context,))
     return render_to_response(reverse_lazy('accounts:register'),
                               RequestContext(request, context, ))
 

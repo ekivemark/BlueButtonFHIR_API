@@ -1,10 +1,12 @@
-from django.conf import *
+
 from registration.backends.default.urls import *
 from django.contrib import admin
 
 # Add next two lines to display static and media files
 # then add +static statement at the end of the urlpatterns
+from django.conf import *
 from django.conf import settings
+from django.conf.urls import patterns, url, include
 from django.conf.urls.static import static
 
 from django.contrib.auth import views as auth_views
@@ -15,8 +17,6 @@ from django.views.generic import TemplateView
 from accounts.forms.other import (RegistrationFormUserTOSAndEmail,
                                   RegistrationFormDeveloperTOSAndEmail)
 
-# from apps.secretqa.views import *
-# from apps.subacc.views import *
 from apps.api.views import *
 from apps.home.views import WhatIsNewListView
 

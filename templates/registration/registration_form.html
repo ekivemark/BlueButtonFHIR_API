@@ -2,7 +2,7 @@
 {% load i18n %}
 
 {% block title %}{% trans "Register for an account" %}{% endblock %}
-{% block pagename %}Register for {{ settings.APPLICATION_TITLE }}{% endblock %}
+{% block pagename %}{% if form.applicant_role != "Developer" %}Register for {{ settings.APPLICATION_TITLE }}{% else %}{{ form.applicant_role }} Registration{% endif %}{% endblock %}
 {% block breadcrumbs %}
     <div class="container">
         <ul class="breadcrumb">
@@ -13,6 +13,7 @@
     </div>
 {% endblock %}
 {% block content %}
+    <p>You are registering as a {{ settings.APPLICATION_TITLE }} {{ form.applicant_role }}</p>
     <p>Please read the Terms of Use and then complete the registration form below.</p>
  <div class="container-fluid">
     <div class="row">
@@ -41,6 +42,7 @@
                            value="{% trans 'I Agree to the terms - Register Me' %}"/>
                 </p>
             </form>
+
             <p>
                 <a href="https://mymedicare.gov/registration.aspx" target="_blank">
                     {% trans "Register on MyMedicare.gov (Opens a new window)" %}</a>
@@ -49,7 +51,11 @@
         <div class="col-md-7">
             <div class="terms">
                 <!--- Template is in bbonfhiruser/accounts/templates/accounts/agree_to_terms --->
-                {% include "accounts/agree_to_terms.html" %}
+                {% if form.applicant_role = "Developer" %}
+                    {% include "accounts/agree_to_terms_developer.html" %}
+                {% else %}
+                     {% include "accounts/agree_to_terms_user.html" %}
+                {% endif %}
             </div>
         </div>
     </div>
