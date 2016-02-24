@@ -20,7 +20,8 @@ from .views.delete import delete
 
 from .views.get import (read, vread, history)
 
-default_app_config = 'fhir_io_hapi.apps.fhir_io_hapi_config'
-
 from .views.search import find
+
+# Used to load post_save signal for write to backend fhir server
+default_app_config = 'fhir_io_hapi.apps.fhir_io_hapi_config'
 
