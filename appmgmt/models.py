@@ -4,6 +4,8 @@
 # Extend the Django OAuth Provider Application Model
 # Author: Mark Scrimshire (c) @ekivemark
 
+import json
+
 from collections import OrderedDict
 
 from django.conf import settings
@@ -11,6 +13,7 @@ from django.db import models
 from oauth2_provider.models import AbstractApplication
 from accounts.choices import DEVELOPER_ROLE_CHOICES
 from .choices import APPLICATION_TYPE_CHOICES
+from .utils import write_fhir, build_fhir_id
 
 # Modify settings.py wih OAUTH2_PROVIDER_APPLICATION_MODEL=
 
@@ -63,8 +66,9 @@ class BBApplication(AbstractApplication):
     privacy_url = models.URLField(blank=True)
     support_url = models.URLField(blank=True)
 
-    fhir_reference = models.URLField(blank=True,
-                                     null=True)
+    fhir_reference = models.CharField(max_length=60,
+                                      blank=True,
+                                      null=True)
 
     # We should create/update a FHIR Device resource each time the Application record is
     # saved.
@@ -87,6 +91,69 @@ class BBApplication(AbstractApplication):
 
     # on 201 Created write FHIR_reference using response header location field content
     # Otherwise use FHIR_Reference to update record on fhir server when application is updated
+
+    def save(self, *args, **kwargs):
+
+        if self.fhir_reference is "":
+            if settings.DEBUG:
+                print("Overriding BBApplication save")
+
+            mode = "POST"
+        else:
+            mode = "PUT"
+        self.fhir_reference = self.build_fhir(self, *args, **kwargs)
+
+        super(BBApplication, self).save(*args, **kwargs)
+
+
+    def build_fhir(self, *args, **kwargs):
+        # Create a FHIR Device Record
+        result = False
+
+        if self.fhir_reference == "":
+            mode = "POST"
+
+        else:
+            mode = "PUT"
+
+        resource = OrderedDict()
+        resource['resourceType'] = "Device"
+        resource['identifier'] = [build_fhir_id("system", settings.DOMAIN,
+                                  "type", {"text": "BBApplication"},
+                                  "value", str(self.id))]
+        resource['type'] = {"text": self.get_app_type_display()}
+        if self.agree:
+            resource['status'] = "available"
+        else:
+            resource['status'] = "not-available"
+        resource['manufacturer'] = self.organization.name
+        resource['model'] = self.name
+
+        org = OrderedDict()
+        org['resourceType'] = "Organization"
+
+        id_info_1 = OrderedDict()
+        id_info_1['system'] = settings.DOMAIN
+        id_info_1['type'] = {"text": "Organization"}
+        id_info_1['value'] = str(self.organization_id)
+
+
+        org['identifier'] = [build_fhir_id("system", settings.DOMAIN,
+                              "type", {"text": "Organization"},
+                              "value", str(self.organization_id)),
+                             build_fhir_id("system", "FHIR",
+                              "type", {"text": "Developer Organization"},
+                              "value", self.organization.fhir_reference)]
+        resource['organization'] = org
+
+        resource['url'] = self.support_url
+
+        result = write_fhir(mode,
+                            "Device",
+                            json.dumps(resource),
+                            self.fhir_reference)
+
+        return result
 
 
     def privacy(self):
@@ -123,8 +190,9 @@ class Organization(models.Model):
     trusted = models.BooleanField(default=False)
     trusted_since = models.DateTimeField(blank=True, null=True)
 
-    fhir_reference = models.URLField(blank=True,
-                                     null=True)
+    fhir_reference = models.CharField(max_length=60,
+                                      blank=True,
+                                      null=True)
 
     # We need to write an Organization Profile to FHIR and update FHIR_Reference
 # {
@@ -149,21 +217,48 @@ class Organization(models.Model):
     # On 201 Created write FHIR_reference using response header location field content
     # Otherwise use FHIR_Reference to update record on fhir server when application is updated
 
-    def build_fhir(self):
+
+    def save(self, *args, **kwargs):
+
+        if self.fhir_reference is "":
+            if settings.DEBUG:
+                print("Overriding Organization save")
+
+            mode = "POST"
+        else:
+            mode = "PUT"
+        self.fhir_reference = self.build_fhir(self, *args, **kwargs)
+
+        super(Organization, self).save(*args, **kwargs)
+
+
+    def build_fhir(self, *args, **kwargs):
         # Create a FHIR Organization Record
         result = False
 
+        if self.fhir_reference == "":
+            mode = "POST"
+
+        else:
+            mode = "PUT"
+
         resource = OrderedDict()
         resource['resourceType'] = "Organization"
-        resource['identifier'] = {"system": settings.DOMAIN,
-                                  "type": "Organization",
-                                  "value": self.id}
+        resource['identifier'] = [build_fhir_id("system", settings.DOMAIN,
+                                  "type", {"text": "Organization"},
+                                  "value", str(self.id))]
         resource['type'] = {"text": "Developer Organization"}
         resource['name'] = self.name
-        resource['telecom'] = [{'resourceType': "ContactPoint",
-                                'system': "domain",
-                                'value': self.domain}]
+        telecom = OrderedDict()
+        telecom['resourceType'] = "ContactPoint"
+        telecom['system'] = "domain"
+        telecom['value'] = self.domain
+        resource['telecom'] = [telecom,]
 
+        result = write_fhir(mode,
+                            "Organization",
+                            json.dumps(resource),
+                            self.fhir_reference)
 
         return result
 
