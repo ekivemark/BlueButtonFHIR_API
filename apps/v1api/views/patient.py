@@ -177,14 +177,14 @@ def get_patient(request, *args, **kwargs):
             print("Patient?:", tag0)
             print("DrillDown:", drill_down[level])
             print("root find:", root.find(drill_down[level]))
-            for element in root:
-                print("Child Element:", element)
-                if drill_down[level] in element:
-                    level += 1
-                    for element2 in element:
-                        print("Element2:", element2)
-                        if drill_down[level] in element2:
-                            print("Element2.iter()", element2.iter())
+            # for element in root:
+            #     print("Child Element:", element)
+            #     if drill_down[level] in element:
+            #         level += 1
+            #         for element2 in element:
+            #             print("Element2:", element2)
+            #             if drill_down[level] in element2:
+            #                 print("Element2.iter()", element2.iter())
             # text = root[4][0][0][2][1].findtext("text")
 
             pretty_xml = xml_text.toprettyxml()
