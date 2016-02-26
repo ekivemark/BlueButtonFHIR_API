@@ -18,7 +18,7 @@ from accounts.forms.other import (RegistrationFormUserTOSAndEmail,
                                   RegistrationFormDeveloperTOSAndEmail)
 
 from apps.api.views import *
-from apps.home.views import WhatIsNewListView
+from apps.home.views import WhatIsNewListView, versionView
 
 from django.contrib import admin
 
@@ -32,6 +32,8 @@ urlpatterns = patterns('',
                        #     name='about'),
                        url(r'^base/',
                            include('apps.home.urls', namespace='base')),
+                       url(r'^version/$', 'apps.home.views.versionView',
+                           name="versionview"),
 
                        # url(r'^whatsnew/$', WhatIsNewListView.as_view(),
                        #     name='whatsnew'),

@@ -18,14 +18,17 @@ from apps.home.views import (WhatIsNewListView,
                              WhatIsNewDetailView,
                              WhatIsNewUpdateView,
                              WhatIsNewDeleteView,
-                             AboutView)
+                             AboutView,
+                             )
 
-
-from .views import (what_is_new_create, )
+from .views import (what_is_new_create, versionView )
 
 admin.autodiscover()
 
 urlpatterns = patterns('',
+                       url(r'^version',
+                           'apps.home.views.versionView',
+                           name="versionview"),
                        url(r'^about/$', AboutView.as_view(),
                            name="about"),
                        url(r'^$', WhatIsNewListView.as_view(),
@@ -42,5 +45,6 @@ urlpatterns = patterns('',
                        url(r'^delete/(?P<pk>\d+)/$',
                            WhatIsNewDeleteView.as_view(success_url=reverse_lazy('base:new_stuff')),
                            name="new_stuff_delete"),
+
                        )
 

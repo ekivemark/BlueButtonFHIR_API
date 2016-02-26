@@ -8,6 +8,11 @@ Created: 12/15/15 4:36 PM
 """
 __author__ = 'Mark Scrimshire:@ekivemark'
 
+from collections import OrderedDict
+from django.http import HttpResponse
+
+import json
+
 from django.conf import settings
 from django.contrib.messages.views import SuccessMessageMixin
 from django.shortcuts import render_to_response
@@ -48,6 +53,16 @@ def home_index(request):
 
     return render_to_response('index.html',
                               RequestContext(request, context, ))
+
+
+def versionView(request):
+    """Version information"""
+    od = OrderedDict()
+    od['request_method'] = request.method
+    od['version'] = settings.APPLICATION_TITLE+":"+settings.VERSION_INFO
+    od['note'] = "Hello.  Welcome to the " + settings.APPLICATION_TITLE
+    return HttpResponse(json.dumps(od, indent=4),
+                        content_type="application/json")
 
 
 class AboutView(TemplateView):

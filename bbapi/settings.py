@@ -676,12 +676,12 @@ if DB_PLATFORM == 'sqlite3':
 else:
     MEDIA_ROOT = "/data/pyapps/media/"
 
+VERSION_INFO = "1.1.2"
+
 if DEBUG_SETTINGS:
+    print("Version:", VERSION_INFO)
     print("FHIR_SERVER:", FHIR_SERVER)
     print("MEDIA_URL:", MEDIA_URL)
     print("MEDIA_ROOT:", MEDIA_ROOT)
     print("=========================================")
 
-from fhir_io_hapi.utils import fhir_datetime
-if DEBUG_SETTINGS:
-    print("datetime test:", fhir_datetime())
