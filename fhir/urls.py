@@ -10,6 +10,9 @@ from .views.history import history, vread
 from .views.hello import hello
 from .views.oauth import oauth_create, oauth_update
 
+from django.contrib import admin
+
+admin.autodiscover()
 
 urlpatterns = patterns('',    
     
