@@ -33,7 +33,7 @@ class ResourceTypeControl(models.Model):
     apply_patient_filter    = models.BooleanField(help_text="Does this resource need to mask "
                                                             "patient ids?")
     force_url_id_override   = models.BooleanField(help_text="Does URI need to be overridden "
-                                                            "in order to prevent retreiving "
+                                                            "in order to prevent retrieving "
                                                             "other people's data?")
     search_parameter_mask   = models.TextField(max_length=5120, default="",
                                         help_text="Empty string indicates no mask. "

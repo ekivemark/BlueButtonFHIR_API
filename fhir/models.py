@@ -97,3 +97,7 @@ class SupportedResourceType(models.Model):
         #     return self.fhir_history
         # else:
         #     return False
+
+
+    def get_fields_and_values(self):
+            return [(field, field.value_to_string(self)) for field in SupportedResourceType._meta.fields]

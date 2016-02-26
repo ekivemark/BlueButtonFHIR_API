@@ -600,7 +600,15 @@ LDAP_AUTH_GET_FIELDS = ["cn", "uid", "givenName",
 # BeautifulSoup
 BS_PARSER = 'lxml'
 
-FHIR_SERVER = PARSE_INI.get('global', 'fhir_server')
+fhir_dict = PARSE_INI.get('global', 'fhir_server_configuration')
+FHIR_SERVER_CONF = eval(fhir_dict)
+# FHIR_SERVER_CONF = {
+#         'SERVER': "http://fhir.bbonfhir.com",
+#         'PATH': "/fhir-p",
+#         'RELEASE': "/baseDstu2",
+#         }
+
+FHIR_SERVER = FHIR_SERVER_CONF['SERVER'] + FHIR_SERVER_CONF['PATH']
 if FHIR_SERVER == '':
     FHIR_SERVER = 'http://fhir.bbonfhir.com/fhir-p'
     # FHIR_SERVER = 'http://localhost:8080/fhir-p'
@@ -624,6 +632,7 @@ DJANGO_FHIR_CONFIG = {
 
 
 if DEBUG_SETTINGS:
+    print("FHIR_SERVER_CONF:", FHIR_SERVER_CONF)
     print("FHIR_SERVER:", FHIR_SERVER)
     print("AUTH_LDAP_SERVER_URI:", AUTH_LDAP_SERVER_URI)
     print("AUTH_LDAP_SCOPE:", AUTH_LDAP_SCOPE)
@@ -672,3 +681,7 @@ if DEBUG_SETTINGS:
     print("MEDIA_URL:", MEDIA_URL)
     print("MEDIA_ROOT:", MEDIA_ROOT)
     print("=========================================")
+
+from fhir_io_hapi.utils import fhir_datetime
+if DEBUG_SETTINGS:
+    print("datetime test:", fhir_datetime())

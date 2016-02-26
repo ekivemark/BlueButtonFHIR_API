@@ -11,6 +11,8 @@ utilities used module-wide
 
 """
 import json
+from datetime import datetime, tzinfo
+from dateutil.tz import *
 
 from collections import OrderedDict
 
@@ -306,3 +308,26 @@ def check_rt_controls(resource_type):
         srtc = None
 
     return srtc
+
+
+def fhir_datetime(dt=None):
+    # convert dateTime to string
+    # Format = "2012-10-25T22:04:27+11:00"
+    # Format = "2012-10-25T22:04:27Z"
+
+    if dt == None:
+        # set to now with timezone
+        dt = datetime.now(tzlocal())
+
+        # if settings.DEBUG:
+        #     print("DateTime:", dt)
+
+    dt_str = dt.strftime("%Y-%m-%dT%H:%M:%S%z")
+
+    if settings.DEBUG:
+        print("DateTime:", dt)
+        print("String:", dt_str)
+
+    return dt_str
+
+

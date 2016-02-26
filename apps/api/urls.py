@@ -38,7 +38,8 @@ urlpatterns = patterns('',
                            include('apps.v1api.urls',
                                    namespace='v1')),
                        url(r'^documentation/$',
-                           TemplateView.as_view(template_name='api/documentation.html')),
+                           TemplateView.as_view(template_name='api/documentation.html'),
+                           name="documentation"),
 
                        url(r'^admin/', include(admin.site.urls)),
 

@@ -20,15 +20,19 @@ SEPARATOR = "/"
 
 QMARK = "?"
 
-FHIR_SERVER_CONF = {
-        'SERVER': "http://fhir.bbonfhir.com",
-        'PATH': "/fhir-p",
-        'RELEASE': "/baseDstu2",
-        }
+# From local.ini via settings.py
+# FHIR_SERVER_CONF = {
+#         'SERVER': "http://fhir.bbonfhir.com",
+#         'PATH': "/fhir-p",
+#         'RELEASE': "/baseDstu2",
+#         }
+
+FHIR_SERVER_CONF = getattr(settings, "FHIR_SERVER_CONF", None)
 
 # Build the Server and Path specification
 # FHIR_SERVER = 'http://fhir.bbonfhir.com/fhir-p'
 # FHIR_SERVER = 'http://localhost:8080/fhir-p'
+
 FHIR_SERVER = FHIR_SERVER_CONF['SERVER']+FHIR_SERVER_CONF['PATH'] + FHIR_SERVER_CONF['RELEASE']
 
 def build_url(Resource="", Id=""):

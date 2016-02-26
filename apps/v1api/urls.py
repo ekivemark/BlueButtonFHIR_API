@@ -27,6 +27,8 @@ from apps.v1api.views.ogets import (Hello,
                                     patient,
                                     Patients,)
 
+from apps.v1api.views.apidocs import ResourceTypeList, ResourceControlList
+
 admin.autodiscover()
 
 urlpatterns = patterns('',
@@ -54,6 +56,12 @@ urlpatterns = patterns('',
 
                        # Add more oauth endpoints here
                        url(r'^o/patient', 'apps.v1api.views.ogets.patient'),
+
+                       url(r'^resourcetype',ResourceTypeList.as_view(),
+                           name = "resourcetype"),
+
+                       url(r'^resourcecontrol',ResourceControlList.as_view(),
+                           name="resourcecontrol"),
 
                        url(r'^admin/', include(admin.site.urls)),
 

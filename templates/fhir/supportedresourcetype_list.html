@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block breadcrumbs %}
+       <div class="container">
+        <ul class="breadcrumb">
+            <li><a href="{% url 'home' %}">Home</a></li>
+            <li><a href="{% url 'api:documentation' %}">Documentation</a></li>
+            <li class="active">Resource Types</li>
+        </ul>
+    </div>
+{% endblock %}
+
+
+{% block content %}
+    <h2>Supported FHIR Resource Types</h2>
+    <ul>
+
+    <table class="table table-striped table-hover ">
+        <thead>
+            <tr>
+                <th>
+                    resourceType
+                </th>
+                <th>
+                    Permitted Actions
+                </th>
+                <th>
+                    Json Schema
+                </th>
+            </tr>
+        </thead>
+        {% for resource in object_list %}
+            <tr>
+                <td>
+                    <h5>{{ resource.resource_name }}</h5>
+                </td>
+                <td>
+                    {{ resource.get_supported_interaction_types }}
+                </td>
+                <td>
+                    {{ resource.json_schema }}
+                </td>
+            </tr>
+        {% endfor %}
+    </Table>
+
+
+
+{% endblock %}

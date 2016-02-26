@@ -14,7 +14,7 @@
         </ul>
     </div>
 {% endblock %}
-{% block pagename %}BlueButton Documentation{% endblock %}
+{% block pagename %}Blue Button Documentation{% endblock %}
 {% block content %}
 
 
@@ -32,8 +32,10 @@
 
                 </p>
                 <p>
-                    Email <a href="mailto:mark@ekivemark.com">mark AT ekivemark DOT com</a> for
-                    assistance.
+                    See the <a href="{% url 'api:v1:resourcetype' %}">Supported Resource Types</a>
+                </p>
+                <p>
+                    See the <a href="{% url 'api:v1:resourcecontrol' %}">Resource Type Controls</a>
                 </p>
             </div>
 
