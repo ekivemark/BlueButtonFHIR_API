@@ -185,12 +185,12 @@ def get_patient(request, *args, **kwargs):
                         print("Element2:", element2)
                         if drill_down[level] in element2:
                             print("Element2.iter()", element2.iter())
-            text = root[4][0][0][2][1].findtext("text")
+            # text = root[4][0][0][2][1].findtext("text")
 
             pretty_xml = xml_text.toprettyxml()
-            if settings.DEBUG:
-                print("TEXT:", text)
-                # print("Pretty XML:", pretty_xml)
+            #if settings.DEBUG:
+            #    print("TEXT:", text)
+            #    # print("Pretty XML:", pretty_xml)
 
             context['result'] = pretty_xml  # convert
             context['text'] = pretty_xml
