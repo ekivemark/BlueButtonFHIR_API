@@ -63,6 +63,10 @@ urlpatterns = patterns('',
                            name='register_developer'),
                        url(r'^registration/', include(
                            'registration.backends.default.urls', )),
+
+                       url(r'^auto_registration/',
+                           include('registration.backends.simple.urls')),
+
 # password
                        url(r'^password/reset/$', auth_views.password_reset,
                            {'post_reset_redirect': reverse_lazy(
@@ -80,7 +84,8 @@ urlpatterns = patterns('',
                            auth_views.password_reset_done,
                            name='password_reset_done'),
 # fhir
-                       url(r'^fhir/', include('fhir.urls')),
+                       url(r'^fhir/', include('fhir.urls',
+                                              namespace='fhir')),
 # OAuth2_provider
                        url(r'^o/', include('oauth2_provider.urls',
                                            namespace='oauth2_provider')),
@@ -90,6 +95,10 @@ urlpatterns = patterns('',
                                            namespace='oauth2_provider')),
 # Templates
                        url(r'^support/$', TemplateView.as_view(template_name='support.html')),
+
+# Setup
+                       url(r'^setup/', include('apps.setup.urls',
+                                                namespace='setup')),
 
 # Admin
                        url(r'^admin/', include(admin.site.urls)),

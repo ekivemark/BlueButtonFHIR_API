@@ -12,7 +12,7 @@ from jsonschema import validate, ValidationError
 
 import datetime
 
-from ..utils import (kickout_404, kickout_403, kickout_400, kickout_500)
+from ..utils import (kickout_404, kickout_403, kickout_400, kickout_500, DEBUG_EXTRA_INFO)
 from .hello import hello
 from .search import search
 
@@ -108,8 +108,9 @@ def create(request, resource_type):
     #This is something other than GET or POST (i.e. a  GET)
     if request.method not in ("GET", "POST"):
         od = OrderedDict()
-        od['request_method']= request.method
-        od['interaction_type'] = "create"
+        if DEBUG_EXTRA_INFO:
+            od['request_method']= request.method
+            od['interaction_type'] = "create"
         od['resource_type']    = resource_type
         od['note'] = "Perform an HTTP POST to this URL with the JSON resource as the request body."
         

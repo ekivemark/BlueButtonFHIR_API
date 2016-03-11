@@ -4,7 +4,9 @@ from collections import OrderedDict
 
 from django.http import HttpResponse
 
-from ..utils import (kickout_403, kickout_404)
+from ..utils import (kickout_403,
+                     kickout_404,
+                     DEBUG_EXTRA_INFO)
 
 import json
 
@@ -29,8 +31,9 @@ def update(request, resource_type, id):
 
     # Replace Section below with call to function in fhir_io_mongo or pluggable backend
     od = OrderedDict()
-    od['request_method']= request.method
-    od['interaction_type'] = "update"
+    if DEBUG_EXTRA_INFO:
+        od['request_method']= request.method
+        od['interaction_type'] = "update"
     od['resource_type']    = resource_type
     od['id'] = id
     od['note'] = "This is only a stub for future implementation"

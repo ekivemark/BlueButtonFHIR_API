@@ -7,7 +7,7 @@ import json
 
 from django.views.decorators.csrf import csrf_exempt
 
-from ..utils import (kickout_403, kickout_404)
+from ..utils import (kickout_403, kickout_404, DEBUG_EXTRA_INFO)
 from .utils import check_access_interaction_and_resource_type
 
 from ..settings import FHIR_BACKEND
@@ -29,8 +29,9 @@ def delete(request, resource_type, id):
 
     
     od = OrderedDict()
-    od['request_method']= request.method
-    od['interaction_type'] = interaction_type
+    if DEBUG_EXTRA_INFO:
+        od['request_method']= request.method
+        od['interaction_type'] = interaction_type
     od['resource_type']    = resource_type
     od['id'] = id
     od['note'] = "This is only a stub for future implementation"

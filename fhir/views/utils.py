@@ -13,3 +13,4 @@ def check_access_interaction_and_resource_type(resource_type, interaction_type):
         msg = "%s is not a supported resource type on this FHIR server." % (resource_type)
         return kickout_404(msg)
     return False
+

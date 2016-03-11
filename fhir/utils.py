@@ -7,6 +7,7 @@ import json
 from collections import OrderedDict
 from django.http import HttpResponse
 
+DEBUG_EXTRA_INFO = False
 
 def kickout_400(reason, status_code=400):
     response= OrderedDict()

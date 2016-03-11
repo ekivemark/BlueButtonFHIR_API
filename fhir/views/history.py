@@ -8,7 +8,7 @@ from django.http import HttpResponse
 import json
 
 from .utils import check_access_interaction_and_resource_type
-from ..utils import (kickout_404, kickout_403, kickout_400)
+from ..utils import (kickout_404, kickout_403, kickout_400, DEBUG_EXTRA_INFO)
 from ..settings import FHIR_BACKEND
 
 
@@ -34,8 +34,9 @@ def history(request, resource_type, id):
 
 
     od = OrderedDict()
-    od['request_method']= request.method
-    od['interaction_type'] = "_history"
+    if DEBUG_EXTRA_INFO:
+        od['request_method']= request.method
+        od['interaction_type'] = "_history"
     od['resource_type']    = resource_type
     od['id'] = id
     od['note'] = "This is only a stub for future implementation"

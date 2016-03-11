@@ -195,68 +195,9 @@ def manage_user(request):
 
     mfa_address = cell_email(user.mobile, user.carrier)
 
-    # SubAccount Section
-
-    # dev_list = list(Device.objects.filter(user_id=request.user,
-    #                                       deleted=False))
-    # DONE: Get Device Used indicator
-    # Used Field is included in Device. It is set during login
-
-    # End of SubAccount/Device section
-
-    try:
-        xwalk = Crosswalk.objects.get(user=request.user)
-        mmg_xwalk = {}
-        mmg_xwalk['mmg_user'] = xwalk.mmg_user
-        mmg_xwalk['mmg_name'] = xwalk.mmg_name
-        mmg_xwalk['mmg_email'] = xwalk.mmg_email
-        mmg_xwalk['mmg_account'] = xwalk.mmg_account
-        mmg_xwalk['mmg_bbdata'] = xwalk.mmg_bbdata
-        mmg_xwalk['mmg_bbfhir'] = xwalk.mmg_bbfhir
-
-        temp = xwalk.mmg_bbjson
-        # if settings.DEBUG:
-            # print("Temp:", temp)
-        #temp2 = json.loads(eval(temp))
-        #temp = json.loads(json.dumps(xwalk.mmg_bbjson),object_pairs_hook=OrderedDict)
-        #temp = json.dumps(serializers.serialize(xwalk.mmg_bbjson))
-
-        #print("Temp2:", temp2)
-        #print("========")
-        #for key, value in temp2.items():
-        #    print("Key:", key, ":", temp[key])
-
-        mmg_xwalk['mmg_bbjson'] = temp
-        # print("patient:", temp['patient'])
-    except Crosswalk.DoesNotExist:
-        mmg_xwalk = {}
-
-    # Secret QA Section
-
-    # try:
-    #     secretqa = QA.objects.get(user=request.user)
-    # except QA.DoesNotExist:
-    #     secretqa = None
-    # if settings.DEBUG:
-    #     print("secretqa-QA",secretqa)
-    #
-    # if secretqa == None:
-    #     security_mode = "add"
-    # else:
-    #     security_mode = "edit"
-    #
-    # security_list = secretqa
-
-    # End of Secret QA Section
 
     context = {"user": user,
                "mfa_address": mfa_address,
-               "mmg_xwalk": mmg_xwalk,
-               # Enable Subaccount/Devices
-               # "devices": dev_list,
-               # Enable Secret QA Section
-               # 'security_mode': security_mode,
-               #"security": security_list,
                }
 
     return render_to_response('accounts/manage_user.html',

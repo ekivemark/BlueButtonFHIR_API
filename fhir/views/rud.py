@@ -1,6 +1,6 @@
 from django.shortcuts import render
 
-from ..utils import kickout_404, kickout_400, kickout_500
+from ..utils import kickout_404, kickout_400, kickout_500, DEBUG_EXTRA_INFO
 from .update import update
 from .delete import delete
 from .read import read

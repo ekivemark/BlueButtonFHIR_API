@@ -17,38 +17,13 @@
             <div class="row">
                 <div class="col-lg-6 well">
                     {% include 'accounts/include/personal_profile.html' %}
-                    {% comment %}{% include 'secretqa/security_profile.html' %}{% endcomment %}
                 </div>
             </div>
-            <div class="row">
-                {% comment %}<div class="col-lg-12 well">
-                    {% if not security.question_1 %}
-                        <h1>Please Add Security Questions before Adding a Sub-account</h1>
-                        <p>Please Add security questions to your account in order
-                            to be able to link Sub-accounts to your Master account.</p>
-                            <a href="/security/{{ security_mode }}"
-                   class="btn btn-success">
-                    <i class="fa fa-pencil-square-o fa-1x"></i> {{ security_mode|capfirst }} Security Questions</a>
-                    {% else %}
-                        {% include 'accounts/include/subaccount_profile.html' %}
-                    {% endif %}
-                </div>{% endcomment %}
-            </div>
         </div>
     </div>
 
 
 
-    <div class="row clearfix">
-
-        <div class="col-md-12 column">
-            <!--- Template is in bbonfhiruser/templates/developer --->
-            <p>Close your Account (All your device credentials will be
-                deleted if you close your {{ settings.APPLICATION_TITLE }} account).
-            </p>
-            {#  TODO: Link to Delete Account process  #}
-        </div>
-    </div>
 
 
 {% endblock %}

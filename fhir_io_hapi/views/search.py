@@ -119,7 +119,8 @@ def find(request, resource_type, *arg, **kwargs):
         return error_status(r, r.status_code)
 
     text_out = ""
-    print("r:", r.text)
+    if settings.DEBUG:
+        print("r:", r.text)
 
     if '_format=xml' in pass_params:
         text_out= minidom.parseString(r.text).toprettyxml()
@@ -127,8 +128,9 @@ def find(request, resource_type, *arg, **kwargs):
         text_out = r.json()
 
     od = OrderedDict()
-    od['request_method']= request.method
-    od['interaction_type'] = interaction_type
+    if settings.DEBUG:
+        od['request_method']= request.method
+        od['interaction_type'] = interaction_type
     od['resource_type']    = resource_type
     od['id'] = id
 

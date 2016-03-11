@@ -26,6 +26,12 @@
                         <p>
                          Access <a href="{% url 'api:v1:patient' %}">Your Beneficiary Profile</a>.
                         </p>
+                        <p>
+                        <a href="/fhir/Patient/{{ crosswalk.fhir_url_id }}/?_format=json">In JSON format </a>
+                        </p>
+                        <p>
+                        <a href="/fhir/Patient/{{ crosswalk.fhir_url_id }}/?_format=xml">In XML format </a>
+                        </p>
                     </div>
                     <div class="col-md-8 well">
                         Get <a href="{% url "api:v1:eob" %}">your Explanation of Benefit records</a>.

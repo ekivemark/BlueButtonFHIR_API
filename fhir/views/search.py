@@ -8,7 +8,7 @@ from django.http import HttpResponse
 
 import json
 
-from ..utils import kickout_400
+from ..utils import kickout_400, DEBUG_EXTRA_INFO
 from .utils import check_access_interaction_and_resource_type
 from ..settings import FHIR_BACKEND
 
@@ -33,8 +33,9 @@ def search(request, resource_type):
 
     # Move to fhir_io_mongo (Plugable back-end)
     od = OrderedDict()
-    od['request_method']= request.method
-    od['interaction_type'] = "search"
+    if DEBUG_EXTRA_INFO:
+        od['request_method']= request.method
+        od['interaction_type'] = "search"
     od['resource_type']    = resource_type
     od['search_params'] = request.GET
     od['note'] = "This is only a stub for future implementation"

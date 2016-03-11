@@ -23,6 +23,8 @@ from django.utils.safestring import mark_safe
 from django.shortcuts import render, render_to_response
 from django.template import RequestContext
 
+from apps.v1api.models import Crosswalk
+
 
 # TODO: Setup DJANGO REST Framework
 # DONE: Apply user scope to FHIR Pass through
@@ -40,7 +42,8 @@ def api_index(request):
     if settings.DEBUG:
         print(settings.APPLICATION_TITLE, "in apps.api.views.api_index")
 
-    context = {}
+    c = Crosswalk.objects.get(user=request.user)
+    context = {"crosswalk": c,}
     from django.template import RequestContext
     return render_to_response('v1api/index.html',
                               RequestContext(request, context, ))

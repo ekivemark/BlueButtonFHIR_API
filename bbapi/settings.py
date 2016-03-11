@@ -199,6 +199,7 @@ LOCAL_APPS = (
     # 'apps.secretqa',
     'apps.api',
     'apps.v1api',
+    'apps.setup',
     # 'apps.npi_upload',
     # 'apps.getbb',
     # 'apps.eob_upload',
@@ -462,10 +463,12 @@ OAUTH2_PROVIDER_APPLICATION_MODEL='appmgmt.BBApplication'
 
 OAUTH2_PROVIDER = {
     #'APPLICATION_MODEL': 'appmgmt.BBApplication',
-    'READ_SCOPE': 'read',
+    'READ_SCOPE': 'patient/*.read',
     #'SCOPES': {"read": "Reading scope", "write": "Writing scope"},
-    'SCOPES': {"read": "Download my claims data and bluebutton profile information", "write_consent": "Record my consent to send data to this app"},
+    'SCOPES': {"patient/*.read": "Download my claims data and bluebutton profile information", "write_consent": "Record my consent to send data to this app"},
 }
+# scope := permission/resource.access
+# http://openid.bitbucket.org/HEART/openid-heart-fhir-oauth2.html
 
 # Configure Django Rest Framework to use OAuth2_Provider Toolkit
 REST_FRAMEWORK = {

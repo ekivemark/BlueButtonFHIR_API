@@ -52,8 +52,7 @@ urlpatterns = patterns('',
     url(r'(?P<resource_type>[^/]+)/(?P<id>[^/]+)',
         read_or_update_or_delete,
         name='fhir_read_or_update_or_delete'),
-    
-    
+
 
     #Create  POST ------------------------------
     url(r'(?P<resource_type>[^/]+)', create,

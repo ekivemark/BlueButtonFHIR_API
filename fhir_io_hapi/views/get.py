@@ -32,7 +32,7 @@ from django.http import (HttpResponseRedirect,
                          HttpResponse,)
 from django.shortcuts import render
 
-from fhir.utils import (kickout_404)
+from fhir.utils import (kickout_404, DEBUG_EXTRA_INFO)
 from fhir.views.utils import check_access_interaction_and_resource_type
 
 __author__ = 'Mark Scrimshire:@ekivemark'
@@ -229,8 +229,9 @@ def generic_read(request, interaction_type, resource_type, id, vid=None, *args, 
         text_out = r.json()
 
     od = OrderedDict()
-    od['request_method']= request.method
-    od['interaction_type'] = interaction_type
+    if DEBUG_EXTRA_INFO:
+        od['request_method']= request.method
+        od['interaction_type'] = interaction_type
     od['resource_type']    = resource_type
     od['id'] = key
     if vid != None:

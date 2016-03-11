@@ -3,7 +3,7 @@
     <div class="container-fluid">
         <div class="row-fluid">
             <div class="col-lg-10">
-                 <h2>My Profile</h2>
+                 <h2>My Profile ({{ user.username }})</h2>
             </div>
              <div class="col-lg-2 align-right">
                 <a href="{% url "accounts:user_edit" %}"
@@ -56,6 +56,10 @@
 
                 </div>
                 {% endif %}
+                <div class="list-group-item">
+                    Account class:{% if user.is_user %}Beneficiary{% endif %}
+                    {% if  user.is_user and user.is_developer %}/{% endif %}{%  if user.is_developer %}Developer{% endif %}
+                </div>
             </div>
 
     </div>

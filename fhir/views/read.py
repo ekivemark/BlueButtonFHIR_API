@@ -6,8 +6,9 @@ from django.shortcuts import render
 
 from collections import OrderedDict
 
-from ..utils import (kickout_404, kickout_403)
+from ..utils import (kickout_404, kickout_403, DEBUG_EXTRA_INFO)
 
+from django.conf import settings
 from django.http import HttpResponse
 
 import json
@@ -36,8 +37,9 @@ def read(request, resource_type, id):
     # move to fhir_io_mongo (pluggable backend)
 
     od = OrderedDict()
-    od['request_method']= request.method
-    od['interaction_type'] = interaction_type 
+    if DEBUG_EXTRA_INFO:
+        od['request_method']= request.method
+        od['interaction_type'] = interaction_type
     od['resource_type']    = resource_type
     od['id'] = id
     od['note'] = "This is only a stub for future implementation"
