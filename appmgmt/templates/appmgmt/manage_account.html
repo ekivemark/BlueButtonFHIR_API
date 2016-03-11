@@ -10,10 +10,11 @@
         </ul>
     </div>
 {% endblock %}
-{% block pagename %}Developer Dashboard{% endblock %}
+{% block pagename %}Developer Dashboard({{ request.user }}){% endblock %}
 {% block content %}
     <div class="section">
         <div class="container">
+
             <div class="row col-sm-12 well">
                 <div class="col-sm-2">
                     <a href="#personal_profile" class="btn btn-success col-md-12 align-left">
