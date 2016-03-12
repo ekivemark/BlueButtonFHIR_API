@@ -567,6 +567,20 @@ if DEBUG_SETTINGS:
 # django-auth-ldap
 
 ####
+# POET Trust Section
+#
+####
+# POET_CONF = {
+#        'MODE': "AUTO_TRUST",
+#        # MODE options are AUTO_TRUST, CHECK
+#        # defaults to CHECK
+#         }
+POET_CONF = {
+    'MODE': "AUTO_TRUST",
+}
+
+
+####
 # Remote LDAP Check in accounts.views.ldap.validate_ldap_user
 # True or False
 ####
@@ -686,5 +700,6 @@ if DEBUG_SETTINGS:
     print("FHIR_SERVER:", FHIR_SERVER)
     print("MEDIA_URL:", MEDIA_URL)
     print("MEDIA_ROOT:", MEDIA_ROOT)
+    print("POET_CONF:", POET_CONF)
     print("=========================================")
 

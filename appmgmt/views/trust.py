@@ -39,9 +39,6 @@ from .poet import get_authorization
 from ..utils import get_bundle_info
 
 from ..static import REDIRECT_URI, POET_BUNDLE_INFO
-# We need an app management set of transactions here
-
-# Change test line to point to localhost:port
 
 
 @login_required()
@@ -179,8 +176,24 @@ def TrustData(request):
 
     u = user.objects.filter(**{access_field: request.user})
 
+    poetconf = getattr(settings, 'POET_CONF', {'MODE':"CHECK"})
+    poet_mode = poetconf['MODE']
+
     if settings.DEBUG:
         print("User (u):", u)
+        print("POET MODE:", poet_mode)
+
+    if poet_mode == "AUTO_TRUST":
+        # Set to trusted and current date/time and return
+        org = Organization.objects.get(owner=request.user)
+        org.trusted = True
+        org.trusted_since = datetime.now()
+        org.save()
+        return HttpResponseRedirect(reverse('appmgmt:organization_view'))
+
+        # No AUTO_TRUST so we process the form.
+        if settings.DEBUG:
+            print("AUTO TRUSTED Organization:", org.name)
 
     if request.method == 'POST':
 
