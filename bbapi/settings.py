@@ -368,7 +368,7 @@ STATICFILES_FINDERS = (
 
 STATIC_URL = '/static/'
 
-STATIC_ROOT = '/var/www/html/dev.bbonfhir.com/'
+STATIC_ROOT = '/var/www/html/'+DOMAIN+'/'
 
 SESSION_COOKIE_SECURE = False
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
@@ -494,30 +494,8 @@ if DEBUG_SETTINGS:
 # Suppress error 1_6.W001 by adding:
 TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 
-# Get Local Settings that you want to keep private.
-# Make sure Local_settings.py is excluded from Git
-# try:
-#     from bbonfhiruser.local_settings import *
-# except Exception as e:
-#     print("ERROR: local_settings not loaded")
-#     pass
-
 # SETTINGS EXPORT for django-settings-export context processor
 # Explicitly define settings to Export for use in {{ Template Values }}
-
-# Get a file name that stores words we will use to create fake accounts
-# WORD_LIST = PARSE_INI.get('global', 'word_dictionary').strip()
-# WORD_LIST = BASE_DIR + "/words/" + WORD_LIST
-#
-# if DEBUG_SETTINGS:
-#     print("===================================")
-#     print("Testing for Word List:", WORD_LIST)
-#     FWL = open(WORD_LIST)
-#     XLEN = 80
-#     for y in range(2):
-#         line = FWL.readline(XLEN)
-#         print(y, ":", line[:-1])
-#     print("=============================")
 
 DEFAULT_VALID_DAYS = 365
 

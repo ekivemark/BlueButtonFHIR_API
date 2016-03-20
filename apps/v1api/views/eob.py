@@ -52,6 +52,9 @@ class EOB(ListView):
         # We need to load the GUID when we are loading EOBs and
         # Patient Records.
 
+        # http://ec2-52-4-198-86.compute-1.amazonaws.com:8081/baseDstu2/
+        # ExplanationOfBenefit/?patient=Patient/131052&_format=json
+
         if settings.DEBUG:
             print("in EOB.get with", eob_id)
 
@@ -84,6 +87,9 @@ class EOB(ListView):
 
         skip_parm = ['_id']
         pass_params = build_params(request.GET, skip_parm)
+
+        if settings.DEBUG:
+            print("Pass_params=", pass_params)
 
         pass_to = Txn['server'] + Txn['locn'] + key + "/"
 

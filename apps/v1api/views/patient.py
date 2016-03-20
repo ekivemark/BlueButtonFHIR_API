@@ -297,6 +297,9 @@ def get_eob(request, *args, **kwargs):
     # &sort_direction=
     # &resource-search-limit=
 
+    # http://ec2-52-4-198-86.compute-1.amazonaws.com:8081/baseDstu2/
+    # ExplanationOfBenefit/?patient=Patient/131052&_format=json
+
     # We will deal internally in JSON Format if caller does not choose
     # a format
     in_fmt = "json"
@@ -331,8 +334,7 @@ def get_eob(request, *args, **kwargs):
 
     #pass_to = pass_to + key + "/"
 
-    pass_to = pass_to + "?identifier="
-    pass_to = pass_to + "https://mymedicare.gov/claims/beneficiary|"
+    pass_to = pass_to + "?patient="
     pass_to = pass_to + "Patient/"
     pass_to = pass_to + xwalk.fhir_url_id.strip()
 

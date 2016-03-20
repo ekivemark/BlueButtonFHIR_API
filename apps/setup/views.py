@@ -143,10 +143,12 @@ def extract_info(item):
 
     e['id'] = resource['id']
     e['identifier'] = resource['identifier'][0]['value']
-    e['first_name'] = resource['name'][0]['given'][0]
-    e['last_name'] = resource['name'][0]['family'][0]
-    e['phone'] = resource['telecom'][0]['value']
-    e['email'] = resource['telecom'][1]['value']
+    if 'name' in resource:
+        e['first_name'] = resource['name'][0]['given'][0]
+        e['last_name'] = resource['name'][0]['family'][0]
+    if 'telecom' in resource:
+        e['phone'] = resource['telecom'][0]['value']
+        e['email'] = resource['telecom'][1]['value']
 
     e['user'] = write_user_account(e)
 
@@ -172,17 +174,41 @@ def write_user_account(e):
         u = User.objects.get(username="u"+e['id'])
         if settings.DEBUG:
             print("Updating:", "u"+e['id'])
-        u.email = rand_str +"."+ e['email']
-        u.first_name = e['first_name']
-        u.last_name = e['last_name']
+        if 'email'in e:
+            u.email = rand_str +"."+ e['email']
+        if 'first_name' in e:
+            u.first_name = e['first_name']
+        else:
+            u.first_name = ""
+        if 'last_name' in e:
+            u.last_name = e['last_name']
+        else:
+            u.last_name = ""
         u.set_password('p'+e['id'])
     except User.DoesNotExist:
+        if 'first_name' in e:
+            first_name = e['first_name']
+        else:
+            first_name = ""
+        if 'last_name' in e:
+            last_name = e['last_name']
+        else:
+            last_name = ""
+
+        if 'email' in e:
+            rand_email = rand_str +"."+ e['email']
+        else:
+            rand_email = rand_str +".unknown@example.com"
         u = User.objects.create_user(username="u"+e['id'],
-                                     email=rand_str +"."+ e['email'],
-                                     first_name=e['first_name'],
-                                     last_name=e['last_name'],
+                                     email=rand_email,
+                                     first_name=first_name,
+                                     last_name=last_name,
                                      password='p'+e['id'])
 
+    if 'email' in e:
+        u.email = rand_str +"."+ e['email']
+    else:
+        u.email = rand_str +".unknown@example.com"
     u.is_active = True
     u.is_user = True
     u.is_developer = False
