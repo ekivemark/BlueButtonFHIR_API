@@ -202,10 +202,18 @@ def get_patient(request, *args, **kwargs):
             if settings.DEBUG:
                 print("Content:", content)
                 print("resourceType:", content['resourceType'])
-                print("text:", content['text']['div'])
+                if 'text' in content:
+                    if 'div' in content['text']:
+                        print("text:", content['text']['div'])
 
             context['result'] = r.json()  # convert
-            context['text'] = content['text']['div']
+            if 'text' in content:
+                if 'div' in content['text']:
+                    context['text'] = content['text']['div']
+                else:
+                    context['text'] = ""
+            else:
+                context['text'] = ""
             if 'error' in content:
                 context['error'] = context['issue']
 
