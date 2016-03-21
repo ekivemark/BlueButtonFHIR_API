@@ -50,7 +50,7 @@ Markdown==2.6.2
 MarkupSafe==0.23
 oauth2==1.9.0.post1
 oauthlib==1.0.3
-oic==0.7.8b0
+#oic==0.7.8b0
 paramiko==1.15.2
 pathspec==0.3.3
 phonenumbers==7.2.7
