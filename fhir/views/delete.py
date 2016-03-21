@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from ..models import SupportedResourceType
+from fhir.models import SupportedResourceType
 from collections import OrderedDict
 from django.http import HttpResponse
 
@@ -7,10 +7,10 @@ import json
 
 from django.views.decorators.csrf import csrf_exempt
 
-from ..utils import (kickout_403, kickout_404, DEBUG_EXTRA_INFO)
-from .utils import check_access_interaction_and_resource_type
+from fhir.utils import (kickout_403, kickout_404, DEBUG_EXTRA_INFO)
+from fhir.views.utils import check_access_interaction_and_resource_type
 
-from ..settings import FHIR_BACKEND
+from fhir.settings import FHIR_BACKEND_DELETE
 
 @csrf_exempt
 def delete(request, resource_type, id):
@@ -25,7 +25,7 @@ def delete(request, resource_type, id):
         return deny
 
     #testing direct response
-    return FHIR_BACKEND.delete(request, resource_type, id)
+    return FHIR_BACKEND_DELETE.delete(request, resource_type, id)
 
     
     od = OrderedDict()

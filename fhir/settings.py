@@ -38,6 +38,9 @@ for df_app in DJANGO_FHIR_CONFIG['DF_APPS']:
         print("Module:",df_app)
 
     FHIR_BACKEND = import_module(df_app)
+    FHIR_BACKEND_VIEW = import_module(df_app+".views.get")
+    FHIR_BACKEND_FIND = import_module(df_app+".views.search")
+    FHIR_BACKEND_DELETE = import_module(df_app+".views.delete")
 
     if settings.DEBUG:
         print("django-FHIR Pluggable Module:", FHIR_BACKEND)
@@ -49,7 +52,13 @@ for df_app in DJANGO_FHIR_CONFIG['DF_APPS']:
 
     if settings.DEBUG:
 
-        result = getattr(FHIR_BACKEND,'hello_world')("search", "Patient", "1")
+        print("FHIR_BACKEND_VIEW:", FHIR_BACKEND_VIEW)
+        print("FHIR_BACKEND_FIND:", FHIR_BACKEND_FIND)
+        print("FHIR_BACKEND_DELETE:", FHIR_BACKEND_DELETE)
+
+
+        my_method = getattr(FHIR_BACKEND_VIEW,'hello_world') #\("search", "Patient", "1")
+        result = my_method("search", "Patient", "1")
         print("")
         print("Testing Pluggable Module %s via hello world:" % FHIR_BACKEND)
         print("Answer from Hello World:", result)

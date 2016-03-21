@@ -23,30 +23,34 @@ from apps.v1api.views.home import *
 from apps.v1api.views.patient import (get_patient,
                                       get_eob,
                                       get_eob_view,)
+
 from apps.v1api.views.ogets import (Hello,
                                     patient,
                                     Patients,)
 
-from apps.v1api.views.apidocs import ResourceTypeList, ResourceControlList
+from apps.v1api.views.apidocs import (ResourceTypeList,
+                                      ResourceControlList)
+
+from apps.v1api.views.eob import (ExplanationOfBenefit)
 
 admin.autodiscover()
 
-urlpatterns = patterns('',
+urlpatterns = [
                        # Examples: These are used by sub-accounts
                        # or master accounts
-                       url(r'^$', 'apps.v1api.views.home.api_index',
+                       url(r'^$', api_index,
                            name='home'),
                        url(r'^patient$',
-                           'apps.v1api.views.patient.get_patient',
+                           get_patient,
                            name='patient'),
                        url(r'^eob/',
-                           'apps.v1api.views.patient.get_eob',
+                           get_eob,
                            name='eob'),
                        url(r'^ExplanationOfBenefit/',
-                           'apps.v1api.views.eob.ExplanationOfBenefit',
+                           ExplanationOfBenefit,
                            name='ExplanationOfBenefit'),
                        url(r'^eobview/(?P<eob_id>[-\w]+)$',
-                           'apps.v1api.views.patient.get_eob_view',
+                           get_eob_view,
                            name='eobview'),
                        # OAuth entry points are here
                        # These will only be used by OAuth authorized apps
@@ -55,7 +59,7 @@ urlpatterns = patterns('',
                        url(r'^o/Patients/(?P<patient_id>\w+|)$', Patients.as_view(), name='fhir_patient'),
 
                        # Add more oauth endpoints here
-                       url(r'^o/patient', 'apps.v1api.views.ogets.patient'),
+                       url(r'^o/patient', patient),
 
                        url(r'^resourcetype',ResourceTypeList.as_view(),
                            name = "resourcetype"),
@@ -65,4 +69,4 @@ urlpatterns = patterns('',
 
                        url(r'^admin/', include(admin.site.urls)),
 
-                       )
+                       ]

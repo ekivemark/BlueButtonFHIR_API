@@ -1,4 +1,4 @@
-from ..models import SupportedResourceType
+from fhir.models import SupportedResourceType
 
 from collections import OrderedDict
 from django.http import HttpResponse

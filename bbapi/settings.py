@@ -179,8 +179,8 @@ THIRD_PARTY_APPS = (
     'debug_toolbar',
     # 'ldap3',
     'requests',
-    'fhir',
     'fhir_io_hapi',
+    'fhir',
 )
 ###############
 # IMPORTANT: If running on Apache you need to
@@ -235,6 +235,9 @@ MIDDLEWARE_CLASSES = (
     'bbapi.utils.CurrentUserMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
+
+# django-guardian requires an ANONYMOUS_USER_ID setting
+ANONYMOUS_USER_ID = -1
 
 ROOT_URLCONF = 'bbapi.urls'
 

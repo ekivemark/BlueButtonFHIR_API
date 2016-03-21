@@ -14,13 +14,13 @@ __author__ = 'Mark Scrimshire:@ekivemark'
 
 # Hello World is here to test the loading of the module from fhir.settings
 # from .settings import *
-from .views.get import hello_world
+#from fhir_io_hapi.views.get import hello_world
 
-from .views.delete import delete
+#from fhir_io_hapi.views.delete import delete
 
-from .views.get import (read, vread, history)
+#from fhir_io_hapi.views.get import (read, vread, history)
 
-from .views.search import find
+#from fhir_io_hapi.views.search import find
 
 # Used to load post_save signal for write to backend fhir server
 default_app_config = 'fhir_io_hapi.apps.fhir_io_hapi_config'

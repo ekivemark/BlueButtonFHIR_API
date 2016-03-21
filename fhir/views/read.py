@@ -1,20 +1,20 @@
 from django.shortcuts import render
 
-from ..models import SupportedResourceType
+from fhir.models import SupportedResourceType
 
 from django.shortcuts import render
 
 from collections import OrderedDict
 
-from ..utils import (kickout_404, kickout_403, DEBUG_EXTRA_INFO)
+from fhir.utils import (kickout_404, kickout_403, DEBUG_EXTRA_INFO)
 
 from django.conf import settings
 from django.http import HttpResponse
 
 import json
 
-from ..settings import FHIR_BACKEND
-from .utils import check_access_interaction_and_resource_type
+from fhir.settings import FHIR_BACKEND
+from fhir.views.utils import check_access_interaction_and_resource_type
 
 from django.conf import settings
 

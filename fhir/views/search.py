@@ -1,16 +1,18 @@
+from django.conf import settings
 from django.shortcuts import render
 
-from ..models import SupportedResourceType
+from fhir.models import SupportedResourceType
 
 from collections import OrderedDict
 
 from django.http import HttpResponse
-
+from importlib import import_module
 import json
 
-from ..utils import kickout_400, DEBUG_EXTRA_INFO
-from .utils import check_access_interaction_and_resource_type
-from ..settings import FHIR_BACKEND
+from fhir.utils import kickout_400, DEBUG_EXTRA_INFO
+from fhir.views.utils import check_access_interaction_and_resource_type
+from fhir.settings import FHIR_BACKEND_FIND
+
 
 
 def search(request, resource_type):
@@ -28,7 +30,9 @@ def search(request, resource_type):
         msg = "HTTP method %s not supported at this URL." % (request.method)
         return kickout_400(msg)
 
-    return FHIR_BACKEND.find(request, resource_type)
+    if settings.DEBUG:
+        print("FHIR_BACKEND in search:",FHIR_BACKEND_FIND )
+    return FHIR_BACKEND_FIND.find(request, resource_type)
 
 
     # Move to fhir_io_mongo (Plugable back-end)

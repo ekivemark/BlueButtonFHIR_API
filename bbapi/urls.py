@@ -6,13 +6,14 @@ from django.contrib import admin
 # then add +static statement at the end of the urlpatterns
 from django.conf import *
 from django.conf import settings
-from django.conf.urls import patterns, url, include
+from django.conf.urls import url, include
 from django.conf.urls.static import static
 
 from django.contrib.auth import views as auth_views
 from django.core.urlresolvers import reverse_lazy
 
 from django.views.generic import TemplateView
+from django.views.static import serve as Static_Serve
 
 from accounts.forms.other import (RegistrationFormUserTOSAndEmail,
                                   RegistrationFormDeveloperTOSAndEmail)
@@ -20,19 +21,21 @@ from accounts.forms.other import (RegistrationFormUserTOSAndEmail,
 from apps.api.views import *
 from apps.home.views import WhatIsNewListView, versionView
 
+from apps.home import views
+
 from django.contrib import admin
 
 admin.autodiscover()
 
-urlpatterns = patterns('',
+urlpatterns = [
                        # url(r'^$', 'bbonfhiruser.views.home', name='home'),
-                       url(r'^$', 'apps.home.views.home_index',
+                       url(r'^$', views.home_index ,
                            name='home'),
-                       # url(r'^about/$', 'apps.home.views.about',
+                       # url(r'^about/$', views.about,
                        #     name='about'),
                        url(r'^base/',
                            include('apps.home.urls', namespace='base')),
-                       url(r'^version/$', 'apps.home.views.versionView',
+                       url(r'^version/$', views.versionView,
                            name="versionview"),
 
                        # url(r'^whatsnew/$', WhatIsNewListView.as_view(),
@@ -106,11 +109,13 @@ urlpatterns = patterns('',
                        # documentation:
                        url(r'^admin/doc/',
                            include('django.contrib.admindocs.urls')),
-                       )
+
+                       ]
+
               # + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 # Django 1.8 method for serving static media files
 if settings.DEBUG:
   urlpatterns.append(url(r'^media/(?P<path>.*)$',
-                         'django.views.static.serve',
+                         Static_Serve,
                          {'document_root': settings.MEDIA_ROOT}))

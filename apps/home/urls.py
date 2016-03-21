@@ -8,8 +8,7 @@ Created: 12/15/15 9:50 PM
 """
 __author__ = 'Mark Scrimshire:@ekivemark'
 
-from django.conf.urls import (patterns,
-                              include,
+from django.conf.urls import (include,
                               url)
 from django.core.urlresolvers import reverse_lazy
 from django.contrib import admin
@@ -19,15 +18,14 @@ from apps.home.views import (WhatIsNewListView,
                              WhatIsNewUpdateView,
                              WhatIsNewDeleteView,
                              AboutView,
-                             )
-
-from .views import (what_is_new_create, versionView )
+                             what_is_new_create,
+                             versionView )
 
 admin.autodiscover()
 
-urlpatterns = patterns('',
+urlpatterns = [
                        url(r'^version',
-                           'apps.home.views.versionView',
+                           versionView,
                            name="versionview"),
                        url(r'^about/$', AboutView.as_view(),
                            name="about"),
@@ -46,5 +44,5 @@ urlpatterns = patterns('',
                            WhatIsNewDeleteView.as_view(success_url=reverse_lazy('base:new_stuff')),
                            name="new_stuff_delete"),
 
-                       )
+                       ]
 

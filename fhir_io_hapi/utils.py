@@ -18,8 +18,6 @@ from collections import OrderedDict
 
 from xml.etree.ElementTree import Element, tostring
 
-from apps.v1api.models import Crosswalk
-
 from django.conf import settings
 from django.contrib import messages
 from django.http import HttpResponse
@@ -28,7 +26,7 @@ from .choices import FORMAT_OPTIONS_CHOICES
 from .models import ResourceTypeControl
 
 from fhir.models import SupportedResourceType
-
+from apps.v1api.models import Crosswalk
 
 
 __author__ = 'Mark Scrimshire:@ekivemark'

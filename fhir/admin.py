@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import SupportedResourceType
+from fhir.models import SupportedResourceType
 
 class SupportedResourceTypeAdmin(admin.ModelAdmin):
     

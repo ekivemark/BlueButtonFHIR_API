@@ -4,7 +4,7 @@ from collections import OrderedDict
 
 from django.http import HttpResponse
 
-from ..utils import (kickout_403,
+from fhir.utils import (kickout_403,
                      kickout_404,
                      DEBUG_EXTRA_INFO)
 
@@ -12,8 +12,8 @@ import json
 
 from django.views.decorators.csrf import csrf_exempt
 
-from ..models import SupportedResourceType
-from .utils import check_access_interaction_and_resource_type
+from fhir.models import SupportedResourceType
+from fhir.views.utils import check_access_interaction_and_resource_type
 
 
 @csrf_exempt

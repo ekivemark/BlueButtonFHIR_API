@@ -1,1 +1,1 @@
-from .utils import strip_url
+# from accounts.utils import strip_url

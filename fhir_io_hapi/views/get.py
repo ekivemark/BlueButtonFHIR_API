@@ -16,13 +16,6 @@ from collections import OrderedDict
 from xml.dom import minidom
 from xml.etree.ElementTree import tostring
 
-from ..utils import (build_params,
-                     crosswalk_id,
-                     dict_to_xml,
-                     error_status,
-                     check_rt_controls)
-from ..models import ResourceTypeControl
-
 from fhir.models import SupportedResourceType
 
 from django.conf import settings
@@ -34,6 +27,11 @@ from django.shortcuts import render
 
 from fhir.utils import (kickout_404, DEBUG_EXTRA_INFO)
 from fhir.views.utils import check_access_interaction_and_resource_type
+from fhir_io_hapi.utils import (build_params,
+                     crosswalk_id,
+                     dict_to_xml,
+                     error_status,
+                     check_rt_controls)
 
 __author__ = 'Mark Scrimshire:@ekivemark'
 

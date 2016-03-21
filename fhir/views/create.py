@@ -1,7 +1,7 @@
 import sys
 
 from django.shortcuts import render
-from ..models import SupportedResourceType
+from fhir.models import SupportedResourceType
 from collections import OrderedDict
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -12,9 +12,9 @@ from jsonschema import validate, ValidationError
 
 import datetime
 
-from ..utils import (kickout_404, kickout_403, kickout_400, kickout_500, DEBUG_EXTRA_INFO)
-from .hello import hello
-from .search import search
+from fhir.utils import (kickout_404, kickout_403, kickout_400, kickout_500, DEBUG_EXTRA_INFO)
+from fhir.views.hello import hello
+from fhir.views.search import search
 
 @csrf_exempt
 def create(request, resource_type):

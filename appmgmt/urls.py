@@ -8,19 +8,21 @@ Created: 10/29/15 8:04 AM
 """
 __author__ = 'Mark Scrimshire:@ekivemark'
 
-from django.conf.urls import patterns, include, url
+from django.conf.urls import include, url
 from django.core.urlresolvers import reverse_lazy
 from django.views.generic import TemplateView
 
 from appmgmt.models import BBApplication
 
+from appmgmt.views import(main)
 from appmgmt.views.application import (MyApplicationListView,
                                        MyApplicationUpdateView,
                                        MyApplicationCreate,
                                        Application_Update_Secret,
                                        Manage_Applications,
                                        MyApplicationDetailView,
-                                       MyApplicationDeleteView)
+                                       MyApplicationDeleteView,
+                                       My_Application_Update)
 from appmgmt.views.main import (home_index)
 
 from appmgmt.views.organization import (MyOrganizationListView,
@@ -35,16 +37,21 @@ from appmgmt.views.developer import (DeveloperList,
                                      DevTeam_Add,
                                      DevTeam_Delete)
 
-# from appmgmt.views.trust import (TrustData)
+from appmgmt.views.trust import (TrustData,
+                                 BaseTrust,
+                                 TrustTest,
+                                 )
+
+from appmgmt.views.poet import CallBack
 
 from django.contrib import admin
 admin.autodiscover()
 
-urlpatterns = patterns('',
+urlpatterns = [
                        # Examples:
                        # url(r'^$', 'bofhirdev.views.home', name='home'),
 
-                       url(r'^$','appmgmt.views.main.home_index',
+                       url(r'^$', main.home_index,
                            name='home'),
 # Intro
                        url(r'^intro/$',
@@ -55,7 +62,7 @@ urlpatterns = patterns('',
                            MyOrganizationListView.as_view(),
                            name='organization_view'),
                        url(r'^createorganization/$',
-                           'appmgmt.views.organization.My_Organization_Create',
+                           My_Organization_Create,
                            name='organization_create'),
                        url(r'^updateorganization/(?P<pk>[0-9]+)/$',
                            MyOrganizationUpdateView.as_view(success_url=reverse_lazy('accounts:manage_account')),
@@ -70,27 +77,27 @@ urlpatterns = patterns('',
                            name='domain_user_view'),
 # DevTeam
                        url(r'^devteam/add/(?P<pk>[0-9]+)/$',
-                           'appmgmt.views.developer.DevTeam_Add',
+                           DevTeam_Add,
                            name='devteam_add'),
                        url(r'^devteam/delete/(?P<pk>[0-9]+)/$',
-                           'appmgmt.views.developer.DevTeam_Delete',
+                           DevTeam_Delete,
                            name='devteam_delete'),
                        url(r'^devteam/edit/(?P<pk>[0-9]+)/$',
-                           'appmgmt.views.developer.DevTeam_Role_Change',
+                           DevTeam_Role_Change,
                            name='devteam_role_change'),
 # Applications
                        url(r'^myapplications/$',
-                           'appmgmt.views.application.Manage_Applications',
+                           Manage_Applications,
                            name='manage_applications'),
                        url(r'^createapplication/$',
                            MyApplicationCreate.as_view(success_url=reverse_lazy('appmgmt:manage_applications')),
                            name='application_create'),
                        url(r'^updateapplication/(?P<pk>[0-9]+)/$',
-                           'appmgmt.views.application.My_Application_Update',
+                           My_Application_Update,
                            name='application_update'),
 
                        url(r'^updateapplicationsecret/(?P<pk>[0-9]+)/$',
-                           'appmgmt.views.application.Application_Update_Secret',
+                           Application_Update_Secret,
                            name='application_update_secret'),
                        url(r'^viewapplication/(?P<pk>[0-9]+)/$',
                            MyApplicationDetailView.as_view(),
@@ -104,15 +111,15 @@ urlpatterns = patterns('',
                            name='application_delete'),
 
 # trust
-                       url(r'^trustdata/$', 'appmgmt.views.trust.TrustData',
+                       url(r'^trustdata/$', TrustData,
                            name='trustdata'),
                        url(r'^trustcheck/(?P<requester_email>.+)/(?P<bundle>.+)/(?P<domain>.+)/(?P<owner_email>.+)$',
-                           'appmgmt.views.trust.BaseTrust',
+                           BaseTrust,
                            name='trustcheck'),
                        url(r'^trust_test/$',
-                           'appmgmt.views.trust.TrustTest',
+                           TrustTest,
                            name='trusttest'),
                        url(r'^poet_callback/$',
-                           'appmgmt.views.poet.CallBack',
+                           CallBack,
                            name='post_callback'),
-                       )
+                       ]

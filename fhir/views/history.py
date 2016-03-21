@@ -1,15 +1,15 @@
 from django.shortcuts import render
 
-from ..models import SupportedResourceType
+from fhir.models import SupportedResourceType
 
 from collections import OrderedDict
 from django.http import HttpResponse
 
 import json
 
-from .utils import check_access_interaction_and_resource_type
-from ..utils import (kickout_404, kickout_403, kickout_400, DEBUG_EXTRA_INFO)
-from ..settings import FHIR_BACKEND
+from fhir.views.utils import check_access_interaction_and_resource_type
+from fhir.utils import (kickout_404, kickout_403, kickout_400, DEBUG_EXTRA_INFO)
+from fhir.settings import FHIR_BACKEND
 
 
 def history(request, resource_type, id):

@@ -23,10 +23,10 @@ from apps.api.views import *
 
 admin.autodiscover()
 
-urlpatterns = patterns('',
+urlpatterns = [
                        # Examples:
                        url(r'^$',
-                           'apps.api.views.api_index',
+                           api_index,
                            name='home'),
                        # url(r'^login$',
                        #     'apps.subacc.views.subaccount_authenticate',
@@ -43,4 +43,4 @@ urlpatterns = patterns('',
 
                        url(r'^admin/', include(admin.site.urls)),
 
-                       )
+                       ]
