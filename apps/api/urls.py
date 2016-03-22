@@ -41,6 +41,6 @@ urlpatterns = [
                            TemplateView.as_view(template_name='api/documentation.html'),
                            name="documentation"),
 
-                       url(r'^admin_disable/', include(admin.site.urls)),
+                       url(r'^admin/', include(admin.site.urls)),
 
                        ]

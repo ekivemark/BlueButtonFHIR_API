@@ -64,7 +64,7 @@ urlpatterns = [
                            name='account_access'),
                        # DONE: apply session_master
 
-                       url(r'^admin_disable/', include(admin.site.urls)),
+                       url(r'^admin/', include(admin.site.urls)),
 
                        # Manage Account
                        # Remove Account

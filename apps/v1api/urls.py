@@ -67,6 +67,6 @@ urlpatterns = [
                        url(r'^resourcecontrol',ResourceControlList.as_view(),
                            name="resourcecontrol"),
 
-                       url(r'^admin_disable/', include(admin.site.urls)),
+                       url(r'^admin/', include(admin.site.urls)),
 
                        ]
