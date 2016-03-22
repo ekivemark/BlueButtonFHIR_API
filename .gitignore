@@ -1,5 +1,5 @@
-/local.ini
-local.ini
+/local_ini/local.ini
+local_ini/local.ini
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -8,7 +8,6 @@ __pycache__/
 *.so
 
 # Distribution / packaging
-local.ini
 .Python
 env/
 build/

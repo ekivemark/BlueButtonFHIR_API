@@ -43,7 +43,7 @@ APPLICATION_ROOT = BASE_DIR
 # email_host = box905.bluehost.com
 #
 
-CONFIG_FILE = 'local.ini'
+CONFIG_FILE = 'local_ini/local.ini'
 # Read the config file
 PARSE_INI.read_file(open(os.path.join(APPLICATION_ROOT, CONFIG_FILE)))
 # Then use PARSE_INI.get(SECTION, VARIABLE) to read in value
