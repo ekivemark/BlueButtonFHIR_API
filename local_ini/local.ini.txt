@@ -39,5 +39,5 @@ db_platform = sqlite3
 #databases_defn = {'default':{'ENGINE':'django.db.backends.postgresql_psycopg2','NAME':'{table}','USER':'{User}','PASSWORD':'{Password}','HOST':'HostAddress','PORT':'{PORT}',}}
 # FHIR_SERVER_CONF
 #fhir_server_configuration = {"SERVER":"{Server_Address}","PATH":"/fhir-p","RELEASE":"/baseDstu2"}
-
+# end of file
 
