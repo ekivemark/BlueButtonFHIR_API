@@ -40,7 +40,7 @@ urlpatterns = [
                        # or master accounts
                        url(r'^$', api_index,
                            name='home'),
-                       url(r'^patient$',
+                       url(r'^Patient$',
                            get_patient,
                            name='patient'),
                        url(r'^eob/',
@@ -56,10 +56,10 @@ urlpatterns = [
                        # These will only be used by OAuth authorized apps
                        # These are the resource servers
                        url(r'^o/hello', Hello.as_view()),
-                       url(r'^o/Patients/(?P<patient_id>\w+|)$', Patients.as_view(), name='fhir_patient'),
+                       url(r'^o/Patient/(?P<patient_id>\w+|)$', Patients.as_view(), name='fhir_patient'),
 
                        # Add more oauth endpoints here
-                       url(r'^o/patient', patient),
+                       url(r'^o/Patient', patient),
 
                        url(r'^resourcetype',ResourceTypeList.as_view(),
                            name = "resourcetype"),
