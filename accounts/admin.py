@@ -50,7 +50,7 @@ class UserCreationForm(forms.ModelForm):
 class UserChangeForm(forms.ModelForm):
     """
     A form for updating users. Includes all the fields on
-    the user, but replaces the password field with admin
+    the user, but replaces the password field with admin_disable
     password hash display field.
     """
     password = ReadOnlyPasswordHashField()
@@ -107,7 +107,7 @@ class UserAdmin(UserAdmin):
     filter_horizontal = ()
 
 
-# admin.site.register(Account)
+# admin_disable.site.register(Account)
 admin.site.register(User, UserAdmin)
 
 admin.site.register(ValidSMSCode)

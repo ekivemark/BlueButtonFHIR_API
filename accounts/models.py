@@ -96,7 +96,7 @@ class UserManager(BaseUserManager):
         user.is_staff = True
         user.save(using=self._db)
         if settings.DEBUG == True:
-            print("%s, active=%s,admin=%s, %s" % (user.email,
+            print("%s, active=%s,admin_disable=%s, %s" % (user.email,
                                                   user.is_active,
                                                   user.is_admin,
                                                   user.password))

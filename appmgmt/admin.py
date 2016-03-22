@@ -95,7 +95,7 @@ Application = get_application_model()
 admin.site.register(Organization, OrganizationAdmin)
 
 # BBApplication is already registered via oauth2_provider and settings.py
-# So we have to unregister and reregister to voerride the default admin view applied
+# So we have to unregister and reregister to voerride the default admin_disable view applied
 # in oauth2_provider (RawIDAdmin) which just defines 'user' for list view
 
 admin.site.unregister(Application)

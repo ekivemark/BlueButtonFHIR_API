@@ -148,8 +148,9 @@ TEMPLATES = [
 # TEMPLATE_LOADERS = ()
 
 DEFAULT_APPS = (
-    # django_admin_bootstrapped Must appear ahead of django.contrib.admin
-    'django_admin_bootstrapped',
+    # django_admin_bootstrapped Must appear ahead of django.contrib.admin_disable
+    #'django_admin_bootstrapped',
+    'flat',
     'django.contrib.admin',
     'django.contrib.admindocs',
     # add django.contrib.auth to support django registration
@@ -348,10 +349,10 @@ if DEBUG_SETTINGS:
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
 
-# URL prefix for admin static files -- CSS, JavaScript and images.
+# URL prefix for admin_disable static files -- CSS, JavaScript and images.
 # Make sure to use a trailing slash.
-# Examples: "http://foo.com/static/admin/", "/static/admin/".
-ADMIN_MEDIA_PREFIX = '/static/admin/'
+# Examples: "http://foo.com/static/admin/", "/static/admin_disable/".
+ADMIN_MEDIA_PREFIX = '/static/admin_disable/'
 
 # Additional locations of static files
 STATICFILES_DIRS = (
@@ -390,7 +391,7 @@ except:
 REGISTRATION_AUTO_LOGIN = str2bool(PARSE_INI.get('global',
                                                  'registration_auto_login'))
 
-# REGISTRATION_FORM = 'accounts.admin.UserCreationForm'
+# REGISTRATION_FORM = 'accounts.admin_disable.UserCreationForm'
 
 # Django Registration
 # EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
