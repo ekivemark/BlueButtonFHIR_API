@@ -39,6 +39,7 @@ from apps.v1api.utils import (get_format,
                               concat_string,
                               build_params)
 
+from fhir.utils import kickout_404
 
 # @login_required
 def get_patient(request, *args, **kwargs):
@@ -58,17 +59,19 @@ def get_patient(request, *args, **kwargs):
         xwalk = Crosswalk.objects.get(user=request.user.id)
     except Crosswalk.DoesNotExist:
         messages.error(request, "Unable to find Patient ID")
-        return HttpResponseRedirect(reverse('api:v1:home'))
+        return kickout_404("Unable to find Patient ID")
+        # return HttpResponseRedirect(reverse('api:v1:home'))
 
     if xwalk.fhir_url_id == "":
-        err_msg = ['Sorry, We were unable to find',
+        err_msg = ['Crosswalk lookup failed: Sorry, We were unable to find',
                    'your record', ]
         exit_message = concat_string("",
                                      msg=err_msg,
                                      delimiter=" ",
                                      last=".")
         messages.error(request, exit_message)
-        return HttpResponseRedirect(reverse('api:v1:home'))
+        return kickout_404(exit_message)
+        # return HttpResponseRedirect(reverse('api:v1:home'))
 
     if settings.DEBUG:
         print("Request.GET :", request.GET)
@@ -213,7 +216,7 @@ def get_patient(request, *args, **kwargs):
                 else:
                     context['text'] = ""
             else:
-                context['text'] = ""
+                context['text'] = "No user readable content to display"
             if 'error' in content:
                 context['error'] = context['issue']
 

@@ -78,7 +78,14 @@ DEBUG = str2bool(PARSE_INI.get('global', 'debug'))
 
 DEBUG_SETTINGS = str2bool(PARSE_INI.get('global', 'debug_settings'))
 
-ALLOWED_HOSTS = []
+# Get the Server Domain Name. eg. dev.bbonfhir.com
+# ie the server name to address this app
+DOMAIN = PARSE_INI.get('global', 'domain')
+
+if DEBUG:
+    ALLOWED_HOSTS = []
+else:
+    ALLOWED_HOSTS = ['.bbonfhir.com', 'localhost', '127.0.0.1', DOMAIN]
 ADMINS = (
     ('Mark Scrimshire', 'mark@ekivemark.com'),
 )
@@ -89,13 +96,14 @@ APPLICATION_TITLE = PARSE_INI.get('global', 'application_title')
 if APPLICATION_TITLE == "":
     APPLICATION_TITLE = "BB+ Developer Accounts"
 
+FULL_CONFIG_FILE = APPLICATION_ROOT.strip() + '/' + CONFIG_FILE
+
 if DEBUG_SETTINGS:
     print("Application: ", APPLICATION_TITLE)
     print("Running on Python_version: ", python_version())
     print("")
     print("BASE_DIR:", BASE_DIR)
     print("APPLICATION_ROOT:", APPLICATION_ROOT)
-    FULL_CONFIG_FILE = APPLICATION_ROOT.strip() + '/' + CONFIG_FILE
     print("Config File: ", FULL_CONFIG_FILE)
 
 # Application definition
@@ -323,10 +331,6 @@ USE_L10N = True
 
 USE_TZ = True
 
-# Get the Server Domain Name. eg. dev.bbonfhir.com
-# ie the server name to address this app
-DOMAIN = PARSE_INI.get('global', 'domain')
-
 if DEBUG_SETTINGS:
     print("Check the valid site id in the site table")
 # SITE_ID = 4 = prod - dev.bbonfhir.com
@@ -447,8 +451,7 @@ if DEBUG_SETTINGS:
     print("Email via %s: %s" % (EMAIL_BACKEND_TYPE, EMAIL_BACKEND))
     print("Account Activation Days: %s" % ACCOUNT_ACTIVATION_DAYS)
     print("Email Host:Port: %s:%s" % (EMAIL_HOST, EMAIL_PORT))
-    print(
-        "Credentials: [%s]/[%s]" % (EMAIL_HOST_USER,
+    print("Credentials: [%s]/[%s]" % (EMAIL_HOST_USER,
                                     EMAIL_HOST_PASSWORD))
 
 # END of DJANGO Registration Settings Section
