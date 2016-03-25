@@ -41,6 +41,9 @@ from apps.v1api.utils import (get_format,
 
 from fhir.utils import kickout_404
 
+from bbapi.utils import FhirServerUrl
+
+
 # @login_required
 def get_patient(request, *args, **kwargs):
     """
@@ -85,12 +88,18 @@ def get_patient(request, *args, **kwargs):
     # a format
     in_fmt = "json"
 
+    # fhir_server_configuration = {"SERVER":"http://fhir-test.bbonfhir.com:8081",
+    #                              "PATH":"",
+    #                              "RELEASE":"/baseDstu2"}
+    # FHIR_SERVER_CONF = fhir_server_configuration
+    # FHIR_SERVER = FHIR_SERVER_CONF['SERVER'] + FHIR_SERVER_CONF['PATH']
+
     # DONE: Define Transaction Dictionary to enable generic presentation of API Call
     Txn = {'name': "Patient",
            'display': 'Patient',
            'mask': True,
-           'server': settings.FHIR_SERVER,
-           'locn': "/baseDstu2/Patient/",
+           'server': settings.FHIR_SERVER_CONF['SERVER']+settings.FHIR_SERVER_CONF['PATH'],
+           'locn': settings.FHIR_SERVER_CONF['RELEASE']+"/Patient/",
            'template': 'v1api/patient.html',
            'in_fmt': in_fmt,
            }
@@ -117,7 +126,9 @@ def get_patient(request, *args, **kwargs):
     if 'mask' in Txn:
         mask = Txn['mask']
 
-    pass_to = Txn['server'] + Txn['locn']
+    pass_to = FhirServerUrl()
+    pass_to += "/Patient"
+    pass_to += "/"
     pass_to = pass_to + key + "/"
 
     # We need to detect if a format was requested in the URL Parameters
@@ -209,7 +220,9 @@ def get_patient(request, *args, **kwargs):
                     if 'div' in content['text']:
                         print("text:", content['text']['div'])
 
-            context['result'] = r.json()  # convert
+            # context['result'] = r.json()  # convert
+            import_text = json.loads(r.text, object_pairs_hook=OrderedDict)
+            context['result'] = json.dumps(import_text, indent=4, sort_keys=False)
             if 'text' in content:
                 if 'div' in content['text']:
                     context['text'] = content['text']['div']
@@ -223,7 +236,8 @@ def get_patient(request, *args, **kwargs):
         # Setup the page
 
         if settings.DEBUG:
-            print()
+            print("Context-result:", context['result'])
+            # print("Context-converted:", json.dumps(context['result'], sort_keys=False))
             # print("Context:",context)
 
         if get_fmt == 'xml' or get_fmt == 'json':
@@ -234,7 +248,8 @@ def get_patient(request, *args, **kwargs):
                 return HttpResponse(context['result'],
                                     content_type='application/' + get_fmt)
             if get_fmt == "json":
-                return JsonResponse(context['result'], )
+                #return HttpResponse(context['result'], mimetype="application/json")
+                return JsonResponse(import_text, safe=False  )
 
         else:
             return render_to_response(Txn['template'],
@@ -311,6 +326,8 @@ def get_eob(request, *args, **kwargs):
     # http://ec2-52-4-198-86.compute-1.amazonaws.com:8081/baseDstu2/
     # ExplanationOfBenefit/?patient=Patient/131052&_format=json
 
+    #
+
     # We will deal internally in JSON Format if caller does not choose
     # a format
     in_fmt = "json"
@@ -334,7 +351,9 @@ def get_eob(request, *args, **kwargs):
     if 'mask' in Txn:
         mask = Txn['mask']
 
-    pass_to = Txn['server'] + Txn['locn']
+    pass_to = FhirServerUrl()
+    pass_to += "/ExplanationOfBenefit"
+    pass_to += "/"
 
     # We can allow an EOB but we MUST add a search Parameter
     # to limit the items found to those relevant to the Patient Id
@@ -345,9 +364,9 @@ def get_eob(request, *args, **kwargs):
 
     #pass_to = pass_to + key + "/"
 
-    pass_to = pass_to + "?patient="
-    pass_to = pass_to + "Patient/"
-    pass_to = pass_to + xwalk.fhir_url_id.strip()
+    pass_to += "?patient="
+    pass_to += "Patient/"
+    pass_to += xwalk.fhir_url_id.strip()
 
     pass_to = pass_to + "&" + build_params(request.GET, skip_parm)[1:]
     if settings.DEBUG:

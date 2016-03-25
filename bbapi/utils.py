@@ -7,7 +7,7 @@ Basic conversion tools
 __author__ = 'Mark Scrimshire:@ekivemark'
 
 from threading import local
-
+from django.conf import settings
 
 _user = local()
 
@@ -38,4 +38,30 @@ def str2int(inp):
 
     return output
 
+
+def FhirServerUrl(server=None,path=None, release=None ):
+    # fhir_server_configuration = {"SERVER":"http://fhir-test.bbonfhir.com:8081",
+    #                              "PATH":"",
+    #                              "RELEASE":"/baseDstu2"}
+    # FHIR_SERVER_CONF = fhir_server_configuration
+    # FHIR_SERVER = FHIR_SERVER_CONF['SERVER'] + FHIR_SERVER_CONF['PATH']
+
+
+    if server == None:
+        fhir_server = settings.FHIR_SERVER_CONF['SERVER']
+    else:
+        fhir_server = server
+
+    if path == None:
+        fhir_path = settings.FHIR_SERVER_CONF['PATH']
+    else:
+        fhir_path = path
+
+
+    if release == None:
+        fhir_release = settings.FHIR_SERVER_CONF['RELEASE']
+    else:
+        fhir_release = release
+
+    return fhir_server + fhir_path + fhir_release
 
