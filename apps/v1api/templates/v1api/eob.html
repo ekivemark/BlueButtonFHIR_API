@@ -27,7 +27,7 @@
                  {% if user.is_authenticated %}
                    <div class="col-md-12">
                        <div class="col-md-12 well">
-                           <h4>Call Info:</h4>
+                           <h4>Debug Call Info:</h4>
                            {{ settings.URL_PRE }}{{ settings.DOMAIN }}{{ request.get_full_path }}<br>
                            {{ pass_to }}
                            {% comment %}Get: {{ '{' }}{{ get.QueryDict }}{{ '}' }}
@@ -35,7 +35,7 @@
                        </div>
 
                         <div class="col-md-12 well">
-                            <h4>Result: [{% if get_fmt %}{{ get_fmt|capfirst }}{% else %}{{ in_fmt|upper }}{% endif %}]</h4>
+                            <h4>User displayable content: [{% if get_fmt %}{{ get_fmt|capfirst }}{% else %}{{ in_fmt|upper }}{% endif %}]</h4>
                             <p>&nbsp;</p>
                             {% if text %}<p>{{ text|safe }}</p>{% endif %}
                             {% if error %}<p>{{ error }}</p>{% endif %}
@@ -43,16 +43,10 @@
                         </div>
 
                    </div>
-                   <div class="collapse-group">
-
-                            <p class="collapse" id="viewdetails">
-                                {% if get_fmt == "xml" %}{{ result }}{% else %}{{ result }}{% endif %}
-                            </p>
-                            <p>
-                                <a class="btn viewdetails btn-success"
-                                   data-toggle="collapse"
-                                   data-target="#viewdetails">Show Details</a>
-                            </p>
+                   <div class="col-md-12 well">
+                       <pre>
+                           {{ result }}
+                       </pre>
                    </div>
 
                 {% else %}

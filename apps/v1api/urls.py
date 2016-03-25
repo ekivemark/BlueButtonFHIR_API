@@ -31,7 +31,8 @@ from apps.v1api.views.ogets import (Hello,
 from apps.v1api.views.apidocs import (ResourceTypeList,
                                       ResourceControlList)
 
-from apps.v1api.views.eob import (ExplanationOfBenefit)
+from apps.v1api.views.eob import (ExplanationOfBenefit,
+                                  PatientExplanationOfBenefit)
 
 admin.autodiscover()
 
@@ -49,6 +50,10 @@ urlpatterns = [
                        url(r'^ExplanationOfBenefit/',
                            ExplanationOfBenefit,
                            name='ExplanationOfBenefit'),
+                      url(r'^PatientExplanationOfBenefit/(?P<patient_id>[-\w]+)$',
+                           PatientExplanationOfBenefit,
+                           name='PatientExplanationOfBenefit'),
+
                        url(r'^eobview/(?P<eob_id>[-\w]+)$',
                            get_eob_view,
                            name='eobview'),

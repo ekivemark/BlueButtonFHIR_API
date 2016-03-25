@@ -11,7 +11,10 @@ Created: 12/28/15 9:33 PM
 """
 __author__ = 'Mark Scrimshire:@ekivemark'
 
+import json
 import requests
+
+from collections import OrderedDict
 
 from xml.dom import minidom
 
@@ -24,16 +27,28 @@ from django.views.generic import ListView
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.core.urlresolvers import reverse_lazy
+from django.core.urlresolvers import (reverse_lazy,
+                                      reverse)
+from django.shortcuts import render_to_response
+from django.template import RequestContext
+
 from django.http import (HttpResponse,
                          HttpResponseRedirect,
-                         HttpRequest)
+                         HttpRequest,
+                         JsonResponse)
+
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 
 from apps.v1api.views.patient import get_patient
 from apps.v1api.views.crosswalk import lookup_xwalk
-from apps.v1api.utils import (build_params)
+from apps.v1api.utils import (build_params,
+                              get_format,
+                              concat_string)
+
+from ..models import Crosswalk
+
+from bbapi.utils import FhirServerUrl
 
 
 class EOB(ListView):
@@ -119,9 +134,9 @@ class EOB(ListView):
                                                          text_out))
 
 
-@csrf_exempt
-@login_required
-@protected_resource(scopes=['read write_consent'])
+#@csrf_exempt
+#@login_required
+#@protected_resource(scopes=['read write_consent'])
 def ExplanationOfBenefit(request, *args, **kwargs):
     """
     Function-based interface to ExplanationOfBenefit
@@ -136,12 +151,346 @@ def ExplanationOfBenefit(request, *args, **kwargs):
 
     process_mode = request.META['REQUEST_METHOD']
 
-    send_back = 'Hello, %s' % request.user
-    send_back += ':ExplanationOfBenefit [mode=%s]' % process_mode
-    if args:
-        send_back += '[args=%s]' % (args)
-    if kwargs:
-        send_back += '[kwargs=%s]' % (kwargs)
+    try:
+        xwalk = Crosswalk.objects.get(user=request.user)
+    except Crosswalk.DoesNotExist:
+        messages.error(request, "Unable to find Patient ID")
+        return HttpResponseRedirect(reverse('api:v1:home'))
 
-    return HttpResponse(send_back)
+    if xwalk.fhir_url_id == "":
+        err_msg = ['Sorry, We were unable to find',
+                   'your record', ]
+        exit_message = concat_string("",
+                                     msg=err_msg,
+                                     delimiter=" ",
+                                     last=".")
+        messages.error(request, exit_message)
+        return HttpResponseRedirect(reverse('api:v1:home'))
 
+    in_fmt = "json"
+    get_fmt = get_format(request.GET)
+
+    Txn = {'name': "ExplanationOfBenefit",
+           'display': 'EOB',
+           'mask': True,
+           'template': 'v1api/eob.html',
+           'in_fmt': in_fmt,
+           }
+
+    if settings.DEBUG:
+        print("Request.GET :", request.GET)
+        print("KWargs      :", kwargs)
+        print("Crosswalk   :", xwalk)
+        print("GUID        :", xwalk.guid)
+        print("FHIR        :", xwalk.fhir)
+        print("FHIR URL ID :", xwalk.fhir_url_id)
+
+    # We should have the xwalk.FHIR_url_id
+    # So we will construct the EOB Identifier to include
+
+    # We will deal internally in JSON Format if caller does not choose
+    # a format
+    in_fmt = "json"
+    get_fmt = get_format(request.GET)
+
+    pass_to = FhirServerUrl()
+    pass_to += "/ExplanationOfBenefit/"
+
+    key = xwalk.fhir_url_id.strip()
+    patient_filter= "?patient=Patient/" + key
+
+    pass_to += patient_filter
+
+    skip_parm = ['_id', '_format']
+
+    pass_to = pass_to + "&" + build_params(request.GET, skip_parm)[1:]
+
+    # Set Context
+    context = {'display':"EOB",
+               'name': "ExplanationOfBenefit",
+               'mask': True,
+               'key': key,
+               'get_fmt': get_fmt,
+               'in_fmt': in_fmt,
+               'pass_to': pass_to,
+               }
+
+    if settings.DEBUG:
+        print("Calling requests with pass_to:", pass_to)
+
+    try:
+        r = requests.get(pass_to)
+
+        if get_fmt == "xml":
+
+            xml_text = minidom.parseString(r.text)
+            print("XML_TEXT:", xml_text.toxml())
+            root = ET.fromstring(r.text)
+            # root_out = etree_to_dict(r.text)
+
+            json_string = ""
+            # json_out = xml_str_to_json_str(r.text, json_string)
+            if settings.DEBUG:
+                print("Root ET XML:", root)
+                # print("XML:", root_out)
+                # print("JSON_OUT:", json_out,":", json_string)
+
+            drill_down = ['Bundle',
+                          'entry',
+                          'Patient', ]
+            level = 0
+
+            tag0 = xml_text.getElementsByTagName("text")
+            # tag1 = tag0.getElementsByTagName("entry")
+
+            print("Patient?:", tag0)
+            print("DrillDown:", drill_down[level])
+            print("root find:", root.find(drill_down[level]))
+
+            pretty_xml = xml_text.toprettyxml()
+            #if settings.DEBUG:
+            #    print("TEXT:", text)
+            #    # print("Pretty XML:", pretty_xml)
+
+            context['result'] = pretty_xml  # convert
+            context['text'] = pretty_xml
+
+        else:
+
+            convert = OrderedDict(r.json())
+            # result = mark_safe(convert)
+
+            if settings.DEBUG:
+                print("Convert:", convert)
+                # print("Next Level - entry:", convert['entry'])
+                # print("\n ANOTHER Level- text:", convert['entry'][0])
+
+            content = OrderedDict(convert)
+            text = ""
+
+            if settings.DEBUG:
+                print("Content:", content)
+                print("resourceType:", content['resourceType'])
+                if 'text' in content:
+                    if 'div' in content['text']:
+                        print("text:", content['text']['div'])
+
+            # context['result'] = r.json()  # convert
+            import_text = json.loads(r.text, object_pairs_hook=OrderedDict)
+            context['result'] = json.dumps(import_text, indent=4, sort_keys=False)
+            if 'text' in content:
+                if 'div' in content['text']:
+                    context['text'] = content['text']['div']
+                else:
+                    context['text'] = ""
+            else:
+                context['text'] = "No user readable content to display"
+            if 'error' in content:
+                context['error'] = context['issue']
+
+        # Setup the page
+
+        if settings.DEBUG:
+            print("Context-result:", context['result'])
+            # print("Context-converted:", json.dumps(context['result'], sort_keys=False))
+            # print("Context:",context)
+
+        if get_fmt == 'xml' or get_fmt == 'json':
+            if settings.DEBUG:
+                print("Mode = ", get_fmt)
+                print("Context['result']: ", context['result'])
+            if get_fmt == "xml":
+                return HttpResponse(context['result'],
+                                    content_type='application/' + get_fmt)
+            if get_fmt == "json":
+                #return HttpResponse(context['result'], mimetype="application/json")
+                return JsonResponse(import_text, safe=False  )
+
+        else:
+            return render_to_response(Txn['template'],
+                                      RequestContext(request,
+                                                     context, ))
+
+    except requests.ConnectionError:
+        print("Whoops - Problem connecting to FHIR Server")
+        messages.error(request,
+                       "FHIR Server is unreachable. Are you on the CMS Network?")
+        return HttpResponseRedirect(reverse('api:v1:home'))
+
+
+def PatientExplanationOfBenefit(request, patient_id, *args, **kwargs):
+    """
+    Function-based interface to ExplanationOfBenefit
+    :param request:
+    :return:
+    """
+
+    if patient_id == "":
+        err_msg = ['Sorry, No Patient Id provided', ]
+        exit_message = concat_string("",
+                                     msg=err_msg,
+                                     delimiter=" ",
+                                     last=".")
+        messages.error(request, exit_message)
+        return HttpResponseRedirect(reverse('api:v1:home'))
+
+
+    if settings.DEBUG:
+        print("In apps.v1api.views.eob.PatientExplanationOfBenefit Function")
+
+        print("request:", request.GET)
+
+    process_mode = request.META['REQUEST_METHOD']
+
+    try:
+        xwalk = Crosswalk.objects.get(user=request.user)
+    except Crosswalk.DoesNotExist:
+        messages.error(request, "Unable to find Patient ID")
+        return HttpResponseRedirect(reverse('api:v1:home'))
+
+    in_fmt = "json"
+    get_fmt = get_format(request.GET)
+
+    Txn = {'name': "ExplanationOfBenefit",
+           'display': 'EOB',
+           'mask': True,
+           'template': 'v1api/eob.html',
+           'in_fmt': in_fmt,
+           }
+
+    if settings.DEBUG:
+        print("Request.GET :", request.GET)
+        print("KWargs      :", kwargs)
+        print("Patient     :", patient_id)
+
+    # We should have the xwalk.FHIR_url_id
+    # So we will construct the EOB Identifier to include
+
+    # We will deal internally in JSON Format if caller does not choose
+    # a format
+    in_fmt = "json"
+    get_fmt = get_format(request.GET)
+
+    pass_to = FhirServerUrl()
+    pass_to += "/ExplanationOfBenefit/"
+
+    key = patient_id
+    patient_filter= "?patient=Patient/" + key
+
+    pass_to += patient_filter
+
+    skip_parm = ['_id', '_format']
+
+    pass_to = pass_to + "&" + build_params(request.GET, skip_parm)[1:]
+
+    # Set Context
+    context = {'display':"EOB",
+               'name': "ExplanationOfBenefit",
+               'mask': True,
+               'key': key,
+               'get_fmt': get_fmt,
+               'in_fmt': in_fmt,
+               'pass_to': pass_to,
+               }
+
+    if settings.DEBUG:
+        print("Calling requests with pass_to:", pass_to)
+
+    try:
+        r = requests.get(pass_to)
+
+        if get_fmt == "xml":
+
+            xml_text = minidom.parseString(r.text)
+            print("XML_TEXT:", xml_text.toxml())
+            root = ET.fromstring(r.text)
+            # root_out = etree_to_dict(r.text)
+
+            json_string = ""
+            # json_out = xml_str_to_json_str(r.text, json_string)
+            if settings.DEBUG:
+                print("Root ET XML:", root)
+                # print("XML:", root_out)
+                # print("JSON_OUT:", json_out,":", json_string)
+
+            drill_down = ['Bundle',
+                          'entry',
+                          'Patient', ]
+            level = 0
+
+            tag0 = xml_text.getElementsByTagName("text")
+            # tag1 = tag0.getElementsByTagName("entry")
+
+            print("Patient?:", tag0)
+            print("DrillDown:", drill_down[level])
+            print("root find:", root.find(drill_down[level]))
+
+            pretty_xml = xml_text.toprettyxml()
+            #if settings.DEBUG:
+            #    print("TEXT:", text)
+            #    # print("Pretty XML:", pretty_xml)
+
+            context['result'] = pretty_xml  # convert
+            context['text'] = pretty_xml
+
+        else:
+
+            convert = OrderedDict(r.json())
+            # result = mark_safe(convert)
+
+            if settings.DEBUG:
+                print("Convert:", convert)
+                # print("Next Level - entry:", convert['entry'])
+                # print("\n ANOTHER Level- text:", convert['entry'][0])
+
+            content = OrderedDict(convert)
+            text = ""
+
+            if settings.DEBUG:
+                print("Content:", content)
+                print("resourceType:", content['resourceType'])
+                if 'text' in content:
+                    if 'div' in content['text']:
+                        print("text:", content['text']['div'])
+
+            # context['result'] = r.json()  # convert
+            import_text = json.loads(r.text, object_pairs_hook=OrderedDict)
+            context['result'] = json.dumps(import_text, indent=4, sort_keys=False)
+            if 'text' in content:
+                if 'div' in content['text']:
+                    context['text'] = content['text']['div']
+                else:
+                    context['text'] = ""
+            else:
+                context['text'] = "No user readable content to display"
+            if 'error' in content:
+                context['error'] = context['issue']
+
+        # Setup the page
+
+        if settings.DEBUG:
+            print("Context-result:", context['result'])
+            # print("Context-converted:", json.dumps(context['result'], sort_keys=False))
+            # print("Context:",context)
+
+        if get_fmt == 'xml' or get_fmt == 'json':
+            if settings.DEBUG:
+                print("Mode = ", get_fmt)
+                print("Context['result']: ", context['result'])
+            if get_fmt == "xml":
+                return HttpResponse(context['result'],
+                                    content_type='application/' + get_fmt)
+            if get_fmt == "json":
+                #return HttpResponse(context['result'], mimetype="application/json")
+                return JsonResponse(import_text, safe=False  )
+
+        else:
+            return render_to_response(Txn['template'],
+                                      RequestContext(request,
+                                                     context, ))
+
+    except requests.ConnectionError:
+        print("Whoops - Problem connecting to FHIR Server")
+        messages.error(request,
+                       "FHIR Server is unreachable. Are you on the CMS Network?")
+        return HttpResponseRedirect(reverse('api:v1:home'))

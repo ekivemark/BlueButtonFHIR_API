@@ -440,7 +440,7 @@ def get_eob(request, *args, **kwargs):
     return HttpResponseRedirect(reverse('api:v1:home'))
 
 
-@login_required
+#@login_required
 def get_eob_view(request, eob_id, *args, **kwargs):
     """
 
@@ -481,24 +481,6 @@ def get_eob_view(request, eob_id, *args, **kwargs):
 
     # We should have the xwalk.FHIR_url_id
     # So we will construct the EOB Identifier to include
-    # This is a hack to limit EOBs returned to this user only.
-
-    #   id_source['system'] = "https://mymedicare.gov/claims/beneficiary"
-    #    id_source['use'] = "official"
-    #    id_source['value'] = "Patient/"+str(patient_id)
-    #    id_list.append(unique_id(id_source))
-
-    # this search works:
-    # http://fhir.bbonfhir.com:8080/fhir-p/
-    # search?serverId=bbonfhir_dev
-    # &resource=ExplanationOfBenefit
-    # &param.0.0=https%3A%2F%2Fmymedicare.gov%2Fclaims%2Fbeneficiary
-    # &param.0.1=Patient%2F4995401
-    # &param.0.name=identifier
-    # &param.0.type=token
-    # &sort_by=
-    # &sort_direction=
-    # &resource-search-limit=
 
     # We will deal internally in JSON Format if caller does not choose
     # a format
@@ -509,8 +491,8 @@ def get_eob_view(request, eob_id, *args, **kwargs):
     Txn = {'name': "ExplanationOfBenefit",
            'display': 'EOB',
            'mask': True,
-           'server': settings.FHIR_SERVER,
-           'locn': "/baseDstu2/ExplanationOfBenefit/",
+           # 'server': settings.FHIR_SERVER,
+           # 'locn': "/baseDstu2/ExplanationOfBenefit/",
            'template': 'v1api/eob.html',
            'in_fmt': in_fmt,
            }
@@ -523,7 +505,8 @@ def get_eob_view(request, eob_id, *args, **kwargs):
     if 'mask' in Txn:
         mask = Txn['mask']
 
-    pass_to = Txn['server'] + Txn['locn']
+    pass_to = FhirServerUrl()
+    pass_to += "/ExplanationOfBenefit/"
 
     # We can allow an EOB but we MUST add a search Parameter
     # to limit the items found to those relevant to the Patient Id
@@ -534,8 +517,7 @@ def get_eob_view(request, eob_id, *args, **kwargs):
 
     #pass_to = pass_to + key + "/"
 
-    pass_to = pass_to + "?identifier="
-    pass_to = pass_to + "https://mymedicare.gov/claims/beneficiary|"
+    pass_to = pass_to + "?patient="
     pass_to = pass_to + "Patient/"
     pass_to = pass_to + xwalk.fhir_url_id.strip()
 
