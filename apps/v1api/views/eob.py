@@ -17,6 +17,7 @@ import requests
 from collections import OrderedDict
 
 from xml.dom import minidom
+from xml.etree import ElementTree as ET
 
 from oauth2_provider.decorators import protected_resource
 from oauth2_provider.models import AbstractApplication, AccessToken
@@ -334,19 +335,12 @@ def PatientExplanationOfBenefit(request, patient_id, *args, **kwargs):
         messages.error(request, exit_message)
         return HttpResponseRedirect(reverse('api:v1:home'))
 
-
     if settings.DEBUG:
         print("In apps.v1api.views.eob.PatientExplanationOfBenefit Function")
 
         print("request:", request.GET)
 
     process_mode = request.META['REQUEST_METHOD']
-
-    try:
-        xwalk = Crosswalk.objects.get(user=request.user)
-    except Crosswalk.DoesNotExist:
-        messages.error(request, "Unable to find Patient ID")
-        return HttpResponseRedirect(reverse('api:v1:home'))
 
     in_fmt = "json"
     get_fmt = get_format(request.GET)
