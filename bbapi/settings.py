@@ -84,8 +84,15 @@ DOMAIN = PARSE_INI.get('global', 'domain')
 
 if DEBUG:
     ALLOWED_HOSTS = []
+    print("ALLOWED_HOSTS:", ALLOWED_HOSTS)
 else:
-    ALLOWED_HOSTS = ['.bbonfhir.com', 'localhost', '127.0.0.1', DOMAIN]
+    ALLOWED_HOSTS = PARSE_INI.get('global', 'allowed_hosts').split(',')
+    ALLOWED_HOSTS.append(DOMAIN)
+
+    # ALLOWED_HOSTS = ['.bbonfhir.com',
+    #                  'localhost',
+    #                  '127.0.0.1',
+    #                  DOMAIN]
 ADMINS = (
     ('Mark Scrimshire', 'mark@ekivemark.com'),
 )

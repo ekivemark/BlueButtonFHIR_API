@@ -4,6 +4,9 @@ domain = __ADD_DOMAIN_HERE__
 debug = True
 template_debug = True
 debug_settings = True
+#allowed_hosts = "*"
+allowed_hosts = .domain.tld,localhost,127.0.0.1
+# settings.py also appends DOMAIN value above to ALLOWED_HOSTS
 email_host = __ADD_EMAIL_HOST_IN_LOCAL.INI__
 #email_host = __ADD_EMAIL_HOST_IN_LOCAL.INI__
 application_title =Beneficiary Accounts
