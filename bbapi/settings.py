@@ -271,18 +271,12 @@ WSGI_APPLICATION = 'bbapi.apache2.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.7/ref/settings/#databases
 DBPATH = os.path.join(BASE_DIR, 'db/db.db')
-if DEBUG_SETTINGS:
-    print("DBPATH:", DBPATH)
-
-
 # Standard sqlite3 settings
-
 DB_PLATFORM = PARSE_INI.get('global', 'db_platform')
 if DEBUG_SETTINGS:
     print("DB Platform:", DB_PLATFORM)
     # postgresql_psycopg2
 if DB_PLATFORM == "postgresql_psycopg2":
-    print("Setting up Database with:", DB_PLATFORM)
     DATABASES = {
         'default' : {
             'ENGINE' : 'django.db.backends.postgresql_psycopg2',
@@ -298,13 +292,10 @@ if DB_PLATFORM == "postgresql_psycopg2":
         }
     }
 elif DB_PLATFORM == "by_local_ini":
-    print("Setting up Database with:", DB_PLATFORM)
     defn_dict = PARSE_INI.get('global', 'databases_defn')
     DATABASES = eval(defn_dict)
 
 else: #  DB_PLATFORM == "sqlite3":
-    if DEBUG_SETTINGS:
-        print('Setting up Database', DB_PLATFORM)
     DATABASES = {
         'default' : {
             'ENGINE' : 'django.db.backends.sqlite3',
@@ -463,7 +454,7 @@ DEFAULT_FROM_EMAIL = PARSE_INI.get('global',
                                    'default_from_email')
 
 if DEBUG_SETTINGS:
-    print("Email via %s: %s" % (EMAIL_BACKEND_TYPE, EMAIL_BACKEND))
+    print("Email via %s[%s]" % (EMAIL_BACKEND,EMAIL_BACKEND_TYPE))
     print("Account Activation Days: %s" % ACCOUNT_ACTIVATION_DAYS)
     print("Email Host:Port: %s:%s" % (EMAIL_HOST, EMAIL_PORT))
     print("Credentials: [%s]/[%s]" % (EMAIL_HOST_USER,
@@ -507,10 +498,7 @@ INTERNAL_IPS = '127.0.0.1'
 SHOW_TOOLBAR_CALLBACK = 'debug_toolbar.middleware.show_toolbar'
 
 if DEBUG_SETTINGS:
-    print("Django Debug Toolbar")
-    print("Internal IPs", INTERNAL_IPS)
-    print("Debug:", DEBUG)
-
+    print("Django Debug Toolbar:%s on %s" % (DEBUG, INTERNAL_IPS))
 
 # Django 1.6+ implement a new test runner
 # Suppress error 1_6.W001 by adding:
@@ -557,14 +545,9 @@ SETTINGS_EXPORT = [
 ]
 
 if DEBUG_SETTINGS:
-    print("SECRET_KEY:%s" % SECRET_KEY)
-    print(
-        "================================================================")
+    print("KEY:%s" % SECRET_KEY)
+    print("================================================================")
 # SECURITY WARNING: keep the secret key used in production secret!
-
-#######################################
-#######################################
-# django-auth-ldap
 
 ####
 # POET Trust Section
@@ -613,7 +596,6 @@ LDAP_AUTH_USER_FIELDS = {
 LDAP_AUTH_GET_FIELDS = ["cn", "uid", "givenName",
                         "sn", "mail"]
 
-
 # BeautifulSoup
 BS_PARSER = 'lxml'
 
@@ -647,14 +629,14 @@ DJANGO_FHIR_CONFIG = {
     "DF_APPS": ('fhir_io_hapi',),
 }
 
-
 if DEBUG_SETTINGS:
     print("FHIR_SERVER_CONF:", FHIR_SERVER_CONF)
     print("FHIR_SERVER:", FHIR_SERVER)
-    print("AUTH_LDAP_SERVER_URI:", AUTH_LDAP_SERVER_URI)
-    print("AUTH_LDAP_SCOPE:", AUTH_LDAP_SCOPE)
-#     print("REMOTE_LDAP_CHECK:", REMOTE_LDAP_CHECK)
-#
+    print("LDAP Authentication:", REMOTE_LDAP_CHECK)
+    if REMOTE_LDAP_CHECK:
+        print("AUTH_LDAP_SERVER_URI:", AUTH_LDAP_SERVER_URI)
+        print("AUTH_LDAP_SCOPE:", AUTH_LDAP_SCOPE)
+
 #     if REMOTE_LDAP_CHECK:
 #         SRVR = Server(AUTH_LDAP_SERVER_URI, get_info=ALL)
 #         try:
@@ -686,14 +668,16 @@ if DEBUG_SETTINGS:
 #             for r in CNCT.response:
 #                 print(r['dn'], r['attributes'])
 #
-    print("=========================================")
+
+print("=========================================")
 MEDIA_URL = "/media/"
 if DB_PLATFORM == 'sqlite3':
     MEDIA_ROOT = "/Users/mark/PycharmProjects/media/bb/"
 else:
     MEDIA_ROOT = "/data/pyapps/media/"
 
-VERSION_INFO = "1.1.2"
+# Simple check for Code Version
+VERSION_INFO = "1.2.1"
 
 if DEBUG_SETTINGS:
     print("Version:", VERSION_INFO)
