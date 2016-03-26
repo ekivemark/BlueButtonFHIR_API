@@ -27,7 +27,9 @@ import json
 from platform import python_version
 from .utils import (str2bool,
                     str2int,
-                    CurrentUserMiddleware)
+                    CurrentUserMiddleware,
+                    Server_Ip,
+                    Server_Name)
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
@@ -88,6 +90,7 @@ if DEBUG:
 else:
     ALLOWED_HOSTS = PARSE_INI.get('global', 'allowed_hosts').split(',')
     ALLOWED_HOSTS.append(DOMAIN)
+    ALLOWED_HOSTS.append(Server_Ip())
 
     # ALLOWED_HOSTS = ['.bbonfhir.com',
     #                  'localhost',
@@ -106,6 +109,10 @@ if APPLICATION_TITLE == "":
 FULL_CONFIG_FILE = APPLICATION_ROOT.strip() + '/' + CONFIG_FILE
 
 if DEBUG_SETTINGS:
+    print("")
+    print("==================================================================")
+    print("==================================================================")
+    print("==================================================================")
     print("Application: ", APPLICATION_TITLE)
     print("Running on Python_version: ", python_version())
     print("")
@@ -113,6 +120,7 @@ if DEBUG_SETTINGS:
     print("APPLICATION_ROOT:", APPLICATION_ROOT)
     print("Config File: ", FULL_CONFIG_FILE)
     print("ALLOWED_HOSTS:", ALLOWED_HOSTS)
+    print("Running on:", Server_Name(),"[", Server_Ip(),"]")
 # Application definition
 
 TEMPLATES = [

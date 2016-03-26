@@ -6,6 +6,8 @@ Basic conversion tools
 """
 __author__ = 'Mark Scrimshire:@ekivemark'
 
+import socket
+
 from threading import local
 from django.conf import settings
 
@@ -38,6 +40,15 @@ def str2int(inp):
 
     return output
 
+
+def Server_Ip():
+    # use socket to get ip address for this server
+    return socket.gethostbyname(socket.gethostname())
+
+
+def Server_Name():
+    # use socket to return server name
+    return socket.gethostname()
 
 def FhirServerUrl(server=None,path=None, release=None ):
     # fhir_server_configuration = {"SERVER":"http://fhir-test.bbonfhir.com:8081",
