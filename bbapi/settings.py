@@ -84,7 +84,7 @@ DOMAIN = PARSE_INI.get('global', 'domain')
 
 if DEBUG:
     ALLOWED_HOSTS = []
-    print("ALLOWED_HOSTS:", ALLOWED_HOSTS)
+
 else:
     ALLOWED_HOSTS = PARSE_INI.get('global', 'allowed_hosts').split(',')
     ALLOWED_HOSTS.append(DOMAIN)
@@ -112,7 +112,7 @@ if DEBUG_SETTINGS:
     print("BASE_DIR:", BASE_DIR)
     print("APPLICATION_ROOT:", APPLICATION_ROOT)
     print("Config File: ", FULL_CONFIG_FILE)
-
+    print("ALLOWED_HOSTS:", ALLOWED_HOSTS)
 # Application definition
 
 TEMPLATES = [
