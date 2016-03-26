@@ -7,10 +7,12 @@ machine configurations.
 ## Machine specific installation
 
 Create a local.ini text file on each machine and define using unique values. 
-PAsswords or keys can also be included here.
+
+local.ini is deliberatly excluded from the github repository so passwords or keys 
+can be included in the file and used to override default values in settings.py.
 
 ## local.ini.txt
 
-This file provides a balnk sample of the structure and content of local.ini
+This file provides a sample of the structure and content of local.ini
 
 
