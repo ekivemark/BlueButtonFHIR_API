@@ -23,6 +23,7 @@ from ..utils import build_params
 from ..fhirpit import build_url, mask_id
 
 from fhir.models import SupportedResourceType
+from fhir.settings import DF_EXTRA_INFO
 
 from django.conf import settings
 from django.contrib import messages
@@ -128,7 +129,7 @@ def find(request, resource_type, *arg, **kwargs):
         text_out = r.json()
 
     od = OrderedDict()
-    if settings.DEBUG:
+    if DF_EXTRA_INFO:
         od['request_method']= request.method
         od['interaction_type'] = interaction_type
     od['resource_type']    = resource_type
@@ -137,10 +138,10 @@ def find(request, resource_type, *arg, **kwargs):
     if settings.DEBUG:
         print("Query List:", request.META['QUERY_STRING'] )
 
-    od['parameters'] = request.GET.urlencode()
-
-    if settings.DEBUG:
-        print("or:", od['parameters'])
+    if DF_EXTRA_INFO:
+        od['parameters'] = request.GET.urlencode()
+        if settings.DEBUG:
+            print("or:", od['parameters'])
 
     if '_format=xml' in pass_params.lower():
         fmt = "xml"
@@ -148,27 +149,29 @@ def find(request, resource_type, *arg, **kwargs):
         fmt = "json"
     else:
         fmt = ''
-    od['format'] = fmt
+    if DF_EXTRA_INFO:
+        od['format'] = fmt
+
     od['bundle'] = text_out
-    od['note'] = 'This is the %s Pass Thru ' % (resource_type)
+    if DF_EXTRA_INFO:
+        od['note'] = 'This is the %s Pass Thru ' % (resource_type)
+        if settings.DEBUG:
+            od['note'] += 'using: %s ' % (pass_to)
+            print(od)
 
-    if settings.DEBUG:
-        od['note'] += 'using: %s ' % (pass_to)
-        print(od)
-
-    if od['format'] == "xml":
+    if fmt == "xml":
         if settings.DEBUG:
             print("We got xml back in od")
         return HttpResponse( tostring(dict_to_xml('content', od)),
-                             content_type="application/%s" % od['format'])
-    elif od['format'] == "json":
+                             content_type="application/%s" % fmt)
+    elif fmt == "json":
         if settings.DEBUG:
             print("We got json back in od")
         return HttpResponse(json.dumps(od, indent=4),
-                            content_type="application/%s" % od['format'])
+                            content_type="application/%s" % fmt)
 
     if settings.DEBUG:
-        print("We got a different format:%s" % od['format'])
+        print("We got a different format:%s" % fmt)
     return render(request,
                   'fhir_io_hapi/default.html',
                   {'content': json.dumps(od, indent=4),

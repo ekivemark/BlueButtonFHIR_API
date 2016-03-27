@@ -1,19 +1,14 @@
-from django.shortcuts import render
-
-from fhir.models import SupportedResourceType
-
-from django.shortcuts import render
+import json
 
 from collections import OrderedDict
 
-from fhir.utils import (kickout_404, kickout_403, DEBUG_EXTRA_INFO)
-
 from django.conf import settings
 from django.http import HttpResponse
+from django.shortcuts import render
 
-import json
-
-from fhir.settings import FHIR_BACKEND
+from fhir.models import SupportedResourceType
+from fhir.settings import FHIR_BACKEND, DF_EXTRA_INFO
+from fhir.utils import (kickout_404, kickout_403)
 from fhir.views.utils import check_access_interaction_and_resource_type
 
 from django.conf import settings
@@ -37,11 +32,12 @@ def read(request, resource_type, id):
     # move to fhir_io_mongo (pluggable backend)
 
     od = OrderedDict()
-    if DEBUG_EXTRA_INFO:
+    if DF_EXTRA_INFO:
         od['request_method']= request.method
         od['interaction_type'] = interaction_type
     od['resource_type']    = resource_type
     od['id'] = id
-    od['note'] = "This is only a stub for future implementation"
+    if DF_EXTRA_INFO:
+        od['note'] = "This is only a stub for future implementation"
     return HttpResponse(json.dumps(od, indent=4),
                         content_type="application/json")

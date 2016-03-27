@@ -16,8 +16,8 @@ def hello(request):
         rt[r.resource_name] =  r.get_supported_interaction_types()
         interactions.append(rt)
     od = OrderedDict()
-    od['request_method']                        = request.method
+    od['request_method'] = request.method
     od['resources_and_interaction_types'] = interactions
-    od['note'] = "Hello.  Welcome to the FHIR Server."
+    od['note'] = "Hello. Welcome to the FHIR Server."
     return HttpResponse(json.dumps(od, indent=4),
                         content_type="application/json")

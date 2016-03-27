@@ -25,8 +25,9 @@ from apps.v1api.views.patient import (get_patient,
                                       get_eob_view,)
 
 from apps.v1api.views.ogets import (Hello,
-                                    patient,
-                                    Patients,)
+                                    o_patient,
+                                    Patients,
+                                    o_explanationofbenefit)
 
 from apps.v1api.views.apidocs import (ResourceTypeList,
                                       ResourceControlList)
@@ -61,10 +62,13 @@ urlpatterns = [
                        # These will only be used by OAuth authorized apps
                        # These are the resource servers
                        url(r'^o/hello', Hello.as_view()),
-                       url(r'^o/Patient/(?P<patient_id>\w+|)$', Patients.as_view(), name='fhir_patient'),
+                       #url(r'^o/Patient/(?P<patient_id>\w+|)$', Patients.as_view(), name='fhir_patient'),
+                       url(r'^o/Patient/(?P<patient_id>\w+|)$', o_patient, name='fhir_patient'),
 
                        # Add more oauth endpoints here
-                       url(r'^o/Patient', patient),
+                       url(r'^o/Patient', o_patient),
+
+                       url(r'^o/ExplanationOfBenefit', o_explanationofbenefit),
 
                        url(r'^resourcetype',ResourceTypeList.as_view(),
                            name = "resourcetype"),

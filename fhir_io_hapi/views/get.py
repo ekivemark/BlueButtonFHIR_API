@@ -16,8 +16,6 @@ from collections import OrderedDict
 from xml.dom import minidom
 from xml.etree.ElementTree import tostring
 
-from fhir.models import SupportedResourceType
-
 from django.conf import settings
 from django.contrib import messages
 from django.core.urlresolvers import reverse_lazy
@@ -25,13 +23,16 @@ from django.http import (HttpResponseRedirect,
                          HttpResponse,)
 from django.shortcuts import render
 
-from fhir.utils import (kickout_404, DEBUG_EXTRA_INFO)
+from fhir.models import SupportedResourceType
+from fhir.settings import DF_EXTRA_INFO
+from fhir.utils import kickout_404
 from fhir.views.utils import check_access_interaction_and_resource_type
 from fhir_io_hapi.utils import (build_params,
                      crosswalk_id,
                      dict_to_xml,
                      error_status,
                      check_rt_controls)
+
 
 __author__ = 'Mark Scrimshire:@ekivemark'
 
@@ -48,14 +49,17 @@ def hello_world(request, resource_type, id):
     """
 
     od = OrderedDict()
-    od['request']= request
-    od['interaction_type'] = ""
-    od['resource_type']    = resource_type
+    if DF_EXTRA_INFO:
+        od['request']= request
+        od['interaction_type'] = ""
+    od['resource_type'] = resource_type
     od['id'] = id
-    od['format'] = "json"
-    od['note'] = "Hello World from fhir_io_hapi.get.hello_world: %s,{%s}[%s]" % (request,
-                                                                        resource_type,
-                                                                        id)
+
+    if DF_EXTRA_INFO:
+        od['format'] = "json"
+        od['note'] = "Hello World from fhir_io_hapi.get.hello_world: %s,{%s}[%s]" % (request,
+                                                                                     resource_type,
+                                                                                     id)
 
     return "Hello World from fhir_io_hapi.get.hello_world: %s,{%s}[%s] %s" % (request,
                                                                               resource_type,
@@ -133,7 +137,7 @@ def generic_read(request, interaction_type, resource_type, id, vid=None, *args, 
 
     if settings.DEBUG:
         if srtc:
-            print("Parameter Rectrictions:", srtc.parameter_restriction())
+            print("Parameter Restrictions:", srtc.parameter_restriction())
         else:
             print("No Resource Controls found")
 
@@ -227,7 +231,7 @@ def generic_read(request, interaction_type, resource_type, id, vid=None, *args, 
         text_out = r.json()
 
     od = OrderedDict()
-    if DEBUG_EXTRA_INFO:
+    if DF_EXTRA_INFO:
         od['request_method']= request.method
         od['interaction_type'] = interaction_type
     od['resource_type']    = resource_type
@@ -238,10 +242,10 @@ def generic_read(request, interaction_type, resource_type, id, vid=None, *args, 
     if settings.DEBUG:
         print("Query List:", request.META['QUERY_STRING'] )
 
-    od['parameters'] = request.GET.urlencode()
-
-    if settings.DEBUG:
-        print("or:", od['parameters'])
+    if DF_EXTRA_INFO:
+        od['parameters'] = request.GET.urlencode()
+        if settings.DEBUG:
+            print("or:", od['parameters'])
 
     if '_format=xml' in pass_params.lower():
         fmt = "xml"
@@ -249,27 +253,30 @@ def generic_read(request, interaction_type, resource_type, id, vid=None, *args, 
         fmt = "json"
     else:
         fmt = ''
-    od['format'] = fmt
+
+    if DF_EXTRA_INFO:
+        od['format'] = fmt
     od['bundle'] = text_out
-    od['note'] = 'This is the %s Pass Thru (%s) ' % (resource_type,key)
 
-    if settings.DEBUG:
-        od['note'] += 'using: %s ' % (pass_to)
-        print(od)
+    if DF_EXTRA_INFO:
+        od['note'] = 'This is the %s Pass Thru (%s) ' % (resource_type,key)
+        if settings.DEBUG:
+            od['note'] += 'using: %s ' % (pass_to)
+            print(od)
 
-    if od['format'] == "xml":
+    if fmt == "xml":
         if settings.DEBUG:
             print("We got xml back in od")
         return HttpResponse( tostring(dict_to_xml('content', od)),
-                             content_type="application/%s" % od['format'])
-    elif od['format'] == "json":
+                             content_type="application/%s" % fmt)
+    elif fmt == "json":
         if settings.DEBUG:
             print("We got json back in od")
         return HttpResponse(json.dumps(od, indent=4),
-                            content_type="application/%s" % od['format'])
+                            content_type="application/%s" % fmt)
 
     if settings.DEBUG:
-        print("We got a different format:%s" % od['format'])
+        print("We got a different format:%s" % fmt)
     return render(request,
                   'fhir_io_hapi/default.html',
                   {'content': json.dumps(od, indent=4),

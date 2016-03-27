@@ -1,18 +1,16 @@
+import json
+
+from collections import OrderedDict
+from importlib import import_module
+
 from django.conf import settings
+from django.http import HttpResponse
 from django.shortcuts import render
 
 from fhir.models import SupportedResourceType
-
-from collections import OrderedDict
-
-from django.http import HttpResponse
-from importlib import import_module
-import json
-
-from fhir.utils import kickout_400, DEBUG_EXTRA_INFO
+from fhir.utils import kickout_400
 from fhir.views.utils import check_access_interaction_and_resource_type
-from fhir.settings import FHIR_BACKEND_FIND
-
+from fhir.settings import FHIR_BACKEND_FIND, DF_EXTRA_INFO
 
 
 def search(request, resource_type):
@@ -37,12 +35,13 @@ def search(request, resource_type):
 
     # Move to fhir_io_mongo (Plugable back-end)
     od = OrderedDict()
-    if DEBUG_EXTRA_INFO:
+    if DF_EXTRA_INFO:
         od['request_method']= request.method
         od['interaction_type'] = "search"
     od['resource_type']    = resource_type
-    od['search_params'] = request.GET
-    od['note'] = "This is only a stub for future implementation"
+    if DF_EXTRA_INFO:
+        od['search_params'] = request.GET
+        od['note'] = "This is only a stub for future implementation"
     
     return HttpResponse(json.dumps(od, indent=4),
                         content_type="application/json")

@@ -1,24 +1,23 @@
+import json
+
+from collections import OrderedDict
+
+from django.http import HttpResponse
 from django.shortcuts import render
 
 from fhir.models import SupportedResourceType
-
-from collections import OrderedDict
-from django.http import HttpResponse
-
-import json
-
+from fhir.settings import FHIR_BACKEND, DF_EXTRA_INFO
+from fhir.utils import (kickout_404, kickout_403, kickout_400)
 from fhir.views.utils import check_access_interaction_and_resource_type
-from fhir.utils import (kickout_404, kickout_403, kickout_400, DEBUG_EXTRA_INFO)
-from fhir.settings import FHIR_BACKEND
 
 
 def history(request, resource_type, id):
     
     interaction_type = '_history'
-    #Check if this interaction type and resource type combo is allowed.
+    # Check if this interaction type and resource type combo is allowed.
     deny = check_access_interaction_and_resource_type(resource_type, interaction_type)
     if deny:
-        #If not allowed, return a 4xx error.
+        # If not allowed, return a 4xx error.
         return deny
 
 
@@ -34,12 +33,13 @@ def history(request, resource_type, id):
 
 
     od = OrderedDict()
-    if DEBUG_EXTRA_INFO:
+    if DF_EXTRA_INFO:
         od['request_method']= request.method
         od['interaction_type'] = "_history"
     od['resource_type']    = resource_type
     od['id'] = id
-    od['note'] = "This is only a stub for future implementation"
+    if DF_EXTRA_INFO:
+        od['note'] = "This is only a stub for future implementation"
     
     return HttpResponse(json.dumps(od, indent=4),
                         content_type="application/json")

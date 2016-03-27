@@ -6,8 +6,6 @@ Created: 9/27/15 7:04 PM
 
 
 """
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
 
 __author__ = 'Mark Scrimshire:@ekivemark'
 
@@ -24,12 +22,14 @@ from django.views.generic import ListView
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+
 from django.core.urlresolvers import reverse_lazy
 from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import render
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 
-from apps.v1api.views.patient import get_patient
+from apps.v1api.views.patient import get_patient, get_eob
 from apps.v1api.views.crosswalk import lookup_xwalk
 from apps.v1api.utils import (build_params)
 
@@ -51,6 +51,7 @@ class Patients(ProtectedResourceView):
             print("in Patients Class - dispatch" )
         return super(Patients, self).dispatch(*args, **kwargs)
 
+    @method_decorator(login_required)
     def get(self, request, patient_id, *args, **kwargs):
         # This is a patient profile GET
         #
@@ -58,6 +59,7 @@ class Patients(ProtectedResourceView):
         # get the FHIR Patient ID
         # Call the FHIR Patient Profile
         # Return the result
+        print("in the get!")
         if settings.DEBUG:
             print("in Patients.get with", patient_id)
 
@@ -151,6 +153,8 @@ class Patients(ProtectedResourceView):
         # get the FHIR Patient ID
         # Call the FHIR Patient Profile
         # Return the result
+        print("in Patients.post with", patient_id)
+
         if settings.DEBUG:
             print("in Patients.post with", patient_id)
 
@@ -168,18 +172,31 @@ class Patients(ProtectedResourceView):
         return render(request, self.template_name, {'form': form})
 
 
-
-
-@protected_resource()
-def patient(request, *args, **kwargs):
-    # TODO: get this working
+#@protected_resource()
+@login_required
+def o_patient(request, *args, **kwargs):
 
     if settings.DEBUG:
         print("in apps.v1api.views.ogets.Patient")
         print("request:", request)
 
     result = get_patient(request, *args, **kwargs)
+    # if settings.DEBUG:
+    #     print("Results:", result)
+
+    return result
+
+
+#@protected_resource()
+@login_required
+def o_explanationofbenefit(request, *args, **kwargs):
+
     if settings.DEBUG:
-        print("Results:", result)
+        print("in apps.v1api.views.ogets.explanationofbenefit")
+        print("request:", request)
+
+    result = get_eob(request, *args, **kwargs)
+    # if settings.DEBUG:
+    #     print("Results:", result)
 
     return result

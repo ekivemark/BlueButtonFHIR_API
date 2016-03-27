@@ -627,6 +627,7 @@ else:
 DJANGO_FHIR_CONFIG = {
     # Overwrite default pluggable database module
     "DF_APPS": ('fhir_io_hapi',),
+    "DF_EXTRA_INFO": True,
 }
 
 if DEBUG_SETTINGS:

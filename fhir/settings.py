@@ -28,12 +28,15 @@ __author__ = 'Mark Scrimshire:@ekivemark'
 
 DJANGO_FHIR_CONFIG = {
     "DF_APPS": ('fhir_io_mongo',),
+    "DF_EXTRA_INFO": False,
 }
 # We should revamp DJANGO_FHIR_CONFIG to add reference for each FHIR call.
 # ie. SEARCH, DELETE etc.
 
 
 DJANGO_FHIR_CONFIG.update(getattr(settings, 'DJANGO_FHIR_CONFIG', {}))
+
+DF_EXTRA_INFO = DJANGO_FHIR_CONFIG['DF_EXTRA_INFO']
 
 for df_app in DJANGO_FHIR_CONFIG['DF_APPS']:
     if settings.DEBUG:

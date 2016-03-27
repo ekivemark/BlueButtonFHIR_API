@@ -61,8 +61,10 @@ def get_patient(request, *args, **kwargs):
     try:
         xwalk = Crosswalk.objects.get(user=request.user.id)
     except Crosswalk.DoesNotExist:
-        messages.error(request, "Unable to find Patient ID")
-        return kickout_404("Unable to find Patient ID")
+        reason = "Unable to find Patient ID for user:%s[%s]" % (request.user,
+                                                                request.user.id)
+        messages.error(request, reason)
+        return kickout_404(reason)
         # return HttpResponseRedirect(reverse('api:v1:home'))
 
     if xwalk.fhir_url_id == "":

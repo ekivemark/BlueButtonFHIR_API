@@ -7,10 +7,10 @@ import json
 
 from django.views.decorators.csrf import csrf_exempt
 
-from fhir.utils import (kickout_403, kickout_404, DEBUG_EXTRA_INFO)
+from fhir.utils import (kickout_403, kickout_404)
 from fhir.views.utils import check_access_interaction_and_resource_type
 
-from fhir.settings import FHIR_BACKEND_DELETE
+from fhir.settings import FHIR_BACKEND_DELETE, DF_EXTRA_INFO
 
 @csrf_exempt
 def delete(request, resource_type, id):
@@ -29,11 +29,12 @@ def delete(request, resource_type, id):
 
     
     od = OrderedDict()
-    if DEBUG_EXTRA_INFO:
+    if DF_EXTRA_INFO:
         od['request_method']= request.method
         od['interaction_type'] = interaction_type
     od['resource_type']    = resource_type
     od['id'] = id
-    od['note'] = "This is only a stub for future implementation"
+    if DF_EXTRA_INFO:
+        od['note'] = "This is only a stub for future implementation"
     return HttpResponse(json.dumps(od, indent=4),
                         content_type="application/json")

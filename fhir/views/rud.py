@@ -1,6 +1,7 @@
 from django.shortcuts import render
 
-from fhir.utils import kickout_404, kickout_400, kickout_500, DEBUG_EXTRA_INFO
+from fhir.settings import DF_EXTRA_INFO
+from fhir.utils import kickout_404, kickout_400, kickout_500
 from fhir.views.update import update
 from fhir.views.delete import delete
 from fhir.views.read import read
