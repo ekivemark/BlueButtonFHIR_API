@@ -15,12 +15,17 @@ from collections import OrderedDict
 
 from django.http import HttpResponse
 
+# Replace next line with
+DF_EXTRA_INFO = False
+# this line when development is complete
+#from fhir.settings import DF_EXTRA_INFO
+
 __author__ = 'Mark Scrimshire:@ekivemark'
 
 
 def hello_world(request, resource_type, id, *arg, **kwargs):
     """
-    Simple Hello World to check for plugable module
+    Simple Hello World to check for pluggable module
     :param request:
     :param resource_type:
     :param id:
@@ -28,9 +33,10 @@ def hello_world(request, resource_type, id, *arg, **kwargs):
     :param kwargs:
     :return:
     """
-    return "Hello World from fhir_io_mongo.views.get.hello_world: %s,{%s}[%s]" % (request,
-                                                                               resource_type,
-                                                                               id)
+    return "Hello World from fhir_io_mongo.views.get.hello_world: " \
+           "%s,{%s}[%s]" % (request,
+                            resource_type,
+                            id)
 
 
 def read(request, resource_type, id, *arg, **kwargs):
@@ -42,12 +48,17 @@ def read(request, resource_type, id, *arg, **kwargs):
     """
 
     od = OrderedDict()
-    od['request_method']= request.method
-    od['interaction_type'] = "search"
+    if DF_EXTRA_INFO:
+        od['request_method']= request.method
+        od['interaction_type'] = "search"
     od['resource_type']    = resource_type
-    od['search_params'] = request.GET
-    od['note'] = "This is only a stub for future implementation of " \
-                 "MongoDB as a pluggable module for django-fhir"
+    if DF_EXTRA_INFO:
+        od['search_params'] = request.GET
+        od['note'] = "This is only a stub for future implementation of " \
+                     "MongoDB as a pluggable module for django-fhir." \
+                     "Suppress this message by setting DF_EXTRA_INFO = False  " \
+                     "in fhir_io_mongo.views.get.py"
+
 
     return HttpResponse(json.dumps(od, indent=4),
                         content_type="application/json")

@@ -42,7 +42,11 @@ def api_index(request):
     if settings.DEBUG:
         print(settings.APPLICATION_TITLE, "in apps.api.views.api_index")
 
-    c = Crosswalk.objects.get(user=request.user)
+    if request.user.is_authenticated():
+        c = Crosswalk.objects.get(user=request.user)
+    else:
+        c = ""
+
     context = {"crosswalk": c,}
     from django.template import RequestContext
     return render_to_response('v1api/index.html',

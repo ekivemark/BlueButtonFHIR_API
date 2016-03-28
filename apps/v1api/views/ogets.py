@@ -192,7 +192,7 @@ def o_patient(request, *args, **kwargs):
 def o_explanationofbenefit(request, *args, **kwargs):
 
     if settings.DEBUG:
-        print("in apps.v1api.views.ogets.explanationofbenefit")
+        print("in apps.v1api.views.ogets.o_explanationofbenefit")
         print("request:", request)
 
     result = get_eob(request, *args, **kwargs)
@@ -200,3 +200,46 @@ def o_explanationofbenefit(request, *args, **kwargs):
     #     print("Results:", result)
 
     return result
+
+
+@login_required
+def open_patient(request, patient_id, *args, **kwargs):
+
+    if settings.DEBUG:
+        print("in apps.v1api.views.ogets.open_patient")
+        print("request   :", request)
+        print("Patient_id:", patient_id)
+
+    kwargs['patient_id'] = patient_id
+
+    result = get_patient(request, Access_Mode="OPEN", *args, **kwargs)
+    # if settings.DEBUG:
+    #     print("Results:", result)
+
+    return result
+
+
+@login_required
+def open_explanationofbenefit(request, *args, **kwargs):
+
+    if settings.DEBUG:
+        print("in apps.v1api.views.ogets.open_explanationofbenefit")
+        print("request:", request)
+
+    p_id =  request.GET.get('patient', '')
+    if p_id != '':
+        patient_id = p_id.split('/')[1]
+    else:
+        patient_id=""
+
+    kwargs['patient_id'] = patient_id
+
+    print("Patient_id:", patient_id)
+    print("p_id:", p_id)
+
+    result = get_eob(request, Access_Mode="OPEN", *args, **kwargs)
+    # if settings.DEBUG:
+    #     print("Results:", result)
+
+    return result
+

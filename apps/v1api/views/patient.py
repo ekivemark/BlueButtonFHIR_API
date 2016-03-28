@@ -45,46 +45,60 @@ from bbapi.utils import FhirServerUrl
 
 
 # @login_required
-def get_patient(request, *args, **kwargs):
+def get_patient(request, Access_Mode=None, *args, **kwargs):
     """
     Display Patient Profile
     :param request:
+    :param Access_Mode = [None], Open
     :param args:
     :param kwargs:
     :return:
 
     """
-    # DONE: Setup Patient API so that ID is not required
-    # DONE: Do CrossWalk Lookup to get Patient ID
-    if settings.DEBUG:
-        print("Request User Beneficiary(Patient):", request.user)
-    try:
-        xwalk = Crosswalk.objects.get(user=request.user.id)
-    except Crosswalk.DoesNotExist:
-        reason = "Unable to find Patient ID for user:%s[%s]" % (request.user,
-                                                                request.user.id)
-        messages.error(request, reason)
-        return kickout_404(reason)
-        # return HttpResponseRedirect(reverse('api:v1:home'))
-
-    if xwalk.fhir_url_id == "":
-        err_msg = ['Crosswalk lookup failed: Sorry, We were unable to find',
-                   'your record', ]
-        exit_message = concat_string("",
-                                     msg=err_msg,
-                                     delimiter=" ",
-                                     last=".")
-        messages.error(request, exit_message)
-        return kickout_404(exit_message)
-        # return HttpResponseRedirect(reverse('api:v1:home'))
-
+    # Access_Mode = None = Do Crosswalk using Request.user
+    # Access_Mode = OPEN = use kwargs['patient_id']
     if settings.DEBUG:
         print("Request.GET :", request.GET)
+        print("Access_Mode :", Access_Mode)
         print("KWargs      :", kwargs)
-        print("Crosswalk   :", xwalk)
-        print("GUID        :", xwalk.guid)
-        print("FHIR        :", xwalk.fhir)
-        print("FHIR URL ID :", xwalk.fhir_url_id)
+        print("Args        :", args)
+
+    if Access_Mode == "OPEN" and kwargs['patient_id']!="":
+        # Lookup using patient_id for fhir_url_id
+
+        key = kwargs['patient_id'].strip()
+    else:
+        # DONE: Setup Patient API so that ID is not required
+        # DONE: Do CrossWalk Lookup to get Patient ID
+        if settings.DEBUG:
+            print("Request User Beneficiary(Patient):", request.user)
+        try:
+            xwalk = Crosswalk.objects.get(user=request.user.id)
+        except Crosswalk.DoesNotExist:
+            reason = "Unable to find Patient ID for user:%s[%s]" % (request.user,
+                                                                request.user.id)
+            messages.error(request, reason)
+            return kickout_404(reason)
+            # return HttpResponseRedirect(reverse('api:v1:home'))
+
+        if xwalk.fhir_url_id == "":
+            err_msg = ['Crosswalk lookup failed: Sorry, We were unable to find',
+                       'your record', ]
+            exit_message = concat_string("",
+                                         msg=err_msg,
+                                         delimiter=" ",
+                                         last=".")
+            messages.error(request, exit_message)
+            return kickout_404(exit_message)
+            # return HttpResponseRedirect(reverse('api:v1:home'))
+
+        key = xwalk.fhir_url_id.strip()
+
+        if settings.DEBUG:
+            print("Crosswalk   :", xwalk)
+            print("GUID        :", xwalk.guid)
+            print("FHIR        :", xwalk.fhir)
+            print("FHIR URL ID :", key)
 
     # We will deal internally in JSON Format if caller does not choose
     # a format
@@ -95,16 +109,6 @@ def get_patient(request, *args, **kwargs):
     #                              "RELEASE":"/baseDstu2"}
     # FHIR_SERVER_CONF = fhir_server_configuration
     # FHIR_SERVER = FHIR_SERVER_CONF['SERVER'] + FHIR_SERVER_CONF['PATH']
-
-    # DONE: Define Transaction Dictionary to enable generic presentation of API Call
-    Txn = {'name': "Patient",
-           'display': 'Patient',
-           'mask': True,
-           'server': settings.FHIR_SERVER_CONF['SERVER']+settings.FHIR_SERVER_CONF['PATH'],
-           'locn': settings.FHIR_SERVER_CONF['RELEASE']+"/Patient/",
-           'template': 'v1api/patient.html',
-           'in_fmt': in_fmt,
-           }
 
     # Since this is BlueButton and we are dealing with Patient Records
     # We need to limit the id search to the specific beneficiary.
@@ -122,11 +126,9 @@ def get_patient(request, *args, **kwargs):
     # DO NOT USE Uppercase
     skip_parm = ['_id', '_format']
 
-    key = xwalk.fhir_url_id.strip()
 
-    mask = False
-    if 'mask' in Txn:
-        mask = Txn['mask']
+
+    mask = True
 
     pass_to = FhirServerUrl()
     pass_to += "/Patient"
@@ -150,12 +152,12 @@ def get_patient(request, *args, **kwargs):
     mask_to = settings.DOMAIN
 
     # Set Context
-    context = {'display': Txn['display'],
-               'name': Txn['name'],
+    context = {'display':"Patient",
+               'name': "Patient",
                'mask': mask,
                'key': key,
                'get_fmt': get_fmt,
-               'in_fmt': Txn['in_fmt'],
+               'in_fmt': in_fmt,
                # 'output' : "test output ",
                # 'args'   : args,
                # 'kwargs' : kwargs,
@@ -168,72 +170,7 @@ def get_patient(request, *args, **kwargs):
     try:
         r = requests.get(pass_to)
 
-        if get_fmt == "xml":
-
-            xml_text = minidom.parseString(r.text)
-            print("XML_TEXT:", xml_text.toxml())
-            root = ET.fromstring(r.text)
-            # root_out = etree_to_dict(r.text)
-
-            json_string = ""
-            # json_out = xml_str_to_json_str(r.text, json_string)
-            if settings.DEBUG:
-                print("Root ET XML:", root)
-                # print("XML:", root_out)
-                # print("JSON_OUT:", json_out,":", json_string)
-
-            drill_down = ['Bundle',
-                          'entry',
-                          'Patient', ]
-            level = 0
-
-            tag0 = xml_text.getElementsByTagName("text")
-            # tag1 = tag0.getElementsByTagName("entry")
-
-            print("Patient?:", tag0)
-            print("DrillDown:", drill_down[level])
-            print("root find:", root.find(drill_down[level]))
-
-            pretty_xml = xml_text.toprettyxml()
-            #if settings.DEBUG:
-            #    print("TEXT:", text)
-            #    # print("Pretty XML:", pretty_xml)
-
-            context['result'] = pretty_xml  # convert
-            context['text'] = pretty_xml
-
-        else:
-
-            convert = OrderedDict(r.json())
-            # result = mark_safe(convert)
-
-            if settings.DEBUG:
-                print("Convert:", convert)
-                # print("Next Level - entry:", convert['entry'])
-                # print("\n ANOTHER Level- text:", convert['entry'][0])
-
-            content = OrderedDict(convert)
-            text = ""
-
-            if settings.DEBUG:
-                print("Content:", content)
-                print("resourceType:", content['resourceType'])
-                if 'text' in content:
-                    if 'div' in content['text']:
-                        print("text:", content['text']['div'])
-
-            # context['result'] = r.json()  # convert
-            import_text = json.loads(r.text, object_pairs_hook=OrderedDict)
-            context['result'] = json.dumps(import_text, indent=4, sort_keys=False)
-            if 'text' in content:
-                if 'div' in content['text']:
-                    context['text'] = content['text']['div']
-                else:
-                    context['text'] = ""
-            else:
-                context['text'] = "No user readable content to display"
-            if 'error' in content:
-                context['error'] = context['issue']
+        context = process_page(request,r,context)
 
         # Setup the page
 
@@ -251,10 +188,34 @@ def get_patient(request, *args, **kwargs):
                                     content_type='application/' + get_fmt)
             if get_fmt == "json":
                 #return HttpResponse(context['result'], mimetype="application/json")
-                return JsonResponse(import_text, safe=False  )
+                return JsonResponse(context['import_text'], safe=False)
 
         else:
-            return render_to_response(Txn['template'],
+
+            if context['text'] == "No user readable content to display" or context['text']=="":
+
+                result = json.loads(context['result'], object_pairs_hook=OrderedDict)
+                print("Result::", result)
+                context['text'] += "<br/> extracting information from returned record:<br/>"
+                context['text'] += "<table>\n"
+                if 'name' in result:
+                    patient_name = result['name'][0]['given'][0]
+                    patient_name += " "
+                    patient_name += result['name'][0]['family'][0]
+                    context['text'] += tr_build_item("Patient Name&nbsp;&nbsp;",
+                                                     patient_name)
+                if 'address' in result:
+                    context['text'] += tr_build_item("Patient Address",
+                                                     result['address'][0]['line'][0])
+                if 'birthDate' in result:
+                    context['text'] += tr_build_item("Birth Date", result['birthDate'])
+
+                if 'identifier' in result:
+                    context['text'] += tr_build_item("Patient ID",
+                                                     result['identifier'][0]['value'])
+                context['text'] += "</table>"
+
+            return render_to_response('v1api/patient.html',
                                       RequestContext(request,
                                                      context, ))
 
@@ -266,7 +227,7 @@ def get_patient(request, *args, **kwargs):
 
 
 @login_required
-def get_eob(request, *args, **kwargs):
+def get_eob(request, Access_Mode=None, *args, **kwargs):
     """
 
     Display one or more EOBs but Always limit scope to Patient_Id
@@ -280,29 +241,37 @@ def get_eob(request, *args, **kwargs):
     if settings.DEBUG:
         print("Request User Beneficiary(Patient):", request.user,
               "\nFor EOB Enquiry ")
-    try:
-        xwalk = Crosswalk.objects.get(user=request.user)
-    except Crosswalk.DoesNotExist:
-        messages.error(request, "Unable to find Patient ID")
-        return HttpResponseRedirect(reverse('api:v1:home'))
+        print("Request.GET :", request.GET)
+        print("Access_Mode :", Access_Mode)
+        print("KWargs      :", kwargs)
+        print("Args        :", args)
 
-    if xwalk.fhir_url_id == "":
-        err_msg = ['Sorry, We were unable to find',
-                   'your record', ]
-        exit_message = concat_string("",
-                                     msg=err_msg,
-                                     delimiter=" ",
-                                     last=".")
-        messages.error(request, exit_message)
-        return HttpResponseRedirect(reverse('api:v1:home'))
+    if Access_Mode == "OPEN" and kwargs['patient_id']!="":
+        # Lookup using patient_id for fhir_url_id
+
+        key = kwargs['patient_id'].strip()
+
+    else:
+        try:
+            xwalk = Crosswalk.objects.get(user=request.user)
+        except Crosswalk.DoesNotExist:
+            messages.error(request, "Unable to find Patient ID")
+            return HttpResponseRedirect(reverse('api:v1:home'))
+
+        if xwalk.fhir_url_id == "":
+            err_msg = ['Sorry, We were unable to find',
+                       'your record', ]
+            exit_message = concat_string("",
+                                         msg=err_msg,
+                                         delimiter=" ",
+                                         last=".")
+            messages.error(request, exit_message)
+            return HttpResponseRedirect(reverse('api:v1:home'))
+
+        key = xwalk.fhir_url_id.strip()
 
     if settings.DEBUG:
-        print("Request.GET :", request.GET)
-        print("KWargs      :", kwargs)
-        print("Crosswalk   :", xwalk)
-        print("GUID        :", xwalk.guid)
-        print("FHIR        :", xwalk.fhir)
-        print("FHIR URL ID :", xwalk.fhir_url_id)
+        print("FHIR URL ID :", key)
 
     # We should have the xwalk.FHIR_url_id
     # So we will construct the EOB Identifier to include
@@ -339,19 +308,13 @@ def get_eob(request, *args, **kwargs):
     Txn = {'name': "ExplanationOfBenefit",
            'display': 'EOB',
            'mask': True,
-           'server': settings.FHIR_SERVER,
-           'locn': "/baseDstu2/ExplanationOfBenefit/",
            'template': 'v1api/eob.html',
            'in_fmt': in_fmt,
            }
 
-    skip_parm = ['_id', '_format']
+    skip_parm = ['_id', '_format', 'patient']
 
-    key = xwalk.fhir_url_id.strip()
-
-    mask = False
-    if 'mask' in Txn:
-        mask = Txn['mask']
+    mask = True
 
     pass_to = FhirServerUrl()
     pass_to += "/ExplanationOfBenefit"
@@ -368,7 +331,7 @@ def get_eob(request, *args, **kwargs):
 
     pass_to += "?patient="
     pass_to += "Patient/"
-    pass_to += xwalk.fhir_url_id.strip()
+    pass_to += key
 
     pass_to = pass_to + "&" + build_params(request.GET, skip_parm)[1:]
     if settings.DEBUG:
@@ -378,58 +341,65 @@ def get_eob(request, *args, **kwargs):
         print("Calling requests with pass_to:", pass_to)
 
     # Set Context
-    context = {'display': Txn['display'],
-               'name': Txn['name'],
+    context = {'display': 'EOB',
+               'name': 'ExplanationOfBenefit',
                'mask': mask,
                'key': key,
                'get_fmt': get_fmt,
-               'in_fmt': Txn['in_fmt'],
-               # 'output' : "test output ",
-               # 'args'   : args,
-               # 'kwargs' : kwargs,
-               # 'get'    : request.GET,
+               'in_fmt': in_fmt,
                'pass_to': pass_to,
                }
 
     try:
         r = requests.get(pass_to)
 
-        if get_fmt == "xml":
-            xml_text = minidom.parseString(r.text)
-            pretty_xml = xml_text.toprettyxml()
-            context['result'] = pretty_xml  # convert
-            context['text'] = pretty_xml
+        context = process_page(request,r,context)
 
-            return HttpResponse(context['result'],
-                                content_type='application/' + get_fmt)
+        # Setup the page
 
-        else: # get_fmt == "json" or None:
+        if settings.DEBUG:
+            print("Context-result:", context['result'])
+            # print("Context-converted:", json.dumps(context['result'], sort_keys=False))
+            # print("Context:",context)
 
-            convert = OrderedDict(r.json())
-            # result = mark_safe(convert)
-
+        if get_fmt == 'xml' or get_fmt == 'json':
             if settings.DEBUG:
-                print("Convert:", convert)
-
-            content = OrderedDict(convert)
-            text = ""
-
-            context['result'] = r.json()  # convert
-            if 'text' in content:
-                context['text'] = content['resource']['text']['div']
-            else:
-                if 'text' in convert:
-                    if settings.DEBUG:
-                        print("Resource:", convert['entry'])
-                    context['text'] = convert['entry']
-                else:
-                    if settings.DEBUG:
-                        print("No resource found in Convert:", convert)
-
+                print("Mode = ", get_fmt)
+                print("Context['result']: ", context['result'])
+            if get_fmt == "xml":
+                return HttpResponse(context['result'],
+                                    content_type='application/' + get_fmt)
             if get_fmt == "json":
-                return JsonResponse(context['result'], )
+                #return HttpResponse(context['result'], mimetype="application/json")
+                return JsonResponse(context['import_text'], safe=False)
 
-        return render_to_response(Txn['template'],
+        else:
+
+            if context['text'] == "No user readable content to display" or context['text']=="":
+
+                result = json.loads(context['result'], object_pairs_hook=OrderedDict)
+                print("Result::", result)
+                context['text'] += "<br/> extracting information from returned record:<br/>"
+                context['text'] += "<table>\n"
+                if 'name' in result:
+                    patient_name = result['name'][0]['given'][0]
+                    patient_name += " "
+                    patient_name += result['name'][0]['family'][0]
+                    context['text'] += tr_build_item("Patient Name&nbsp;&nbsp;",
+                                                     patient_name)
+                if 'address' in result:
+                    context['text'] += tr_build_item("Patient Address",
+                                                     result['address'][0]['line'][0])
+                if 'birthDate' in result:
+                    context['text'] += tr_build_item("Birth Date", result['birthDate'])
+
+                if 'identifier' in result:
+                    context['text'] += tr_build_item("Patient ID",
+                                                     result['identifier'][0]['value'])
+                context['text'] += "</table>"
+
+
+        return render_to_response('v1api/eob.html',
                                       RequestContext(request,
                                                      context, ))
 
@@ -591,3 +561,101 @@ def get_eob_view(request, eob_id, *args, **kwargs):
                        "Are you on the CMS Network?")
 
     return HttpResponseRedirect(reverse('api:v1:home'))
+
+
+def process_page(request, r, context):
+    """
+    Process the request
+
+    :param request:
+    :param r:
+    :param context:
+    :return: context
+    """
+
+    if context["get_fmt"] == "xml":
+
+        xml_text = minidom.parseString(r.text)
+        print("XML_TEXT:", xml_text.toxml())
+        root = ET.fromstring(r.text)
+        # root_out = etree_to_dict(r.text)
+
+        json_string = ""
+        # json_out = xml_str_to_json_str(r.text, json_string)
+        if settings.DEBUG:
+            print("Root ET XML:", root)
+            # print("XML:", root_out)
+            # print("JSON_OUT:", json_out,":", json_string)
+
+        drill_down = ['Bundle',
+                      'entry',
+                      'Patient', ]
+        level = 0
+
+        tag0 = xml_text.getElementsByTagName("text")
+        # tag1 = tag0.getElementsByTagName("entry")
+
+        if settings.DEBUG:
+            print("Patient?:", tag0)
+            print("DrillDown:", drill_down[level])
+            print("root find:", root.find(drill_down[level]))
+
+        pretty_xml = xml_text.toprettyxml()
+
+        #if settings.DEBUG:
+        #    print("TEXT:", text)
+        #    # print("Pretty XML:", pretty_xml)
+
+        context['result'] = pretty_xml  # convert
+        context['text'] = pretty_xml
+
+    else:
+
+        convert = OrderedDict(r.json())
+        # result = mark_safe(convert)
+
+        if settings.DEBUG:
+            print("Convert:", convert)
+            # print("Next Level - entry:", convert['entry'])
+            # print("\n ANOTHER Level- text:", convert['entry'][0])
+
+        content = OrderedDict(convert)
+        text = ""
+
+        if settings.DEBUG:
+            print("Content:", content)
+            print("resourceType:", content['resourceType'])
+            if 'text' in content:
+                if 'div' in content['text']:
+                    print("text:", content['text']['div'])
+
+        # context['result'] = r.json()  # convert
+        import_text = json.loads(r.text, object_pairs_hook=OrderedDict)
+        context['import_text'] = import_text
+        context['result'] = json.dumps(import_text, indent=4, sort_keys=False)
+        if 'text' in content:
+            if 'div' in content['text']:
+                context['text'] = content['text']['div']
+            else:
+                context['text'] = ""
+        else:
+            context['text'] = "No user readable content to display"
+        if 'error' in content:
+            context['error'] = context['issue']
+
+    return context
+
+
+def li_build_item(field_name, field_value):
+
+    li_build_item = "<li>%s: %s</li>" % (field_name, field_value)
+
+    return li_build_item
+
+
+def tr_build_item(field_name, field_value):
+
+    ti_build_item = "<tr>"
+    ti_build_item += "<td>%s</td><td>%s</td>" % (field_name, field_value)
+    ti_build_item += "</tr>"
+    return ti_build_item

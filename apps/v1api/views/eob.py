@@ -38,6 +38,8 @@ from django.http import (HttpResponse,
                          HttpRequest,
                          JsonResponse)
 
+from fhir.utils import kickout_404
+
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 
@@ -319,12 +321,35 @@ def ExplanationOfBenefit(request, *args, **kwargs):
         return HttpResponseRedirect(reverse('api:v1:home'))
 
 
-def PatientExplanationOfBenefit(request, patient_id, *args, **kwargs):
+def PatientExplanationOfBenefit(request, patient_id=None, *args, **kwargs):
     """
     Function-based interface to ExplanationOfBenefit
     :param request:
     :return:
     """
+
+    if patient_id == None:
+        try:
+            xwalk = Crosswalk.objects.get(user=request.user.id)
+
+            patient_id = xwalk.fhir_url_id
+
+        except Crosswalk.DoesNotExist:
+            reason = "Unable to find Patient ID for user:%s[%s]" % (request.user,
+                                                                request.user.id)
+            messages.error(request, reason)
+            return kickout_404(reason)
+            # return HttpResponseRedirect(reverse('api:v1:home'))
+
+        if xwalk.fhir_url_id == "":
+            err_msg = ['Crosswalk lookup failed: Sorry, We were unable to find',
+                       'your record', ]
+            exit_message = concat_string("",
+                                         msg=err_msg,
+                                         delimiter=" ",
+                                         last=".")
+            messages.error(request, exit_message)
+            return kickout_404(exit_message)
 
     if patient_id == "":
         err_msg = ['Sorry, No Patient Id provided', ]

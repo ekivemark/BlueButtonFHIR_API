@@ -12,12 +12,12 @@ Crosswalk utilities
 """
 __author__ = 'Mark Scrimshire:@ekivemark'
 
-from ..models import Crosswalk
-
 from django.conf import settings
 from django.contrib import messages
 
+from ..models import Crosswalk
 from ..utils import concat_string
+
 
 def lookup_xwalk(request, element='fhir_url_id'):
     # Lookup up in Crosswalk with request.user

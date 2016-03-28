@@ -35,8 +35,12 @@ DJANGO_FHIR_CONFIG = {
 
 
 DJANGO_FHIR_CONFIG.update(getattr(settings, 'DJANGO_FHIR_CONFIG', {}))
+if settings.DEBUG:
+    print("DJANGO_FHIR_CONFIG:", DJANGO_FHIR_CONFIG)
 
 DF_EXTRA_INFO = DJANGO_FHIR_CONFIG['DF_EXTRA_INFO']
+if settings.DEBUG:
+    print("DF_EXTRA_INFO:", DF_EXTRA_INFO)
 
 for df_app in DJANGO_FHIR_CONFIG['DF_APPS']:
     if settings.DEBUG:
