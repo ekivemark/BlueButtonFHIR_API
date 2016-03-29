@@ -6,8 +6,8 @@ Created: 6/22/15 12:49 PM
 
 """
 __author__ = 'Mark Scrimshire:@ekivemark'
-from django.contrib.sites.models import RequestSite
 from django.contrib.sites.models import Site
+from django.contrib.sites.requests import RequestSite
 from registration import signals
 from registration.models import RegistrationProfile
 

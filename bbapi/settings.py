@@ -359,10 +359,10 @@ if DEBUG_SETTINGS:
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
 
-# URL prefix for admin_disable static files -- CSS, JavaScript and images.
+# URL prefix for admin static files -- CSS, JavaScript and images.
 # Make sure to use a trailing slash.
 # Examples: "http://foo.com/static/admin/", "/static/admin_disable/".
-ADMIN_MEDIA_PREFIX = '/static/admin_disable/'
+ADMIN_MEDIA_PREFIX = '/static/admin/'
 
 # Additional locations of static files
 STATICFILES_DIRS = (
