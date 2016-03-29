@@ -348,6 +348,7 @@ def get_eob(request, Access_Mode=None, *args, **kwargs):
                'get_fmt': get_fmt,
                'in_fmt': in_fmt,
                'pass_to': pass_to,
+               'template': 'v1api/eob.html',
                }
 
     try:
@@ -355,53 +356,53 @@ def get_eob(request, Access_Mode=None, *args, **kwargs):
 
         context = process_page(request,r,context)
 
-        # Setup the page
+        result = publish_page(request, context)
 
-        if settings.DEBUG:
-            print("Context-result:", context['result'])
-            # print("Context-converted:", json.dumps(context['result'], sort_keys=False))
-            # print("Context:",context)
-
-        if get_fmt == 'xml' or get_fmt == 'json':
-            if settings.DEBUG:
-                print("Mode = ", get_fmt)
-                print("Context['result']: ", context['result'])
-            if get_fmt == "xml":
-                return HttpResponse(context['result'],
-                                    content_type='application/' + get_fmt)
-            if get_fmt == "json":
-                #return HttpResponse(context['result'], mimetype="application/json")
-                return JsonResponse(context['import_text'], safe=False)
-
-        else:
-
-            if context['text'] == "No user readable content to display" or context['text']=="":
-
-                result = json.loads(context['result'], object_pairs_hook=OrderedDict)
-                print("Result::", result)
-                context['text'] += "<br/> extracting information from returned record:<br/>"
-                context['text'] += "<table>\n"
-                if 'name' in result:
-                    patient_name = result['name'][0]['given'][0]
-                    patient_name += " "
-                    patient_name += result['name'][0]['family'][0]
-                    context['text'] += tr_build_item("Patient Name&nbsp;&nbsp;",
-                                                     patient_name)
-                if 'address' in result:
-                    context['text'] += tr_build_item("Patient Address",
-                                                     result['address'][0]['line'][0])
-                if 'birthDate' in result:
-                    context['text'] += tr_build_item("Birth Date", result['birthDate'])
-
-                if 'identifier' in result:
-                    context['text'] += tr_build_item("Patient ID",
-                                                     result['identifier'][0]['value'])
-                context['text'] += "</table>"
-
-
-        return render_to_response('v1api/eob.html',
-                                      RequestContext(request,
-                                                     context, ))
+        # if settings.DEBUG:
+        #     print("Context-result:", context['result'])
+        #     # print("Context-converted:", json.dumps(context['result'], sort_keys=False))
+        #     # print("Context:",context)
+        #
+        # if get_fmt == 'xml' or get_fmt == 'json':
+        #     if settings.DEBUG:
+        #         print("Mode = ", get_fmt)
+        #         print("Context['result']: ", context['result'])
+        #     if get_fmt == "xml":
+        #         return HttpResponse(context['result'],
+        #                             content_type='application/' + get_fmt)
+        #     if get_fmt == "json":
+        #         #return HttpResponse(context['result'], mimetype="application/json")
+        #         return JsonResponse(context['import_text'], safe=False)
+        #
+        # else:
+        #
+        #     if context['text'] == "No user readable content to display" or context['text']=="":
+        #
+        #         result = json.loads(context['result'], object_pairs_hook=OrderedDict)
+        #         print("Result::", result)
+        #         context['text'] += "<br/> extracting information from returned record:<br/>"
+        #         context['text'] += "<table>\n"
+        #         if 'name' in result:
+        #             patient_name = result['name'][0]['given'][0]
+        #             patient_name += " "
+        #             patient_name += result['name'][0]['family'][0]
+        #             context['text'] += tr_build_item("Patient Name&nbsp;&nbsp;",
+        #                                              patient_name)
+        #         if 'address' in result:
+        #             context['text'] += tr_build_item("Patient Address",
+        #                                              result['address'][0]['line'][0])
+        #         if 'birthDate' in result:
+        #             context['text'] += tr_build_item("Birth Date", result['birthDate'])
+        #
+        #         if 'identifier' in result:
+        #             context['text'] += tr_build_item("Patient ID",
+        #                                              result['identifier'][0]['value'])
+        #         context['text'] += "</table>"
+        #
+        #
+        # return render_to_response(context['template'],
+        #                               RequestContext(request,
+        #                                              context, ))
 
     except requests.ConnectionError:
         print("Whoops - Problem connecting to FHIR Server")
@@ -573,10 +574,18 @@ def process_page(request, r, context):
     :return: context
     """
 
+    # We need to replace FHIR Server with External Server reference
+    rewrite_from = settings.FHIR_SERVER_CONF['REWRITE_FROM']
+    rewrite_to = settings.FHIR_SERVER_CONF['REWRITE_TO']
+
     if context["get_fmt"] == "xml":
 
-        xml_text = minidom.parseString(r.text)
-        print("XML_TEXT:", xml_text.toxml())
+        pre_text = r.text.replace(rewrite_from, rewrite_to)
+        xml_text = minidom.parseString(pre_text)
+
+        if settings.DEBUG:
+            print("XML_TEXT:", xml_text.toxml())
+
         root = ET.fromstring(r.text)
         # root_out = etree_to_dict(r.text)
 
@@ -611,11 +620,12 @@ def process_page(request, r, context):
 
     else:
 
-        convert = OrderedDict(r.json())
-        # result = mark_safe(convert)
+        pre_text = r.text.replace(rewrite_from,rewrite_to)
+        convert = json.loads(pre_text, object_pairs_hook=OrderedDict)
 
         if settings.DEBUG:
-            print("Convert:", convert)
+            pass
+            # print("Convert:", convert)
             # print("Next Level - entry:", convert['entry'])
             # print("\n ANOTHER Level- text:", convert['entry'][0])
 
@@ -623,16 +633,19 @@ def process_page(request, r, context):
         text = ""
 
         if settings.DEBUG:
-            print("Content:", content)
+            # print("Content:", content)
             print("resourceType:", content['resourceType'])
             if 'text' in content:
                 if 'div' in content['text']:
-                    print("text:", content['text']['div'])
+                    pass
+                    # print("text:", content['text']['div'])
 
         # context['result'] = r.json()  # convert
-        import_text = json.loads(r.text, object_pairs_hook=OrderedDict)
+        import_text = json.loads(pre_text, object_pairs_hook=OrderedDict)
         context['import_text'] = import_text
+
         context['result'] = json.dumps(import_text, indent=4, sort_keys=False)
+
         if 'text' in content:
             if 'div' in content['text']:
                 context['text'] = content['text']['div']
@@ -644,6 +657,68 @@ def process_page(request, r, context):
             context['error'] = context['issue']
 
     return context
+
+
+def publish_page(request, context):
+    """
+    Publish the page
+    :return:
+    """
+
+    # Setup the page
+    get_fmt = context['get_fmt']
+    in_fmt = context['in_fmt']
+
+    if settings.DEBUG:
+        pass
+        # print("Context-result:", context['result'])
+        # print("Context-converted:", json.dumps(context['result'], sort_keys=False))
+        # print("Context:",context)
+
+    if get_fmt == 'xml' or get_fmt == 'json':
+        # if settings.DEBUG:
+        #     print("Mode = ", get_fmt)
+        #     print("Context['result']: ", context['result'])
+        if get_fmt == "xml":
+            return HttpResponse(context['result'],
+                                content_type='application/' + get_fmt)
+        if get_fmt == "json":
+            print("Returning HttpResponse")
+            return HttpResponse(context['result'],content_type="application/json")
+            # return JsonResponse(context['import_text'], safe=False)
+
+    else:
+
+        if context['text'] == "No user readable content to display" or context['text']=="":
+
+            result = json.loads(context['result'], object_pairs_hook=OrderedDict)
+            # if settings.DEBUG:
+            #     print("Result::", result)
+
+            context['text'] += "<br/> extracting information from returned record:<br/>"
+            context['text'] += "<table>\n"
+            if 'name' in result:
+                patient_name = result['name'][0]['given'][0]
+                patient_name += " "
+                patient_name += result['name'][0]['family'][0]
+                context['text'] += tr_build_item("Patient Name&nbsp;&nbsp;",
+                                                 patient_name)
+            if 'address' in result:
+                context['text'] += tr_build_item("Patient Address",
+                                                 result['address'][0]['line'][0])
+            if 'birthDate' in result:
+                context['text'] += tr_build_item("Birth Date", result['birthDate'])
+
+            if 'identifier' in result:
+                context['text'] += tr_build_item("Patient ID",
+                                                 result['identifier'][0]['value'])
+            context['text'] += "</table>"
+
+    print("Template:", context['template'])
+
+    return render_to_response(context['template'],
+                              RequestContext(request,
+                                             context ))
 
 
 def li_build_item(field_name, field_value):

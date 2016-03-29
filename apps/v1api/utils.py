@@ -31,8 +31,8 @@ def get_to_lower(in_get):
     """
 
     if not in_get:
-        if settings.DEBUG:
-            print("get_to_lower: Nothing to process")
+        # if settings.DEBUG:
+        #    print("get_to_lower: Nothing to process")
         return in_get
 
     got_get = OrderedDict()
@@ -41,11 +41,11 @@ def get_to_lower(in_get):
     for value in in_get:
 
         got_get[value.lower()] = in_get.get(value,"")
-        if settings.DEBUG:
-            print("Got key", value.lower(), ":", got_get[value.lower()] )
+        # if settings.DEBUG:
+        #     print("Got key", value.lower(), ":", got_get[value.lower()] )
 
-    if settings.DEBUG:
-        print("Returning lowercase request.GET", got_get)
+    # if settings.DEBUG:
+    #    print("Returning lowercase request.GET", got_get)
 
     return got_get
 
@@ -66,19 +66,20 @@ def get_format(in_get):
     if "_format" in got_get:
         # we have something to process
 
-        if settings.DEBUG:
-            print("In Get:",in_get)
+        # if settings.DEBUG:
+        #    print("In Get:",in_get)
         fmt = got_get.get('_format','').lower()
 
-        if settings.DEBUG:
-            print("Format Returned:", fmt)
+        # if settings.DEBUG:
+        #    print("Format Returned:", fmt)
 
         # Check for a valid lower case value
         if fmt in FORMAT_OPTIONS_CHOICES:
             result = fmt
         else:
-            if settings.DEBUG:
-                print("No Match with Format Options:", fmt)
+            pass
+            # if settings.DEBUG:
+            #    print("No Match with Format Options:", fmt)
 
     return result
 

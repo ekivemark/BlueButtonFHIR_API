@@ -221,12 +221,18 @@ def ExplanationOfBenefit(request, *args, **kwargs):
     if settings.DEBUG:
         print("Calling requests with pass_to:", pass_to)
 
+    # We need to replace FHIR Server with External Server reference
+    rewrite_from = settings.FHIR_SERVER_CONF['REWRITE_FROM']
+    rewrite_to = settings.FHIR_SERVER_CONF['REWRITE_TO']
+
     try:
         r = requests.get(pass_to)
 
         if get_fmt == "xml":
 
-            xml_text = minidom.parseString(r.text)
+            pre_text = r.text.replace(rewrite_from, rewrite_to)
+
+            xml_text = minidom.parseString(pre_text)
             print("XML_TEXT:", xml_text.toxml())
             root = ET.fromstring(r.text)
             # root_out = etree_to_dict(r.text)
@@ -260,7 +266,9 @@ def ExplanationOfBenefit(request, *args, **kwargs):
 
         else:
 
-            convert = OrderedDict(r.json())
+            pre_text = r.text.replace(rewrite_from,rewrite_to)
+            convert = json.loads(pre_text, object_pairs_hook=OrderedDict)
+
             # result = mark_safe(convert)
 
             if settings.DEBUG:
@@ -279,7 +287,7 @@ def ExplanationOfBenefit(request, *args, **kwargs):
                         print("text:", content['text']['div'])
 
             # context['result'] = r.json()  # convert
-            import_text = json.loads(r.text, object_pairs_hook=OrderedDict)
+            import_text = json.loads(pre_text, object_pairs_hook=OrderedDict)
             context['result'] = json.dumps(import_text, indent=4, sort_keys=False)
             if 'text' in content:
                 if 'div' in content['text']:

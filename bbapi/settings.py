@@ -605,6 +605,8 @@ FHIR_SERVER_CONF = eval(fhir_dict)
 #         'SERVER': "http://fhir.bbonfhir.com",
 #         'PATH': "/fhir-p",
 #         'RELEASE': "/baseDstu2",
+#         'REWRITE_FROM': "http://ip-172-31-45-177.ec2.internal:8080/baseDstu2",
+#         'REWRITE_TO': "https://api.bbonfhir.com/api/v1",
 #         }
 
 FHIR_SERVER = FHIR_SERVER_CONF['SERVER'] + FHIR_SERVER_CONF['PATH']
