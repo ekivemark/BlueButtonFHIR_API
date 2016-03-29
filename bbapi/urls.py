@@ -105,7 +105,7 @@ urlpatterns = [
 
 # Admin
                        url(r'^admin/', include(admin.site.urls)),
-                       # Uncomment the admin_disable/doc line below to enable admin_disable
+                       # Uncomment the admin/doc line below to enable admin
                        # documentation:
                        url(r'^admin/doc/',
                            include('django.contrib.admindocs.urls')),
