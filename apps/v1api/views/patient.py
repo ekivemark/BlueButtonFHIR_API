@@ -303,14 +303,6 @@ def get_eob(request, Access_Mode=None, *args, **kwargs):
     in_fmt = "json"
     get_fmt = get_format(request.GET)
 
-    # DONE: Define Transaction Dictionary to enable generic presentation of API Call
-    Txn = {'name': "ExplanationOfBenefit",
-           'display': 'EOB',
-           'mask': True,
-           'template': 'v1api/eob.html',
-           'in_fmt': in_fmt,
-           }
-
     skip_parm = ['_id', '_format', 'patient']
 
     mask = True
@@ -411,22 +403,13 @@ def get_eob_view(request, eob_id, *args, **kwargs):
     get_fmt = get_format(request.GET)
 
     # DONE: Define Transaction Dictionary to enable generic presentation of API Call
-    Txn = {'name': "ExplanationOfBenefit",
-           'display': 'EOB',
-           'mask': True,
-           # 'server': settings.FHIR_SERVER,
-           # 'locn': "/baseDstu2/ExplanationOfBenefit/",
-           'template': 'v1api/eob.html',
-           'in_fmt': in_fmt,
-           }
+
 
     skip_parm = ['_id', '_format']
 
     key = xwalk.fhir_url_id.strip()
 
-    mask = False
-    if 'mask' in Txn:
-        mask = Txn['mask']
+    mask = True
 
     pass_to = FhirServerUrl()
     pass_to += "/ExplanationOfBenefit/"
@@ -452,17 +435,18 @@ def get_eob_view(request, eob_id, *args, **kwargs):
         print("Calling requests with pass_to:", pass_to)
 
     # Set Context
-    context = {'display': Txn['display'],
-               'name': Txn['name'],
+    context = {'name': "ExplanationOfBenefit",
+               'display': 'EOB',
                'mask': mask,
                'key': key,
                'get_fmt': get_fmt,
-               'in_fmt': Txn['in_fmt'],
+               'in_fmt': in_fmt,
                # 'output' : "test output ",
                # 'args'   : args,
                # 'kwargs' : kwargs,
                # 'get'    : request.GET,
                'pass_to': pass_to,
+               'template': 'v1api/eob.html',
                }
 
     try:
@@ -471,44 +455,6 @@ def get_eob_view(request, eob_id, *args, **kwargs):
         context = process_page(request, r, context)
 
         return publish_page(request, context)
-
-        # if get_fmt == "xml":
-        #     pre_text = re_write_url(r.text)
-        #     xml_text = minidom.parseString(pre_text)
-        #     pretty_xml = xml_text.toprettyxml()
-        #     context['result'] = pretty_xml  # convert
-        #     context['text'] = pretty_xml
-        #
-        #     return HttpResponse(context['result'],
-        #                         content_type='application/' + get_fmt)
-        #
-        # else: # get_fmt == "json" or None:
-        #
-        #     pre_text = re_write_url(r.text)
-        #     convert = json.loads(pre_text, object_pairs_hook=OrderedDict)
-        #
-        #     if settings.DEBUG:
-        #         print("Convert:", convert)
-        #
-        #     content = OrderedDict(convert)
-        #     text = ""
-        #
-        #     context['result'] = r.json()  # convert
-        #     if 'text' in content:
-        #         context['text'] = content['text']['div']
-        #         if 'issue' in content:
-        #             context['error'] = content['issue']
-        #     else:
-        #         if settings.DEBUG:
-        #             print("Resource:", convert['entry'])
-        #         context['text'] = convert['entry']
-        #
-        #     if get_fmt == "json":
-        #         return JsonResponse(context['result'], )
-        #
-        # return render_to_response(Txn['template'],
-        #                               RequestContext(request,
-        #                                              context, ))
 
     except requests.ConnectionError:
         pass

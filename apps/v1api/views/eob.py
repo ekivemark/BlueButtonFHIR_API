@@ -57,91 +57,8 @@ from ..models import Crosswalk
 from bbapi.utils import FhirServerUrl
 
 
-class EOB(ListView):
-    if settings.DEBUG:
-        print("in apps.v1api.views.eob")
-
-    def get(self, request, eob_id, *args, **kwargs):
-        # This is an ExplanationOfBenefit profile GET
-        #
-        # use request.user to lookup a crosswalk
-        # get the FHIR Patient ID
-        # Call the FHIR Patient Profile
-        # Return the result
-        # EOB will need to look up request.user and apply a filter on the EOB
-        # The filter in search Parameters will be the GUID
-        # We need to load the GUID when we are loading EOBs and
-        # Patient Records.
-
-        # http://ec2-52-4-198-86.compute-1.amazonaws.com:8081/baseDstu2/
-        # ExplanationOfBenefit/?patient=Patient/131052&_format=json
-
-        if settings.DEBUG:
-            print("in EOB.get with", eob_id)
-
-        xwalk_id = lookup_xwalk(request, )
-        if settings.DEBUG:
-            print("crosswalk:", xwalk_id)
-
-        if xwalk_id == None:
-            return HttpResponseRedirect(reverse_lazy('api:v1:home'))
-
-        if settings.DEBUG:
-            print("now we need to evaluate the parameters and arguments"
-                  " to work with ", xwalk_id, "and ", request.user)
-            print("GET Parameters:", request.GET, ":")
-
-        if patient_id == xwalk_id:
-            key = eob_id
-        else:
-            key = xwalk_id.strip()
-
-        in_fmt = "json"
-        Txn = {'name': "ExplanationOfBenefit",
-           'display': 'ExplanationOfBenefit',
-           'mask': True,
-           'server': settings.FHIR_SERVER,
-           'locn': "/baseDstu2/ExplanationOfBenefit/",
-           'template': 'v1api/eob.html',
-           'in_fmt': in_fmt,
-           }
-
-        skip_parm = ['_id']
-        pass_params = build_params(request.GET, skip_parm)
-
-        if settings.DEBUG:
-            print("Pass_params=", pass_params)
-
-        pass_to = Txn['server'] + Txn['locn'] + key + "/"
-
-        print("Here is the URL to send, %s now get parameters" % pass_to)
-
-        if pass_params != "":
-            pass_to = pass_to + pass_params
-
-        try:
-            r = requests.get(pass_to)
-
-        except requests.ConnectionError:
-            if settings.DEBUG:
-                print("Problem connecting to FHIR Server")
-            messages.error(request, "FHIR Server is unreachable." )
-            return HttpResponseRedirect(reverse_lazy('api:v1:home'))
-
-        text_out = ""
-        if '_format=xml' in pass_to:
-            text_out= minidom.parseString(r.text).toprettyxml()
-        else:
-            text_out = r.json()
-
-        return HttpResponse('This is the EOB Pass Thru %s using %s '
-                            'and with response of %s' % (xwalk_id,
-                                                         pass_to,
-                                                         text_out))
-
-
 #@csrf_exempt
-#@login_required
+@login_required
 #@protected_resource(scopes=['read write_consent'])
 def ExplanationOfBenefit(request, *args, **kwargs):
     """
@@ -169,13 +86,6 @@ def ExplanationOfBenefit(request, *args, **kwargs):
 
     in_fmt = "json"
     get_fmt = get_format(request.GET)
-
-    Txn = {'name': "ExplanationOfBenefit",
-           'display': 'EOB',
-           'mask': True,
-           'template': 'v1api/eob.html',
-           'in_fmt': in_fmt,
-           }
 
     if settings.DEBUG:
         print("Request.GET :", request.GET)
@@ -210,6 +120,7 @@ def ExplanationOfBenefit(request, *args, **kwargs):
                'get_fmt': get_fmt,
                'in_fmt': in_fmt,
                'pass_to': pass_to,
+               'template': 'v1api/eob.html',
                }
 
     if settings.DEBUG:
@@ -225,100 +136,6 @@ def ExplanationOfBenefit(request, *args, **kwargs):
         context = process_page(request, r, context)
 
         return publish_page(request, context)
-
-        # if get_fmt == "xml":
-        #
-        #     pre_text = r.text.replace(rewrite_from, rewrite_to)
-        #
-        #     xml_text = minidom.parseString(pre_text)
-        #     print("XML_TEXT:", xml_text.toxml())
-        #     root = ET.fromstring(r.text)
-        #     # root_out = etree_to_dict(r.text)
-        #
-        #     json_string = ""
-        #     # json_out = xml_str_to_json_str(r.text, json_string)
-        #     if settings.DEBUG:
-        #         print("Root ET XML:", root)
-        #         # print("XML:", root_out)
-        #         # print("JSON_OUT:", json_out,":", json_string)
-        #
-        #     drill_down = ['Bundle',
-        #                   'entry',
-        #                   'Patient', ]
-        #     level = 0
-        #
-        #     tag0 = xml_text.getElementsByTagName("text")
-        #     # tag1 = tag0.getElementsByTagName("entry")
-        #
-        #     print("Patient?:", tag0)
-        #     print("DrillDown:", drill_down[level])
-        #     print("root find:", root.find(drill_down[level]))
-        #
-        #     pretty_xml = xml_text.toprettyxml()
-        #     #if settings.DEBUG:
-        #     #    print("TEXT:", text)
-        #     #    # print("Pretty XML:", pretty_xml)
-        #
-        #     context['result'] = pretty_xml  # convert
-        #     context['text'] = pretty_xml
-        #
-        # else:
-        #
-        #     pre_text = r.text.replace(rewrite_from,rewrite_to)
-        #     convert = json.loads(pre_text, object_pairs_hook=OrderedDict)
-        #
-        #     # result = mark_safe(convert)
-        #
-        #     if settings.DEBUG:
-        #         print("Convert:", convert)
-        #         # print("Next Level - entry:", convert['entry'])
-        #         # print("\n ANOTHER Level- text:", convert['entry'][0])
-        #
-        #     content = OrderedDict(convert)
-        #     text = ""
-        #
-        #     if settings.DEBUG:
-        #         print("Content:", content)
-        #         print("resourceType:", content['resourceType'])
-        #         if 'text' in content:
-        #             if 'div' in content['text']:
-        #                 print("text:", content['text']['div'])
-        #
-        #     # context['result'] = r.json()  # convert
-        #     import_text = json.loads(pre_text, object_pairs_hook=OrderedDict)
-        #     context['result'] = json.dumps(import_text, indent=4, sort_keys=False)
-        #     if 'text' in content:
-        #         if 'div' in content['text']:
-        #             context['text'] = content['text']['div']
-        #         else:
-        #             context['text'] = ""
-        #     else:
-        #         context['text'] = "No user readable content to display"
-        #     if 'error' in content:
-        #         context['error'] = context['issue']
-        #
-        # # Setup the page
-        #
-        # if settings.DEBUG:
-        #     print("Context-result:", context['result'])
-        #     # print("Context-converted:", json.dumps(context['result'], sort_keys=False))
-        #     # print("Context:",context)
-        #
-        # if get_fmt == 'xml' or get_fmt == 'json':
-        #     if settings.DEBUG:
-        #         print("Mode = ", get_fmt)
-        #         print("Context['result']: ", context['result'])
-        #     if get_fmt == "xml":
-        #         return HttpResponse(context['result'],
-        #                             content_type='application/' + get_fmt)
-        #     if get_fmt == "json":
-        #         #return HttpResponse(context['result'], mimetype="application/json")
-        #         return JsonResponse(import_text, safe=False  )
-        #
-        # else:
-        #     return render_to_response(Txn['template'],
-        #                               RequestContext(request,
-        #                                              context, ))
 
     except requests.ConnectionError:
         pass
@@ -364,12 +181,6 @@ def PatientExplanationOfBenefit(request, patient_id=None, *args, **kwargs):
     in_fmt = "json"
     get_fmt = get_format(request.GET)
 
-    # Txn = {'name': "ExplanationOfBenefit",
-    #        'display': 'EOB',
-    #        'mask': True,
-    #        'template': 'v1api/eob.html',
-    #        'in_fmt': in_fmt,
-    #        }
 
     if settings.DEBUG:
         print("Request.GET :", request.GET)
@@ -404,6 +215,7 @@ def PatientExplanationOfBenefit(request, patient_id=None, *args, **kwargs):
                'get_fmt': get_fmt,
                'in_fmt': in_fmt,
                'pass_to': pass_to,
+               'template': 'v1api/eob.html',
                }
 
     if settings.DEBUG:
@@ -415,96 +227,6 @@ def PatientExplanationOfBenefit(request, patient_id=None, *args, **kwargs):
         context = process_page(request, r, context)
 
         return publish_page(request, context)
-
-        # if get_fmt == "xml":
-        #
-        #     xml_text = minidom.parseString(r.text)
-        #     print("XML_TEXT:", xml_text.toxml())
-        #     root = ET.fromstring(r.text)
-        #     # root_out = etree_to_dict(r.text)
-        #
-        #     json_string = ""
-        #     # json_out = xml_str_to_json_str(r.text, json_string)
-        #     if settings.DEBUG:
-        #         print("Root ET XML:", root)
-        #         # print("XML:", root_out)
-        #         # print("JSON_OUT:", json_out,":", json_string)
-        #
-        #     drill_down = ['Bundle',
-        #                   'entry',
-        #                   'Patient', ]
-        #     level = 0
-        #
-        #     tag0 = xml_text.getElementsByTagName("text")
-        #     # tag1 = tag0.getElementsByTagName("entry")
-        #
-        #     print("Patient?:", tag0)
-        #     print("DrillDown:", drill_down[level])
-        #     print("root find:", root.find(drill_down[level]))
-        #
-        #     pretty_xml = xml_text.toprettyxml()
-        #     #if settings.DEBUG:
-        #     #    print("TEXT:", text)
-        #     #    # print("Pretty XML:", pretty_xml)
-        #
-        #     context['result'] = pretty_xml  # convert
-        #     context['text'] = pretty_xml
-        #
-        # else:
-        #
-        #     convert = OrderedDict(r.json())
-        #     # result = mark_safe(convert)
-        #
-        #     if settings.DEBUG:
-        #         print("Convert:", convert)
-        #         # print("Next Level - entry:", convert['entry'])
-        #         # print("\n ANOTHER Level- text:", convert['entry'][0])
-        #
-        #     content = OrderedDict(convert)
-        #     text = ""
-        #
-        #     if settings.DEBUG:
-        #         print("Content:", content)
-        #         print("resourceType:", content['resourceType'])
-        #         if 'text' in content:
-        #             if 'div' in content['text']:
-        #                 print("text:", content['text']['div'])
-        #
-        #     # context['result'] = r.json()  # convert
-        #     import_text = json.loads(r.text, object_pairs_hook=OrderedDict)
-        #     context['result'] = json.dumps(import_text, indent=4, sort_keys=False)
-        #     if 'text' in content:
-        #         if 'div' in content['text']:
-        #             context['text'] = content['text']['div']
-        #         else:
-        #             context['text'] = ""
-        #     else:
-        #         context['text'] = "No user readable content to display"
-        #     if 'error' in content:
-        #         context['error'] = context['issue']
-
-        ## Setup the page
-
-        # if settings.DEBUG:
-        #     print("Context-result:", context['result'])
-        #     # print("Context-converted:", json.dumps(context['result'], sort_keys=False))
-        #     # print("Context:",context)
-        #
-        # if get_fmt == 'xml' or get_fmt == 'json':
-        #     if settings.DEBUG:
-        #         print("Mode = ", get_fmt)
-        #         print("Context['result']: ", context['result'])
-        #     if get_fmt == "xml":
-        #         return HttpResponse(context['result'],
-        #                             content_type='application/' + get_fmt)
-        #     if get_fmt == "json":
-        #         #return HttpResponse(context['result'], mimetype="application/json")
-        #         return JsonResponse(import_text, safe=False  )
-        #
-        # else:
-        #     return render_to_response(Txn['template'],
-        #                               RequestContext(request,
-        #                                              context, ))
 
     except requests.ConnectionError:
         pass

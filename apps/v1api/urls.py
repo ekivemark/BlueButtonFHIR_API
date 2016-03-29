@@ -59,9 +59,6 @@ urlpatterns = [
                        url(r'^ExplanationOfBenefit$',
                            ExplanationOfBenefit,
                            name='ExplanationOfBenefit'),
-                       url(r'^eobview/(?P<eob_id>[-\w]+)$',
-                           get_eob_view,
-                           name='eobview'),
 
                        url(r'^PatientExplanationOfBenefit/(?P<patient_id>[-\w]+)$',
                            PatientExplanationOfBenefit,
