@@ -56,7 +56,7 @@ urlpatterns = [
                        url(r'^eob/',
                            get_eob,
                            name='eob'),
-                       url(r'^ExplanationOfBenefit$',
+                       url(r'^ExplanationOfBenefit(|/)$',
                            ExplanationOfBenefit,
                            name='ExplanationOfBenefit'),
 
