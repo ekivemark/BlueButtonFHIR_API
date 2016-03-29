@@ -45,6 +45,9 @@ from django.views.decorators.cache import cache_page
 
 from apps.v1api.views.patient import get_patient
 from apps.v1api.views.crosswalk import lookup_xwalk
+from apps.v1api.views.patient import (cms_not_connected,
+                                      process_page,
+                                      publish_page)
 from apps.v1api.utils import (build_params,
                               get_format,
                               concat_string)
@@ -228,105 +231,108 @@ def ExplanationOfBenefit(request, *args, **kwargs):
     try:
         r = requests.get(pass_to)
 
-        if get_fmt == "xml":
+        context = process_page(request, r, context)
 
-            pre_text = r.text.replace(rewrite_from, rewrite_to)
+        return publish_page(request, context)
 
-            xml_text = minidom.parseString(pre_text)
-            print("XML_TEXT:", xml_text.toxml())
-            root = ET.fromstring(r.text)
-            # root_out = etree_to_dict(r.text)
-
-            json_string = ""
-            # json_out = xml_str_to_json_str(r.text, json_string)
-            if settings.DEBUG:
-                print("Root ET XML:", root)
-                # print("XML:", root_out)
-                # print("JSON_OUT:", json_out,":", json_string)
-
-            drill_down = ['Bundle',
-                          'entry',
-                          'Patient', ]
-            level = 0
-
-            tag0 = xml_text.getElementsByTagName("text")
-            # tag1 = tag0.getElementsByTagName("entry")
-
-            print("Patient?:", tag0)
-            print("DrillDown:", drill_down[level])
-            print("root find:", root.find(drill_down[level]))
-
-            pretty_xml = xml_text.toprettyxml()
-            #if settings.DEBUG:
-            #    print("TEXT:", text)
-            #    # print("Pretty XML:", pretty_xml)
-
-            context['result'] = pretty_xml  # convert
-            context['text'] = pretty_xml
-
-        else:
-
-            pre_text = r.text.replace(rewrite_from,rewrite_to)
-            convert = json.loads(pre_text, object_pairs_hook=OrderedDict)
-
-            # result = mark_safe(convert)
-
-            if settings.DEBUG:
-                print("Convert:", convert)
-                # print("Next Level - entry:", convert['entry'])
-                # print("\n ANOTHER Level- text:", convert['entry'][0])
-
-            content = OrderedDict(convert)
-            text = ""
-
-            if settings.DEBUG:
-                print("Content:", content)
-                print("resourceType:", content['resourceType'])
-                if 'text' in content:
-                    if 'div' in content['text']:
-                        print("text:", content['text']['div'])
-
-            # context['result'] = r.json()  # convert
-            import_text = json.loads(pre_text, object_pairs_hook=OrderedDict)
-            context['result'] = json.dumps(import_text, indent=4, sort_keys=False)
-            if 'text' in content:
-                if 'div' in content['text']:
-                    context['text'] = content['text']['div']
-                else:
-                    context['text'] = ""
-            else:
-                context['text'] = "No user readable content to display"
-            if 'error' in content:
-                context['error'] = context['issue']
-
-        # Setup the page
-
-        if settings.DEBUG:
-            print("Context-result:", context['result'])
-            # print("Context-converted:", json.dumps(context['result'], sort_keys=False))
-            # print("Context:",context)
-
-        if get_fmt == 'xml' or get_fmt == 'json':
-            if settings.DEBUG:
-                print("Mode = ", get_fmt)
-                print("Context['result']: ", context['result'])
-            if get_fmt == "xml":
-                return HttpResponse(context['result'],
-                                    content_type='application/' + get_fmt)
-            if get_fmt == "json":
-                #return HttpResponse(context['result'], mimetype="application/json")
-                return JsonResponse(import_text, safe=False  )
-
-        else:
-            return render_to_response(Txn['template'],
-                                      RequestContext(request,
-                                                     context, ))
+        # if get_fmt == "xml":
+        #
+        #     pre_text = r.text.replace(rewrite_from, rewrite_to)
+        #
+        #     xml_text = minidom.parseString(pre_text)
+        #     print("XML_TEXT:", xml_text.toxml())
+        #     root = ET.fromstring(r.text)
+        #     # root_out = etree_to_dict(r.text)
+        #
+        #     json_string = ""
+        #     # json_out = xml_str_to_json_str(r.text, json_string)
+        #     if settings.DEBUG:
+        #         print("Root ET XML:", root)
+        #         # print("XML:", root_out)
+        #         # print("JSON_OUT:", json_out,":", json_string)
+        #
+        #     drill_down = ['Bundle',
+        #                   'entry',
+        #                   'Patient', ]
+        #     level = 0
+        #
+        #     tag0 = xml_text.getElementsByTagName("text")
+        #     # tag1 = tag0.getElementsByTagName("entry")
+        #
+        #     print("Patient?:", tag0)
+        #     print("DrillDown:", drill_down[level])
+        #     print("root find:", root.find(drill_down[level]))
+        #
+        #     pretty_xml = xml_text.toprettyxml()
+        #     #if settings.DEBUG:
+        #     #    print("TEXT:", text)
+        #     #    # print("Pretty XML:", pretty_xml)
+        #
+        #     context['result'] = pretty_xml  # convert
+        #     context['text'] = pretty_xml
+        #
+        # else:
+        #
+        #     pre_text = r.text.replace(rewrite_from,rewrite_to)
+        #     convert = json.loads(pre_text, object_pairs_hook=OrderedDict)
+        #
+        #     # result = mark_safe(convert)
+        #
+        #     if settings.DEBUG:
+        #         print("Convert:", convert)
+        #         # print("Next Level - entry:", convert['entry'])
+        #         # print("\n ANOTHER Level- text:", convert['entry'][0])
+        #
+        #     content = OrderedDict(convert)
+        #     text = ""
+        #
+        #     if settings.DEBUG:
+        #         print("Content:", content)
+        #         print("resourceType:", content['resourceType'])
+        #         if 'text' in content:
+        #             if 'div' in content['text']:
+        #                 print("text:", content['text']['div'])
+        #
+        #     # context['result'] = r.json()  # convert
+        #     import_text = json.loads(pre_text, object_pairs_hook=OrderedDict)
+        #     context['result'] = json.dumps(import_text, indent=4, sort_keys=False)
+        #     if 'text' in content:
+        #         if 'div' in content['text']:
+        #             context['text'] = content['text']['div']
+        #         else:
+        #             context['text'] = ""
+        #     else:
+        #         context['text'] = "No user readable content to display"
+        #     if 'error' in content:
+        #         context['error'] = context['issue']
+        #
+        # # Setup the page
+        #
+        # if settings.DEBUG:
+        #     print("Context-result:", context['result'])
+        #     # print("Context-converted:", json.dumps(context['result'], sort_keys=False))
+        #     # print("Context:",context)
+        #
+        # if get_fmt == 'xml' or get_fmt == 'json':
+        #     if settings.DEBUG:
+        #         print("Mode = ", get_fmt)
+        #         print("Context['result']: ", context['result'])
+        #     if get_fmt == "xml":
+        #         return HttpResponse(context['result'],
+        #                             content_type='application/' + get_fmt)
+        #     if get_fmt == "json":
+        #         #return HttpResponse(context['result'], mimetype="application/json")
+        #         return JsonResponse(import_text, safe=False  )
+        #
+        # else:
+        #     return render_to_response(Txn['template'],
+        #                               RequestContext(request,
+        #                                              context, ))
 
     except requests.ConnectionError:
-        print("Whoops - Problem connecting to FHIR Server")
-        messages.error(request,
-                       "FHIR Server is unreachable. Are you on the CMS Network?")
-        return HttpResponseRedirect(reverse('api:v1:home'))
+        pass
+
+    return cms_not_connected(request, 'api:v1:home')
 
 
 def PatientExplanationOfBenefit(request, patient_id=None, *args, **kwargs):
@@ -426,98 +432,101 @@ def PatientExplanationOfBenefit(request, patient_id=None, *args, **kwargs):
     try:
         r = requests.get(pass_to)
 
-        if get_fmt == "xml":
+        context = process_page(request, r, context)
 
-            xml_text = minidom.parseString(r.text)
-            print("XML_TEXT:", xml_text.toxml())
-            root = ET.fromstring(r.text)
-            # root_out = etree_to_dict(r.text)
+        return publish_page(request, context)
 
-            json_string = ""
-            # json_out = xml_str_to_json_str(r.text, json_string)
-            if settings.DEBUG:
-                print("Root ET XML:", root)
-                # print("XML:", root_out)
-                # print("JSON_OUT:", json_out,":", json_string)
+        # if get_fmt == "xml":
+        #
+        #     xml_text = minidom.parseString(r.text)
+        #     print("XML_TEXT:", xml_text.toxml())
+        #     root = ET.fromstring(r.text)
+        #     # root_out = etree_to_dict(r.text)
+        #
+        #     json_string = ""
+        #     # json_out = xml_str_to_json_str(r.text, json_string)
+        #     if settings.DEBUG:
+        #         print("Root ET XML:", root)
+        #         # print("XML:", root_out)
+        #         # print("JSON_OUT:", json_out,":", json_string)
+        #
+        #     drill_down = ['Bundle',
+        #                   'entry',
+        #                   'Patient', ]
+        #     level = 0
+        #
+        #     tag0 = xml_text.getElementsByTagName("text")
+        #     # tag1 = tag0.getElementsByTagName("entry")
+        #
+        #     print("Patient?:", tag0)
+        #     print("DrillDown:", drill_down[level])
+        #     print("root find:", root.find(drill_down[level]))
+        #
+        #     pretty_xml = xml_text.toprettyxml()
+        #     #if settings.DEBUG:
+        #     #    print("TEXT:", text)
+        #     #    # print("Pretty XML:", pretty_xml)
+        #
+        #     context['result'] = pretty_xml  # convert
+        #     context['text'] = pretty_xml
+        #
+        # else:
+        #
+        #     convert = OrderedDict(r.json())
+        #     # result = mark_safe(convert)
+        #
+        #     if settings.DEBUG:
+        #         print("Convert:", convert)
+        #         # print("Next Level - entry:", convert['entry'])
+        #         # print("\n ANOTHER Level- text:", convert['entry'][0])
+        #
+        #     content = OrderedDict(convert)
+        #     text = ""
+        #
+        #     if settings.DEBUG:
+        #         print("Content:", content)
+        #         print("resourceType:", content['resourceType'])
+        #         if 'text' in content:
+        #             if 'div' in content['text']:
+        #                 print("text:", content['text']['div'])
+        #
+        #     # context['result'] = r.json()  # convert
+        #     import_text = json.loads(r.text, object_pairs_hook=OrderedDict)
+        #     context['result'] = json.dumps(import_text, indent=4, sort_keys=False)
+        #     if 'text' in content:
+        #         if 'div' in content['text']:
+        #             context['text'] = content['text']['div']
+        #         else:
+        #             context['text'] = ""
+        #     else:
+        #         context['text'] = "No user readable content to display"
+        #     if 'error' in content:
+        #         context['error'] = context['issue']
 
-            drill_down = ['Bundle',
-                          'entry',
-                          'Patient', ]
-            level = 0
+        ## Setup the page
 
-            tag0 = xml_text.getElementsByTagName("text")
-            # tag1 = tag0.getElementsByTagName("entry")
-
-            print("Patient?:", tag0)
-            print("DrillDown:", drill_down[level])
-            print("root find:", root.find(drill_down[level]))
-
-            pretty_xml = xml_text.toprettyxml()
-            #if settings.DEBUG:
-            #    print("TEXT:", text)
-            #    # print("Pretty XML:", pretty_xml)
-
-            context['result'] = pretty_xml  # convert
-            context['text'] = pretty_xml
-
-        else:
-
-            convert = OrderedDict(r.json())
-            # result = mark_safe(convert)
-
-            if settings.DEBUG:
-                print("Convert:", convert)
-                # print("Next Level - entry:", convert['entry'])
-                # print("\n ANOTHER Level- text:", convert['entry'][0])
-
-            content = OrderedDict(convert)
-            text = ""
-
-            if settings.DEBUG:
-                print("Content:", content)
-                print("resourceType:", content['resourceType'])
-                if 'text' in content:
-                    if 'div' in content['text']:
-                        print("text:", content['text']['div'])
-
-            # context['result'] = r.json()  # convert
-            import_text = json.loads(r.text, object_pairs_hook=OrderedDict)
-            context['result'] = json.dumps(import_text, indent=4, sort_keys=False)
-            if 'text' in content:
-                if 'div' in content['text']:
-                    context['text'] = content['text']['div']
-                else:
-                    context['text'] = ""
-            else:
-                context['text'] = "No user readable content to display"
-            if 'error' in content:
-                context['error'] = context['issue']
-
-        # Setup the page
-
-        if settings.DEBUG:
-            print("Context-result:", context['result'])
-            # print("Context-converted:", json.dumps(context['result'], sort_keys=False))
-            # print("Context:",context)
-
-        if get_fmt == 'xml' or get_fmt == 'json':
-            if settings.DEBUG:
-                print("Mode = ", get_fmt)
-                print("Context['result']: ", context['result'])
-            if get_fmt == "xml":
-                return HttpResponse(context['result'],
-                                    content_type='application/' + get_fmt)
-            if get_fmt == "json":
-                #return HttpResponse(context['result'], mimetype="application/json")
-                return JsonResponse(import_text, safe=False  )
-
-        else:
-            return render_to_response(Txn['template'],
-                                      RequestContext(request,
-                                                     context, ))
+        # if settings.DEBUG:
+        #     print("Context-result:", context['result'])
+        #     # print("Context-converted:", json.dumps(context['result'], sort_keys=False))
+        #     # print("Context:",context)
+        #
+        # if get_fmt == 'xml' or get_fmt == 'json':
+        #     if settings.DEBUG:
+        #         print("Mode = ", get_fmt)
+        #         print("Context['result']: ", context['result'])
+        #     if get_fmt == "xml":
+        #         return HttpResponse(context['result'],
+        #                             content_type='application/' + get_fmt)
+        #     if get_fmt == "json":
+        #         #return HttpResponse(context['result'], mimetype="application/json")
+        #         return JsonResponse(import_text, safe=False  )
+        #
+        # else:
+        #     return render_to_response(Txn['template'],
+        #                               RequestContext(request,
+        #                                              context, ))
 
     except requests.ConnectionError:
-        print("Whoops - Problem connecting to FHIR Server")
-        messages.error(request,
-                       "FHIR Server is unreachable. Are you on the CMS Network?")
-        return HttpResponseRedirect(reverse('api:v1:home'))
+        pass
+
+    return cms_not_connected(request, 'api:v1:home')

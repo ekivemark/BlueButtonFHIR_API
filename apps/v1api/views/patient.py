@@ -126,8 +126,6 @@ def get_patient(request, Access_Mode=None, *args, **kwargs):
     # DO NOT USE Uppercase
     skip_parm = ['_id', '_format']
 
-
-
     mask = True
 
     pass_to = FhirServerUrl()
@@ -163,6 +161,7 @@ def get_patient(request, Access_Mode=None, *args, **kwargs):
                # 'kwargs' : kwargs,
                # 'get'    : request.GET,
                'pass_to': pass_to,
+               'template': 'v1api/patient.html',
                }
 
     if settings.DEBUG:
@@ -172,58 +171,58 @@ def get_patient(request, Access_Mode=None, *args, **kwargs):
 
         context = process_page(request,r,context)
 
-        # Setup the page
-
-        if settings.DEBUG:
-            print("Context-result:", context['result'])
-            # print("Context-converted:", json.dumps(context['result'], sort_keys=False))
-            # print("Context:",context)
-
-        if get_fmt == 'xml' or get_fmt == 'json':
-            if settings.DEBUG:
-                print("Mode = ", get_fmt)
-                print("Context['result']: ", context['result'])
-            if get_fmt == "xml":
-                return HttpResponse(context['result'],
-                                    content_type='application/' + get_fmt)
-            if get_fmt == "json":
-                #return HttpResponse(context['result'], mimetype="application/json")
-                return JsonResponse(context['import_text'], safe=False)
-
-        else:
-
-            if context['text'] == "No user readable content to display" or context['text']=="":
-
-                result = json.loads(context['result'], object_pairs_hook=OrderedDict)
-                print("Result::", result)
-                context['text'] += "<br/> extracting information from returned record:<br/>"
-                context['text'] += "<table>\n"
-                if 'name' in result:
-                    patient_name = result['name'][0]['given'][0]
-                    patient_name += " "
-                    patient_name += result['name'][0]['family'][0]
-                    context['text'] += tr_build_item("Patient Name&nbsp;&nbsp;",
-                                                     patient_name)
-                if 'address' in result:
-                    context['text'] += tr_build_item("Patient Address",
-                                                     result['address'][0]['line'][0])
-                if 'birthDate' in result:
-                    context['text'] += tr_build_item("Birth Date", result['birthDate'])
-
-                if 'identifier' in result:
-                    context['text'] += tr_build_item("Patient ID",
-                                                     result['identifier'][0]['value'])
-                context['text'] += "</table>"
-
-            return render_to_response('v1api/patient.html',
-                                      RequestContext(request,
-                                                     context, ))
+        result = publish_page(request, context)
+        # # Setup the page
+        #
+        # if settings.DEBUG:
+        #     print("Context-result:", context['result'])
+        #     # print("Context-converted:", json.dumps(context['result'], sort_keys=False))
+        #     # print("Context:",context)
+        #
+        # if get_fmt == 'xml' or get_fmt == 'json':
+        #     if settings.DEBUG:
+        #         print("Mode = ", get_fmt)
+        #         print("Context['result']: ", context['result'])
+        #     if get_fmt == "xml":
+        #         return HttpResponse(context['result'],
+        #                             content_type='application/' + get_fmt)
+        #     if get_fmt == "json":
+        #         #return HttpResponse(context['result'], mimetype="application/json")
+        #         return JsonResponse(context['import_text'], safe=False)
+        #
+        # else:
+        #
+        #     if context['text'] == "No user readable content to display" or context['text']=="":
+        #
+        #         result = json.loads(context['result'], object_pairs_hook=OrderedDict)
+        #         print("Result::", result)
+        #         context['text'] += "<br/> extracting information from returned record:<br/>"
+        #         context['text'] += "<table>\n"
+        #         if 'name' in result:
+        #             patient_name = result['name'][0]['given'][0]
+        #             patient_name += " "
+        #             patient_name += result['name'][0]['family'][0]
+        #             context['text'] += tr_build_item("Patient Name&nbsp;&nbsp;",
+        #                                              patient_name)
+        #         if 'address' in result:
+        #             context['text'] += tr_build_item("Patient Address",
+        #                                              result['address'][0]['line'][0])
+        #         if 'birthDate' in result:
+        #             context['text'] += tr_build_item("Birth Date", result['birthDate'])
+        #
+        #         if 'identifier' in result:
+        #             context['text'] += tr_build_item("Patient ID",
+        #                                              result['identifier'][0]['value'])
+        #         context['text'] += "</table>"
+        #
+        #     return render_to_response('v1api/patient.html',
+        #                               RequestContext(request,
+        #                                              context, ))
 
     except requests.ConnectionError:
-        print("Whoops - Problem connecting to FHIR Server")
-        messages.error(request,
-                       "FHIR Server is unreachable. Are you on the CMS Network?")
-        return HttpResponseRedirect(reverse('api:v1:home'))
+        pass
+
+    return cms_not_connected(request, 'api:v1:home')
 
 
 @login_required
@@ -356,61 +355,12 @@ def get_eob(request, Access_Mode=None, *args, **kwargs):
 
         context = process_page(request,r,context)
 
-        result = publish_page(request, context)
-
-        # if settings.DEBUG:
-        #     print("Context-result:", context['result'])
-        #     # print("Context-converted:", json.dumps(context['result'], sort_keys=False))
-        #     # print("Context:",context)
-        #
-        # if get_fmt == 'xml' or get_fmt == 'json':
-        #     if settings.DEBUG:
-        #         print("Mode = ", get_fmt)
-        #         print("Context['result']: ", context['result'])
-        #     if get_fmt == "xml":
-        #         return HttpResponse(context['result'],
-        #                             content_type='application/' + get_fmt)
-        #     if get_fmt == "json":
-        #         #return HttpResponse(context['result'], mimetype="application/json")
-        #         return JsonResponse(context['import_text'], safe=False)
-        #
-        # else:
-        #
-        #     if context['text'] == "No user readable content to display" or context['text']=="":
-        #
-        #         result = json.loads(context['result'], object_pairs_hook=OrderedDict)
-        #         print("Result::", result)
-        #         context['text'] += "<br/> extracting information from returned record:<br/>"
-        #         context['text'] += "<table>\n"
-        #         if 'name' in result:
-        #             patient_name = result['name'][0]['given'][0]
-        #             patient_name += " "
-        #             patient_name += result['name'][0]['family'][0]
-        #             context['text'] += tr_build_item("Patient Name&nbsp;&nbsp;",
-        #                                              patient_name)
-        #         if 'address' in result:
-        #             context['text'] += tr_build_item("Patient Address",
-        #                                              result['address'][0]['line'][0])
-        #         if 'birthDate' in result:
-        #             context['text'] += tr_build_item("Birth Date", result['birthDate'])
-        #
-        #         if 'identifier' in result:
-        #             context['text'] += tr_build_item("Patient ID",
-        #                                              result['identifier'][0]['value'])
-        #         context['text'] += "</table>"
-        #
-        #
-        # return render_to_response(context['template'],
-        #                               RequestContext(request,
-        #                                              context, ))
+        return publish_page(request, context)
 
     except requests.ConnectionError:
-        print("Whoops - Problem connecting to FHIR Server")
-        messages.error(request,
-                       "FHIR Server is unreachable. "
-                       "Are you on the CMS Network?")
+        pass
 
-    return HttpResponseRedirect(reverse('api:v1:home'))
+    return cms_not_connected(request, 'api:v1:home')
 
 
 #@login_required
@@ -518,50 +468,52 @@ def get_eob_view(request, eob_id, *args, **kwargs):
     try:
         r = requests.get(pass_to)
 
-        if get_fmt == "xml":
-            xml_text = minidom.parseString(r.text)
-            pretty_xml = xml_text.toprettyxml()
-            context['result'] = pretty_xml  # convert
-            context['text'] = pretty_xml
+        context = process_page(request, r, context)
 
-            return HttpResponse(context['result'],
-                                content_type='application/' + get_fmt)
+        return publish_page(request, context)
 
-        else: # get_fmt == "json" or None:
-
-            convert = OrderedDict(r.json())
-            # result = mark_safe(convert)
-
-            if settings.DEBUG:
-                print("Convert:", convert)
-
-            content = OrderedDict(convert)
-            text = ""
-
-            context['result'] = r.json()  # convert
-            if 'text' in content:
-                context['text'] = content['text']['div']
-                if 'issue' in content:
-                    context['error'] = content['issue']
-            else:
-                if settings.DEBUG:
-                    print("Resource:", convert['entry'])
-                context['text'] = convert['entry']
-
-            if get_fmt == "json":
-                return JsonResponse(context['result'], )
-
-        return render_to_response(Txn['template'],
-                                      RequestContext(request,
-                                                     context, ))
+        # if get_fmt == "xml":
+        #     pre_text = re_write_url(r.text)
+        #     xml_text = minidom.parseString(pre_text)
+        #     pretty_xml = xml_text.toprettyxml()
+        #     context['result'] = pretty_xml  # convert
+        #     context['text'] = pretty_xml
+        #
+        #     return HttpResponse(context['result'],
+        #                         content_type='application/' + get_fmt)
+        #
+        # else: # get_fmt == "json" or None:
+        #
+        #     pre_text = re_write_url(r.text)
+        #     convert = json.loads(pre_text, object_pairs_hook=OrderedDict)
+        #
+        #     if settings.DEBUG:
+        #         print("Convert:", convert)
+        #
+        #     content = OrderedDict(convert)
+        #     text = ""
+        #
+        #     context['result'] = r.json()  # convert
+        #     if 'text' in content:
+        #         context['text'] = content['text']['div']
+        #         if 'issue' in content:
+        #             context['error'] = content['issue']
+        #     else:
+        #         if settings.DEBUG:
+        #             print("Resource:", convert['entry'])
+        #         context['text'] = convert['entry']
+        #
+        #     if get_fmt == "json":
+        #         return JsonResponse(context['result'], )
+        #
+        # return render_to_response(Txn['template'],
+        #                               RequestContext(request,
+        #                                              context, ))
 
     except requests.ConnectionError:
-        print("Whoops - Problem connecting to FHIR Server")
-        messages.error(request,
-                       "FHIR Server is unreachable. "
-                       "Are you on the CMS Network?")
+        pass
 
-    return HttpResponseRedirect(reverse('api:v1:home'))
+    return cms_not_connected(request,'api:v1:home')
 
 
 def process_page(request, r, context):
@@ -574,13 +526,9 @@ def process_page(request, r, context):
     :return: context
     """
 
-    # We need to replace FHIR Server with External Server reference
-    rewrite_from = settings.FHIR_SERVER_CONF['REWRITE_FROM']
-    rewrite_to = settings.FHIR_SERVER_CONF['REWRITE_TO']
-
     if context["get_fmt"] == "xml":
 
-        pre_text = r.text.replace(rewrite_from, rewrite_to)
+        pre_text = re_write_url(r.text)
         xml_text = minidom.parseString(pre_text)
 
         if settings.DEBUG:
@@ -620,14 +568,8 @@ def process_page(request, r, context):
 
     else:
 
-        pre_text = r.text.replace(rewrite_from,rewrite_to)
+        pre_text = re_write_url(r.text)
         convert = json.loads(pre_text, object_pairs_hook=OrderedDict)
-
-        if settings.DEBUG:
-            pass
-            # print("Convert:", convert)
-            # print("Next Level - entry:", convert['entry'])
-            # print("\n ANOTHER Level- text:", convert['entry'][0])
 
         content = OrderedDict(convert)
         text = ""
@@ -669,12 +611,6 @@ def publish_page(request, context):
     get_fmt = context['get_fmt']
     in_fmt = context['in_fmt']
 
-    if settings.DEBUG:
-        pass
-        # print("Context-result:", context['result'])
-        # print("Context-converted:", json.dumps(context['result'], sort_keys=False))
-        # print("Context:",context)
-
     if get_fmt == 'xml' or get_fmt == 'json':
         # if settings.DEBUG:
         #     print("Mode = ", get_fmt)
@@ -683,17 +619,15 @@ def publish_page(request, context):
             return HttpResponse(context['result'],
                                 content_type='application/' + get_fmt)
         if get_fmt == "json":
-            print("Returning HttpResponse")
-            return HttpResponse(context['result'],content_type="application/json")
-            # return JsonResponse(context['import_text'], safe=False)
+
+            # return HttpResponse(context['result'],content_type="application/json")
+            return JsonResponse(context['import_text'], safe=False)
 
     else:
 
         if context['text'] == "No user readable content to display" or context['text']=="":
 
             result = json.loads(context['result'], object_pairs_hook=OrderedDict)
-            # if settings.DEBUG:
-            #     print("Result::", result)
 
             context['text'] += "<br/> extracting information from returned record:<br/>"
             context['text'] += "<table>\n"
@@ -714,11 +648,31 @@ def publish_page(request, context):
                                                  result['identifier'][0]['value'])
             context['text'] += "</table>"
 
-    print("Template:", context['template'])
+    if settings.DEBUG:
+        print("Template:", context['template'])
 
     return render_to_response(context['template'],
                               RequestContext(request,
                                              context ))
+
+
+def re_write_url(src_text, rw_from=None, rw_to=None):
+    """
+    receive text and rewrite rw_From with rw_to
+
+    """
+
+    # We need to replace FHIR Server with External Server reference
+    if rw_from == None:
+        rewrite_from = settings.FHIR_SERVER_CONF['REWRITE_FROM']
+    else:
+        rewrite_from = rw_from
+    if rw_to == None:
+        rewrite_to = settings.FHIR_SERVER_CONF['REWRITE_TO']
+    else:
+        rewrite_to = rw_to
+
+    return src_text.replace(rewrite_from, rewrite_to)
 
 
 def li_build_item(field_name, field_value):
@@ -734,3 +688,16 @@ def tr_build_item(field_name, field_value):
     ti_build_item += "<td>%s</td><td>%s</td>" % (field_name, field_value)
     ti_build_item += "</tr>"
     return ti_build_item
+
+
+def cms_not_connected(request, reverse_to_name):
+    """
+    did we get a connection error because we are in the CMS network?
+    """
+    if settings.DEBUG:
+        print("Whoops - Problem connecting to FHIR Server")
+    messages.error(request,
+                   "FHIR Server is unreachable. "
+                   "Are you on the CMS Network?")
+
+    return HttpResponseRedirect(reverse(reverse_to_name))
