@@ -1,5 +1,4 @@
 {% load i18n %}
-{% load url from future %}
 {% blocktrans %}
 {{user|capfirst}},
 you (or someone pretending to be you) have asked to register an account at
