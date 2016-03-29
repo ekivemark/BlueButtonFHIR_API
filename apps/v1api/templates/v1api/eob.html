@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% if get_fmt == "xml" or get_fmt == "json" %}
-{{ result }}
+    {{ result }}
 {% else %}
 {% load i18n %}
 {% load staticfiles %}
@@ -54,27 +54,6 @@
 
         </div>
 
-
-
 {% endblock %}
 
-{% comment %}
-Txn =  {'name'  :"EOB",
-            'dsply':'Patient',
-            'server': settings.FHIR_SERVER,
-            'locn'  : "/baseDstu2/ExplanationOfBenefit/",
-            'tmplt' : 'v1api/eob.html',
-             }
-
-context = {'display': Txn['dsply'],
-               'name'   : Txn['name'],
-               'key'    : key,
-               'output' : "test output ",
-               'args'   : args,
-               'kwargs' : kwargs,
-               'get'    : request.GET,
-               'pass_to': pass_to,
-               'result' : convert,
-               }
-{% endcomment %}
 {% endif %}

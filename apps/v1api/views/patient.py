@@ -171,7 +171,7 @@ def get_patient(request, Access_Mode=None, *args, **kwargs):
 
         context = process_page(request,r,context)
 
-        result = publish_page(request, context)
+        return publish_page(request, context)
         # # Setup the page
         #
         # if settings.DEBUG:

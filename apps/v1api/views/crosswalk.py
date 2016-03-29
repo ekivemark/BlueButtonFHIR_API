@@ -23,7 +23,7 @@ def lookup_xwalk(request, element='fhir_url_id'):
     # Lookup up in Crosswalk with request.user
     # First we need to check for AnonymousUser
 
-    if request.user.id ==None:
+    if request.user.id == None:
         if settings.DEBUG:
             print('Sorry - AnonymousUser gets no information')
         return None

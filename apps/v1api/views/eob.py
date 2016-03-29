@@ -157,20 +157,14 @@ def ExplanationOfBenefit(request, *args, **kwargs):
 
     process_mode = request.META['REQUEST_METHOD']
 
-    try:
-        xwalk = Crosswalk.objects.get(user=request.user)
-    except Crosswalk.DoesNotExist:
-        messages.error(request, "Unable to find Patient ID")
-        return HttpResponseRedirect(reverse('api:v1:home'))
-
-    if xwalk.fhir_url_id == "":
-        err_msg = ['Sorry, We were unable to find',
-                   'your record', ]
-        exit_message = concat_string("",
-                                     msg=err_msg,
-                                     delimiter=" ",
-                                     last=".")
-        messages.error(request, exit_message)
+    patient_id = lookup_xwalk(request)
+    # try:
+    #     xwalk = Crosswalk.objects.get(user=request.user)
+    # except Crosswalk.DoesNotExist:
+    #     messages.error(request, "Unable to find Patient ID")
+    #     return HttpResponseRedirect(reverse('api:v1:home'))
+    #
+    if patient_id == None:
         return HttpResponseRedirect(reverse('api:v1:home'))
 
     in_fmt = "json"
@@ -186,10 +180,7 @@ def ExplanationOfBenefit(request, *args, **kwargs):
     if settings.DEBUG:
         print("Request.GET :", request.GET)
         print("KWargs      :", kwargs)
-        print("Crosswalk   :", xwalk)
-        print("GUID        :", xwalk.guid)
-        print("FHIR        :", xwalk.fhir)
-        print("FHIR URL ID :", xwalk.fhir_url_id)
+        print("FHIR URL ID :", patient_id)
 
     # We should have the xwalk.FHIR_url_id
     # So we will construct the EOB Identifier to include
@@ -202,7 +193,7 @@ def ExplanationOfBenefit(request, *args, **kwargs):
     pass_to = FhirServerUrl()
     pass_to += "/ExplanationOfBenefit/"
 
-    key = xwalk.fhir_url_id.strip()
+    key = patient_id.strip()
     patient_filter= "?patient=Patient/" + key
 
     pass_to += patient_filter
@@ -343,19 +334,9 @@ def PatientExplanationOfBenefit(request, patient_id=None, *args, **kwargs):
     """
 
     if patient_id == None:
-        try:
-            xwalk = Crosswalk.objects.get(user=request.user.id)
+        patient_id = lookup_xwalk(request)
 
-            patient_id = xwalk.fhir_url_id
-
-        except Crosswalk.DoesNotExist:
-            reason = "Unable to find Patient ID for user:%s[%s]" % (request.user,
-                                                                request.user.id)
-            messages.error(request, reason)
-            return kickout_404(reason)
-            # return HttpResponseRedirect(reverse('api:v1:home'))
-
-        if xwalk.fhir_url_id == "":
+        if patient_id == None:
             err_msg = ['Crosswalk lookup failed: Sorry, We were unable to find',
                        'your record', ]
             exit_message = concat_string("",
@@ -376,7 +357,6 @@ def PatientExplanationOfBenefit(request, patient_id=None, *args, **kwargs):
 
     if settings.DEBUG:
         print("In apps.v1api.views.eob.PatientExplanationOfBenefit Function")
-
         print("request:", request.GET)
 
     process_mode = request.META['REQUEST_METHOD']
@@ -384,19 +364,19 @@ def PatientExplanationOfBenefit(request, patient_id=None, *args, **kwargs):
     in_fmt = "json"
     get_fmt = get_format(request.GET)
 
-    Txn = {'name': "ExplanationOfBenefit",
-           'display': 'EOB',
-           'mask': True,
-           'template': 'v1api/eob.html',
-           'in_fmt': in_fmt,
-           }
+    # Txn = {'name': "ExplanationOfBenefit",
+    #        'display': 'EOB',
+    #        'mask': True,
+    #        'template': 'v1api/eob.html',
+    #        'in_fmt': in_fmt,
+    #        }
 
     if settings.DEBUG:
         print("Request.GET :", request.GET)
         print("KWargs      :", kwargs)
         print("Patient     :", patient_id)
 
-    # We should have the xwalk.FHIR_url_id
+    # We should have the patient_id from xwalk.FHIR_url_id
     # So we will construct the EOB Identifier to include
 
     # We will deal internally in JSON Format if caller does not choose
