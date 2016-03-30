@@ -62,7 +62,7 @@ def getpatient(request):
     if 'entry' in j:
         od['entries'] = len(j['entry'])
     else:
-        od['entries'] = notNone(od['entries'], 0)
+        od['entries'] = 0
     od['entry'] = []
     if settings.DEBUG:
         print("od:", od)
