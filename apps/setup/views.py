@@ -97,8 +97,8 @@ def getpatient(request):
         #     print("rt:", rt)
 
     od['result'] = j
-    od['finish'] = datetime.datetime.now()
-    od['elapsed'] = od['finish'] - od['start']
+    od['end'] = datetime.datetime.now()
+    od['elapsed'] = str(od['finish'] - od['start'])
     od['processed'] = rt
     # Check total
 
@@ -116,6 +116,45 @@ def getpatient(request):
 
     return HttpResponse(json.dumps(od, indent=4),
                             content_type="application/json")
+
+
+def geteob(request):
+    """
+    Process each crosswalk record.
+    Get the fhir_url_id
+    Construct an ExplanationOfBenefit call using patient=Patient/{xwalk.fhir_url_id}
+    Get the count
+    Write to xwalk.eob_cont
+    """
+
+    server_call = FhirServerUrl() + "/ExplanationOfBenefit/?_format=json&patient=Patient/"
+
+    ctr = 0
+    od = OrderedDict()
+    od['server'] = FhirServerUrl()
+    od['api_call'] = "/setup/geteob"
+    od['start'] = datetime.datetime.now()
+
+    for x in Crosswalk.objects.all():
+        patient_id = x.fhir_url_id
+
+        u = server_call + patient_id
+
+        j = get_page_content(u)
+
+        if 'total' in j:
+            x.eob_count = notNone(j["total"],0)
+        x.save()
+        ctr += 1
+        if ctr % 100 == 0:
+            print("processed ", ctr)
+            print("elapsed ", str(datetime.datetime.now()-od['start']))
+
+    od['processed'] = ctr
+    od['end'] = datetime.datetime.now()
+
+    return HttpResponse(json.dumps(od, indent=4),
+                        content_type="application/json")
 
 
 def get_next_page(j):

@@ -12,10 +12,15 @@ Created: 3/8/16 1:42 AM
 __author__ = 'Mark Scrimshire:@ekivemark'
 
 from django.conf.urls import patterns, url
-from apps.setup.views import getpatient
+from apps.setup.views import getpatient, geteob
 
 urlpatterns = [
                        url(r'^getpatient/$',
                            getpatient,
                            name='getpatient'),
-                       ]
+
+                       url(r'^geteob/$',
+                           geteob,
+                           name='geteob'),
+
+]
