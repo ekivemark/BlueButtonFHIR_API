@@ -78,9 +78,11 @@ def getpatient(request):
                 if x % 100 == 0:
                     print("running for:", datetime.datetime.now()-od['start'])
                     print("x:", rt+x)
+                    print("OD:", od)
                     # print("entries:", len(j['entry']))
             if 'entry' in j:
-                od['entry'].append(extract_info(j['entry'][x]))
+                result = extract_info(j['entry'][x])
+                od['entry'].append(result['id'])
             x += 1
 
             if x >= notNone(bundle_count,0):
@@ -120,7 +122,7 @@ def get_next_page(j):
     # Get the next page
 
     next_page = ""
-    print("Get Next Page from link:", json.dumps(j, indent=4))
+    # print("Get Next Page from link:", json.dumps(j, indent=4))
     for l in j['link']:
         if l['relation'] == "next":
 
