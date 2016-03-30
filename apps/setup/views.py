@@ -262,7 +262,7 @@ def write_user_account(e):
         # if settings.DEBUG:
         #    print("Updating:", "u"+e['id'])
         if 'email'in e:
-            u.email = rand_str +"."+ e['email']
+            u.email = rand_str_first+"." +rand_str_last + "."+ e['email']
         if 'first_name' in e:
             u.first_name = e['first_name']
         else:
@@ -283,7 +283,7 @@ def write_user_account(e):
             last_name = ""
 
         if 'email' in e:
-            rand_email = rand_str +"."+ e['email']
+            rand_email = rand_str_first +"."+ rand_str_first + "." +e['email']
         else:
             rand_email = rand_str_first + rand_str_last+ "@example.com"
 
@@ -294,9 +294,9 @@ def write_user_account(e):
                                      password='p'+e['id'])
 
     if 'email' in e:
-        u.email = rand_str +"."+ e['email']
+        u.email = rand_str_first +"."+ rand_str_first + "." +e['email']
     else:
-        u.email = rand_str +".unknown@example.com"
+        u.email = rand_str_first + rand_str_last +"@example.com"
     u.is_active = True
     u.is_user = True
     u.is_developer = False
