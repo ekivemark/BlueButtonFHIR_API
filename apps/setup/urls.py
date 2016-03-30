@@ -23,7 +23,7 @@ urlpatterns = [
                            geteob,
                            name='geteob'),
 
-                       url(r'^userlist/$',
+                       url(r'^userlist/(?P<fmt>\w+|)$',
                            user_list,
                            name='userlist'),
 

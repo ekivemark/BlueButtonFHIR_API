@@ -62,6 +62,12 @@
 {% endblock %}
 
 {% comment %}
+Txn =  {'name'  :"Patient",
+            'dsply':'Patient',
+            'server': settings.FHIR_SERVER,
+            'locn'  : "/baseDstu2/Patient/",
+            'tmplt' : 'v1api/patient.html',
+             }
 
 context = {'display': Txn['dsply'],
                'name'   : Txn['name'],

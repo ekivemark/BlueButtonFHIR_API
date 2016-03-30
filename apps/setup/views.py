@@ -24,6 +24,8 @@ from django.core.urlresolvers import reverse_lazy
 
 from django.http import (HttpResponse,
                          HttpResponseRedirect)
+from django.shortcuts import render_to_response
+from django.template import RequestContext
 
 from bbapi.utils import FhirServerUrl, notNone
 
@@ -340,7 +342,7 @@ def get_eob_count(e):
     return eob_count
 
 
-def user_list(request):
+def user_list(request, fmt="html"):
     """
     Print a userlist
     """
@@ -348,15 +350,46 @@ def user_list(request):
     xwalk = Crosswalk.objects.all()
 
     od = OrderedDict()
-    od['user'] = []
+    if fmt.lower() == "html":
+
+        od['userlist'] = "<table><tr><td>User</td><td>Password</td><td>FHIR Id</td><td>EOB Count</td></tr>"
+    else:
+        od['userlist'] = []
 
     for x in xwalk:
 
         if x.eob_count > 0:
-            od['user'].append({'user': x.user,
-                               'password': "p"+x.user[1:],
-                               'fhir_url_id': x.fhir_url_id,
-                               'eob_count': x.eob_count})
+            if x.user.is_staff:
+                pass
+            else:
+                if x.user.username == "u"+x.fhir_url_id:
+                    if fmt.lower() == "html":
+                        od['userlist'] += "<tr>"
+                        od['userlist'] += "<td>"+ x.user.username +"</td>"
+                        od['userlist'] += "<td>p" + x.user.username[1:] + "</td>"
+                        od['userlist'] += "<td>" + x.fhir_url_id + "</td>"
+                        od['userlist'] += "<td>" + str(x.eob_count) + "</td>"
+                        od['userlist'] += "</tr>"
+                    else:
+                        od['userlist'].append({'user': x.user.username,
+                                               'password': "p"+x.user.username[1:],
+                                               'fhir_url_id': x.fhir_url_id,
+                                               'eob_count': x.eob_count})
+                else:
+                    pass
+    if fmt.lower() == "html":
+        od['userlist'] += "</table>"
 
-    return HttpResponse(json.dumps(od, indent=4),
-                        content_type="application/json")
+        context = {'display': 'User List',
+                   'name':'UserList',
+                   'key': fmt,
+                   'result': od['userlist'],
+                   }
+
+        return render_to_response('v1api/userlist.html',
+                                  RequestContext(request, context ))
+
+    else:
+        return HttpResponse(json.dumps(od, indent=4),
+                            content_type="application/json")
+
