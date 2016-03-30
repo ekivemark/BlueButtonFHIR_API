@@ -53,7 +53,8 @@ def getpatient(request):
     j = get_page_content(od['fhir_server'] + od['parameters'])
 
     od['total'] = j['total']
-    od['start'] = datetime.datetime.now()
+    then = datetime.datetime.now()
+    od['start'] = str(then)
 
     od['entries'] = len(j['entry'])
     od['entry'] = []
@@ -76,7 +77,7 @@ def getpatient(request):
             if settings.DEBUG:
                 # Print every 100 lines
                 if x % 100 == 0:
-                    print("running for:", datetime.datetime.now()-od['start'])
+                    print("running for:", datetime.datetime.now()-then)
                     print("x:", rt+x)
                     print("OD:", od)
                     # print("entries:", len(j['entry']))
@@ -97,8 +98,9 @@ def getpatient(request):
         #     print("rt:", rt)
 
     od['result'] = j
-    od['end'] = datetime.datetime.now()
-    od['elapsed'] = str(od['finish'] - od['start'])
+    now = datetime.datetime.now()
+    od['end'] = str(then)
+    od['elapsed'] = str(now - then)
     od['processed'] = rt
     # Check total
 
@@ -133,7 +135,8 @@ def geteob(request):
     od = OrderedDict()
     od['server'] = FhirServerUrl()
     od['api_call'] = "/setup/geteob"
-    od['start'] = datetime.datetime.now()
+    then = datetime.datetime.now()
+    od['start'] = str(then)
 
     for x in Crosswalk.objects.all():
         patient_id = x.fhir_url_id
@@ -148,10 +151,12 @@ def geteob(request):
         ctr += 1
         if ctr % 100 == 0:
             print("processed ", ctr)
-            print("elapsed ", str(datetime.datetime.now()-od['start']))
+            print("elapsed ", str(datetime.datetime.now()-then))
 
     od['processed'] = ctr
-    od['end'] = datetime.datetime.now()
+    now = datetime.datetime.now()
+    od['elapsed'] = str(now - then)
+    od['end'] = str(now)
 
     return HttpResponse(json.dumps(od, indent=4),
                         content_type="application/json")
@@ -183,11 +188,17 @@ def get_page_content(u):
         return HttpResponseRedirect(reverse_lazy('api:v1:home'))
 
     # test for errors:
-    if r.status_code in [301, 302, 400, 403, 404, 500]:
+    if r.status_code in [301, 302, 400, 403, 404, 500, 504]:
         return error_status(r, r.status_code)
 
     pre_text = re_write_url(r.text)
-    j =json.loads(pre_text, object_pairs_hook=OrderedDict)
+    try:
+        j =json.loads(pre_text, object_pairs_hook=OrderedDict)
+    except ValueError:
+        if settings.DEBUG:
+            print("Problem with:", u)
+            print("returned:", pre_text)
+        j = {}
 
     return j
 
