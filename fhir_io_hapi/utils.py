@@ -174,14 +174,16 @@ def error_status(r, status_code=404, reason="undefined error occured"):
             error_detail = r.json()
 
     if reason == "undefined error occured":
-        if status_code == 404:
-            reason = "page not found"
-        elif status_code == 403:
-            reason = "You are not authorised to access this page. Do you need to login?"
-        elif status_code == 400:
-            reason = "There was a problem with the data"
-        elif status_code == 301:
-            reason = "The requested page has been permanently moved"
+       if status_code == 404:
+           reason = "page not found"
+       elif status_code == 403:
+           reason = "You are not authorised to access this page. Do you need to login?"
+       elif status_code == 400:
+           reason = "There was a problem with the data"
+       elif status_code == 301:
+           reason = "The requested page has been permanently moved"
+       elif status_code == 502:
+           reason = "Bad gateway"
 
     response= OrderedDict()
 
