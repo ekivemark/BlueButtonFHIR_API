@@ -26,12 +26,12 @@ from django.utils.safestring import mark_safe
 from bbapi.utils import FhirServerUrl
 from fhir.utils import kickout_404
 
+from apps.setup.views import get_page_content
 from apps.v1api.models import Crosswalk
 from apps.v1api.utils import get_format
 from apps.v1api.views.patient import (process_page,
                                       publish_page)
 
-# Create your views here.
 
 @login_required
 def api_index(request):
@@ -44,12 +44,21 @@ def api_index(request):
         return next_search(request)
         # Call FHIR Server with GET Args
 
+    patient_count = get_patient_count()
+    eob_count = get_eob_count()
     if request.user.is_authenticated():
         c = Crosswalk.objects.get(user=request.user)
     else:
         c = ""
 
-    context = {"crosswalk": c,}
+
+    my_eob_count = get_my_eob_count(c.fhir_url_id)
+
+    context = {"crosswalk": c,
+               "patient_count": patient_count,
+               "eob_count": eob_count,
+               "my_eob_count": my_eob_count}
+
     return render_to_response('v1api/index.html',
                               RequestContext(request, context, ))
 
@@ -111,3 +120,49 @@ def next_search(request, *args, **kwargs):
 
     return render_to_response(context['template'],
                               RequestContext(request, context, ))
+
+
+def get_patient_count():
+    """
+    Do patient search and get total field for number of patients
+    """
+
+    total = get_api_count("/Patient?_format=json")
+
+    return total
+
+
+def get_eob_count():
+    """
+    Do ExplanatinOfBenefit search and get total field for number of EOBs
+    """
+
+    total = get_api_count("/ExplanationOfBenefit?_format=json")
+
+    return total
+
+
+def get_my_eob_count(id):
+    """
+    Do a search for a Patient's EOB Count
+    """
+
+    total = get_api_count("/ExplanationOfBenefit?_format=json&patient=Patient/"+id)
+
+    return total
+
+
+def get_api_count(api_parm):
+    """
+    Generic API Call to a search to get count
+    """
+
+    server = FhirServerUrl() + api_parm
+
+    j = get_page_content(server)
+
+    if 'total' in j:
+        return j['total']
+
+    else:
+        return None
