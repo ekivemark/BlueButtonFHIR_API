@@ -46,10 +46,18 @@ for df_app in DJANGO_FHIR_CONFIG['DF_APPS']:
     if settings.DEBUG:
         print("Module:",df_app)
 
+    # Build a series of Variables that specify the module that will contain a function
+    # This is then used in the core FHIR module to call a pluggable routine
+    # This is an early implementation. I expect to move the major call entrypoints to
+    # values in the DJANGO_FHIR_CONFIG dict.
+    # Here is an example to use read inside the views.get module
+    # return FHIR_BACKEND_VIEW.read(request, resource_type, id)
+
     FHIR_BACKEND = import_module(df_app)
     FHIR_BACKEND_VIEW = import_module(df_app+".views.get")
     FHIR_BACKEND_FIND = import_module(df_app+".views.search")
     FHIR_BACKEND_DELETE = import_module(df_app+".views.delete")
+
 
     if settings.DEBUG:
         print("django-FHIR Pluggable Module:", FHIR_BACKEND)

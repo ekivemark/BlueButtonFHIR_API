@@ -7,7 +7,7 @@ from django.http import HttpResponse
 from django.shortcuts import render
 
 from fhir.models import SupportedResourceType
-from fhir.settings import FHIR_BACKEND, DF_EXTRA_INFO
+from fhir.settings import FHIR_BACKEND_VIEW, DF_EXTRA_INFO
 from fhir.utils import (kickout_404, kickout_403)
 from fhir.views.utils import check_access_interaction_and_resource_type
 
@@ -26,8 +26,10 @@ def read(request, resource_type, id):
         #If not allowed, return a 4xx error.
         return deny
 
+    if settings.DEBUG:
+        print("Backend:", FHIR_BACKEND_VIEW)
     #testing direct response
-    return FHIR_BACKEND.read(request, resource_type, id)
+    return FHIR_BACKEND_VIEW.read(request, resource_type, id)
 
     # move to fhir_io_mongo (pluggable backend)
 
