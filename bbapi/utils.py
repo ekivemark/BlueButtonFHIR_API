@@ -42,6 +42,11 @@ def str2int(inp):
 
 
 def notNone(value, default):
+    """
+    Test value. Return Default if None
+    http://stackoverflow.com/questions/4978738/
+    is-there-a-python-equivalent-of-the-c-sharp-null-coalescing-operator
+    """
     if value is None:
         return default
     else:
