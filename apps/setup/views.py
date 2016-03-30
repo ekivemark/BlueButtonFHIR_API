@@ -27,6 +27,14 @@ from django.http import (HttpResponse,
 
 from bbapi.utils import FhirServerUrl, notNone
 
+from fhir.utils import (kickout_301,
+                        kickout_400,
+                        kickout_401,
+                        kickout_403,
+                        kickout_404,
+                        kickout_500,
+                        kickout_502,
+                        kickout_504)
 from fhir_io_hapi.utils import (error_status)
 
 from accounts.models import User
@@ -102,7 +110,7 @@ def getpatient(request):
         # if settings.DEBUG:
         #     print("rt:", rt)
 
-    od['result'] = j
+    od['result'] = str(j)
     now = datetime.datetime.now()
     od['end'] = str(then)
     od['elapsed'] = str(now - then)
@@ -121,6 +129,8 @@ def getpatient(request):
 
     # Increment count while count less than total
 
+    if settings.DEBUG:
+        print("OD -result:",od['result'])
     return HttpResponse(json.dumps(od, indent=4),
                             content_type="application/json")
 

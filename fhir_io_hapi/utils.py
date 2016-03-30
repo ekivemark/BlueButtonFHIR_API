@@ -26,6 +26,15 @@ from .choices import FORMAT_OPTIONS_CHOICES
 from .models import ResourceTypeControl
 
 from fhir.models import SupportedResourceType
+from fhir.utils import (kickout_301,
+                        kickout_400,
+                        kickout_401,
+                        kickout_403,
+                        kickout_404,
+                        kickout_500,
+                        kickout_502,
+                        kickout_504)
+
 from apps.v1api.models import Crosswalk
 
 
@@ -176,14 +185,19 @@ def error_status(r, status_code=404, reason="undefined error occured"):
     if reason == "undefined error occured":
        if status_code == 404:
            reason = "page not found"
+           kickout_404(reason)
        elif status_code == 403:
            reason = "You are not authorised to access this page. Do you need to login?"
+           kickout_403(reason)
        elif status_code == 400:
            reason = "There was a problem with the data"
+           kickout_400(reason)
        elif status_code == 301:
            reason = "The requested page has been permanently moved"
+           kickout_301(reason)
        elif status_code == 502:
            reason = "Bad gateway"
+           kickout_502(reason)
 
     response= OrderedDict()
 
