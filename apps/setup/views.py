@@ -339,3 +339,24 @@ def get_eob_count(e):
 
     return eob_count
 
+
+def user_list(request):
+    """
+    Print a userlist
+    """
+
+    xwalk = Crosswalk.objects.all()
+
+    od = OrderedDict()
+    od['user'] = []
+
+    for x in xwalk:
+
+        if x.eob_count > 0:
+            od['user'].append({'user': x.user,
+                               'password': "p"+x.user[1:],
+                               'fhir_url_id': x.fhir_url_id,
+                               'eob_count': x.eob_count})
+
+    return HttpResponse(json.dumps(od, indent=4),
+                        content_type="application/json")

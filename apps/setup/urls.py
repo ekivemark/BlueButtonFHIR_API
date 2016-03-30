@@ -12,7 +12,7 @@ Created: 3/8/16 1:42 AM
 __author__ = 'Mark Scrimshire:@ekivemark'
 
 from django.conf.urls import patterns, url
-from apps.setup.views import getpatient, geteob
+from apps.setup.views import getpatient, geteob, user_list
 
 urlpatterns = [
                        url(r'^getpatient/$',
@@ -22,5 +22,9 @@ urlpatterns = [
                        url(r'^geteob/$',
                            geteob,
                            name='geteob'),
+
+                       url(r'^userlist/$',
+                           user_list,
+                           name='userlist'),
 
 ]
