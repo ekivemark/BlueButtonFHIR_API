@@ -377,13 +377,16 @@ def user_list(request, fmt="html"):
                                                'eob_count': x.eob_count})
                 else:
                     pass
+
+
     if fmt.lower() == "html":
         od['userlist'] += "</table>"
 
         context = {'display': 'User List',
                    'name':'UserList',
                    'key': fmt,
-                   'result': od['userlist'],
+                   'get_fmt': fmt,
+                   'text': od['userlist'],
                    }
 
         return render_to_response('v1api/userlist.html',

@@ -36,20 +36,8 @@
                        </div>
                     {% endif %}
 
-                        <div class="col-md-12 well">
-                            <h4>User displayable content: [{% if get_fmt %}{{ get_fmt|capfirst }}{% else %}{{ in_fmt|upper }}{% endif %}]</h4>
-                            <p>&nbsp;</p>
-                            {% if text %}<p>{{ text|safe }}</p>{% endif %}
-                            {% if error %}<p>{{ error }}</p>{% endif %}
-                            <p>&nbsp;</p>
-                        </div>
-
+                     {% if text %}{{ text|safe }}{% endif %}
                    </div>
-                     <div class="col-md-12 well">
-                       <pre>
-                           {{ result }}
-                       </pre>
-                     </div>
 
                 {% else %}
 
