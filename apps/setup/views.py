@@ -52,16 +52,21 @@ def getpatient(request):
 
     j = get_page_content(od['fhir_server'] + od['parameters'])
 
-    od['total'] = j['total']
+    if 'total' in j:
+        od['total'] = j['total']
+    else:
+        od['total'] = notNone(od['total'],0)
+
     then = datetime.datetime.now()
     od['start'] = str(then)
-
-    od['entries'] = len(j['entry'])
+    if 'entry' in j:
+        od['entries'] = len(j['entry'])
+    else:
+        od['entries'] = notNone(od['entries'], 0)
     od['entry'] = []
-
-    print("od:", od)
-    # print("j:", j)
-
+    if settings.DEBUG:
+        print("od:", od)
+        # print("j:", j)
 
     if settings.DEBUG:
         print("Entries:", len(j['entry']))
