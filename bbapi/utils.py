@@ -41,6 +41,13 @@ def str2int(inp):
     return output
 
 
+def notNone(value, default):
+    if value is None:
+        return default
+    else:
+        return value
+
+
 def Server_Ip():
     # use socket to get ip address for this server
     return socket.gethostbyname(socket.gethostname())
