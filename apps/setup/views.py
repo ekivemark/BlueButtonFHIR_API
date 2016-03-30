@@ -253,7 +253,8 @@ def write_user_account(e):
     # is_active = True
     # is_user = True
 
-    rand_str = ''.join(random.sample(string.ascii_lowercase, 6))
+    rand_str_first = ''.join(random.sample(string.ascii_lowercase, 6))
+    rand_str_last = ''.join(random.sample(string.ascii_lowercase, 8))
 
     # print(rand_str)
     try:
@@ -284,7 +285,7 @@ def write_user_account(e):
         if 'email' in e:
             rand_email = rand_str +"."+ e['email']
         else:
-            rand_email = rand_str +".unknown@example.com"
+            rand_email = rand_str_first + rand_str_last+ "@example.com"
 
         u = User.objects.create_user(username="u"+e['id'],
                                      email=rand_email,
