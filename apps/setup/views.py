@@ -55,7 +55,7 @@ def getpatient(request):
     if 'total' in j:
         od['total'] = j['total']
     else:
-        od['total'] = notNone(od['total'],0)
+        od['total'] = 0
 
     then = datetime.datetime.now()
     od['start'] = str(then)
