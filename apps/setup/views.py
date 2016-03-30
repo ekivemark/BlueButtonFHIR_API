@@ -11,6 +11,7 @@ Created: 3/8/16 1:45 AM
 """
 __author__ = 'Mark Scrimshire:@ekivemark'
 
+import datetime
 import json
 import random
 import requests
@@ -23,11 +24,14 @@ from django.core.urlresolvers import reverse_lazy
 
 from django.http import (HttpResponse,
                          HttpResponseRedirect)
-from fhir_io_hapi.utils import (build_fhir_server_url,
-                                error_status)
+
+from bbapi.utils import FhirServerUrl, notNone
+
+from fhir_io_hapi.utils import (error_status)
 
 from accounts.models import User
 from apps.v1api.models import Crosswalk
+from apps.v1api.views.patient import re_write_url
 
 
 @staff_member_required
@@ -40,7 +44,7 @@ def getpatient(request):
     od = OrderedDict()
     # Compile call to Patient search on FHIR Server
 
-    od['fhir_server'] = build_fhir_server_url(release=True) + "Patient"
+    od['fhir_server'] = FhirServerUrl() + "/" + "Patient"
     od['count'] = 10
     od['parameters'] = "?_format=json&_count=" + str(od['count'])
 
@@ -49,9 +53,14 @@ def getpatient(request):
     j = get_page_content(od['fhir_server'] + od['parameters'])
 
     od['total'] = j['total']
+    od['start'] = datetime.datetime.now()
 
     od['entries'] = len(j['entry'])
     od['entry'] = []
+
+    print("od:", od)
+    # print("j:", j)
+
 
     if settings.DEBUG:
         print("Entries:", len(j['entry']))
@@ -59,28 +68,36 @@ def getpatient(request):
     # and the contents of the entries
 
     # pass the content, current count and total to function to get patient info
-
+    bundle_count = od['entries']
     rt = 0
     while rt < od['total']:
         x = 0
-        while x < len(j['entry']):
+        while x < notNone(bundle_count,0):
             if settings.DEBUG:
-                print("x:", x)
-                print("entries:", len(j['entry']))
-
-            od['entry'].append(extract_info(j['entry'][x]))
+                # Print every 100 lines
+                if x % 100 == 0:
+                    print("running for:", datetime.datetime.now()-od['start'])
+                    print("x:", rt+x)
+                    # print("entries:", len(j['entry']))
+            if 'entry' in j:
+                od['entry'].append(extract_info(j['entry'][x]))
             x += 1
 
-            if x >= len(j['entry']):
+            if x >= notNone(bundle_count,0):
                 # We need to request the next page
                 next_page = get_next_page(j)
                 if next_page != "":
                     j = get_page_content(next_page)
-
-        rt = rt + x
-        print("rt:", rt)
+                    if 'entry' in j:
+                        bundle_count = len(j['entry'])
+        rt += x
+        # if settings.DEBUG:
+        #     print("rt:", rt)
 
     od['result'] = j
+    od['finish'] = datetime.datetime.now()
+    od['elapsed'] = od['finish'] - od['start']
+    od['processed'] = rt
     # Check total
 
     # while x <= 10 and y <= total
@@ -103,11 +120,11 @@ def get_next_page(j):
     # Get the next page
 
     next_page = ""
-
+    print("Get Next Page from link:", json.dumps(j, indent=4))
     for l in j['link']:
         if l['relation'] == "next":
 
-            next_page = build_fhir_server_url(release=True) + "?" + l['url'].split("?")[1]
+            next_page = FhirServerUrl() + "?" + l['url'].split("?")[1]
 
     return next_page
 
@@ -121,13 +138,15 @@ def get_page_content(u):
     except requests.ConnectionError:
         if settings.DEBUG:
             print("Problem connecting to FHIR Server")
+            print("called:", u)
         return HttpResponseRedirect(reverse_lazy('api:v1:home'))
 
     # test for errors:
     if r.status_code in [301, 302, 400, 403, 404, 500]:
         return error_status(r, r.status_code)
 
-    j =json.loads(r.text, object_pairs_hook=OrderedDict)
+    pre_text = re_write_url(r.text)
+    j =json.loads(pre_text, object_pairs_hook=OrderedDict)
 
     return j
 
@@ -135,10 +154,10 @@ def get_page_content(u):
 def extract_info(item):
     # Extract the Patient Entry
 
-
     e = OrderedDict()
 
     this = item
+    # print("this item:", this)
     resource = this['resource']
 
     e['id'] = resource['id']
@@ -169,11 +188,11 @@ def write_user_account(e):
 
     rand_str = ''.join(random.sample(string.ascii_lowercase, 6))
 
-    print(rand_str)
+    # print(rand_str)
     try:
         u = User.objects.get(username="u"+e['id'])
-        if settings.DEBUG:
-            print("Updating:", "u"+e['id'])
+        # if settings.DEBUG:
+        #    print("Updating:", "u"+e['id'])
         if 'email'in e:
             u.email = rand_str +"."+ e['email']
         if 'first_name' in e:
@@ -199,6 +218,7 @@ def write_user_account(e):
             rand_email = rand_str +"."+ e['email']
         else:
             rand_email = rand_str +".unknown@example.com"
+
         u = User.objects.create_user(username="u"+e['id'],
                                      email=rand_email,
                                      first_name=first_name,
@@ -220,14 +240,34 @@ def write_user_account(e):
     try:
         c = Crosswalk.objects.get(user=u)
         c.fhir_url_id = e['id']
+        # c.eob_count = get_eob_count(e)
         c.save()
-        if settings.DEBUG:
-            print("Updating Crosswalk:",c.user)
+        # if settings.DEBUG:
+        #    print("Updating Crosswalk:",c.user)
 
     except Crosswalk.DoesNotExist:
         c = Crosswalk.objects.create(user=u, fhir_url_id=e['id'])
-        if settings.DEBUG:
-            print("Creating Crosswalk:", c.user)
+        # if settings.DEBUG:
+        #    print("Creating Crosswalk:", c.user)
 
     return u.username+",p" + e['id']+","+u.email
+
+
+def get_eob_count(e):
+    """
+    Do EOB Search for patient=Patient/{e['id']}
+    Get count
+    """
+
+    pass_to  = FhirServerUrl() + "/" +"ExplanationOfBenefit"
+    pass_to += "?_format=json&patient=Patient/"
+    pass_to += e['id']
+
+    eob = get_page_content(pass_to)
+
+    # eob search bundle returnedin json format
+
+    eob_count = notNone(eob['total'], 0)
+
+    return eob_count
 

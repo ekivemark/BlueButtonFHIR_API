@@ -328,20 +328,3 @@ def fhir_datetime(dt=None):
 
     return dt_str
 
-def build_fhir_server_url(release=True):
-    # Construct the URL string for the fhir Server from settings
-
-    # Call in Settings is:
-    #fhir_dict = PARSE_INI.get('global', 'fhir_server_configuration')
-    #FHIR_SERVER_CONF = eval(fhir_dict)
-    # FHIR_SERVER_CONF = {
-    #         'SERVER': "http://fhir.bbonfhir.com",
-    #         'PATH': "/fhir-p",
-    #         'RELEASE': "/baseDstu2",
-    #         }
-
-    fhir_server = settings.FHIR_SERVER_CONF['SERVER'] + settings.FHIR_SERVER_CONF['PATH']
-    if release:
-        fhir_server = fhir_server + settings.FHIR_SERVER_CONF['RELEASE'] + "/"
-
-    return fhir_server

@@ -62,6 +62,7 @@ def Server_Name():
     # use socket to return server name
     return socket.gethostname()
 
+
 def FhirServerUrl(server=None,path=None, release=None ):
     # fhir_server_configuration = {"SERVER":"http://fhir-test.bbonfhir.com:8081",
     #                              "PATH":"",
@@ -69,22 +70,11 @@ def FhirServerUrl(server=None,path=None, release=None ):
     # FHIR_SERVER_CONF = fhir_server_configuration
     # FHIR_SERVER = FHIR_SERVER_CONF['SERVER'] + FHIR_SERVER_CONF['PATH']
 
+    fhir_server = notNone(server, settings.FHIR_SERVER_CONF['SERVER'])
 
-    if server == None:
-        fhir_server = settings.FHIR_SERVER_CONF['SERVER']
-    else:
-        fhir_server = server
+    fhir_path = notNone(path, settings.FHIR_SERVER_CONF['PATH'])
 
-    if path == None:
-        fhir_path = settings.FHIR_SERVER_CONF['PATH']
-    else:
-        fhir_path = path
-
-
-    if release == None:
-        fhir_release = settings.FHIR_SERVER_CONF['RELEASE']
-    else:
-        fhir_release = release
+    fhir_release = notNone(release, settings.FHIR_SERVER_CONF['RELEASE'])
 
     return fhir_server + fhir_path + fhir_release
 

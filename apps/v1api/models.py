@@ -19,6 +19,8 @@ class Crosswalk(models.Model):
 
     HICN to UUID Crosswalk and back.
     Linked to User Account
+    Use fhir_url_id for id
+    use fhir for resource.identifier
 
     """
 # TODO: Implement PyCrypto to encrypt HICN
@@ -28,6 +30,10 @@ class Crosswalk(models.Model):
     fhir = models.CharField(max_length=40, blank=True )
     fhir_url_id = models.CharField(max_length=80, blank=True)
     date_created = models.DateTimeField(auto_now_add=True)
+    eob_count = models.IntegerField(default=0,
+                                    verbose_name="EOB Count",
+                                    null=True,
+                                    blank=True)
 
     # FHIR = Identifier contained in the Patient Profile
     # fhir_url_id = Identifier used in the patient Profile URL
@@ -38,8 +44,8 @@ class Crosswalk(models.Model):
     def save(self, *args, **kwargs):
         created = self.date_created is None
         if not self.pk or created is None:
-            if settings.DEBUG:
-                print("Overriding Crosswalk save")
+            # if settings.DEBUG:
+            #    print("Overriding Crosswalk save")
 
             # Assign a GUID with the save
             uid = str(uuid4().urn)[9:]
