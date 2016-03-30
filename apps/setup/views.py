@@ -69,7 +69,7 @@ def getpatient(request):
         # print("j:", j)
 
     if settings.DEBUG:
-        print("Entries:", len(j['entry']))
+        print("Entries:", od['entries'])
     # Now we have the number of entries
     # and the contents of the entries
 
