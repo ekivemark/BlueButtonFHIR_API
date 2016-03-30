@@ -193,7 +193,7 @@ def get_page_content(u):
         return HttpResponseRedirect(reverse_lazy('api:v1:home'))
 
     # test for errors:
-    if r.status_code in [301, 302, 400, 403, 404, 500, 504]:
+    if r.status_code in [301, 302, 400, 403, 404, 500, 502, 504]:
         return error_status(r, r.status_code)
 
     pre_text = re_write_url(r.text)
