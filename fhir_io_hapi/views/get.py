@@ -33,6 +33,9 @@ from fhir_io_hapi.utils import (build_params,
                      error_status,
                      check_rt_controls)
 
+from bbapi.utils import FhirServerUrl
+
+
 
 __author__ = 'Mark Scrimshire:@ekivemark'
 
@@ -141,12 +144,19 @@ def generic_read(request, interaction_type, resource_type, id, vid=None, *args, 
         else:
             print("No Resource Controls found")
 
+        print("Working with id:", id)
+
+    key = id
     if srtc:
         if srtc.force_url_id_override:
             key = crosswalk_id(request, id)
+            if key == None:
+                if not id == None:
+                    key = id
+
             # Crosswalk returns the new id or returns None
             if settings.DEBUG:
-                print("crosswalk:", key)
+                print("crosswalk:", key, ":", request.user)
         else:
             # No Id_Overide so use the original id
             key = id
@@ -154,10 +164,10 @@ def generic_read(request, interaction_type, resource_type, id, vid=None, *args, 
         key = id
 
     # Do we have a key?
-    if key == None:
-        return kickout_404("FHIR_IO_HAPI:Search needs a valid Resource Id that is linked "
-                           "to the authenticated user "
-                           "(%s) which was not available" % request.user)
+    # if key == None:
+    #     return kickout_404("FHIR_IO_HAPI:Search needs a valid Resource Id that is linked "
+    #                        "to the authenticated user "
+    #                        "(%s) which was not available" % request.user)
 
     # Now we get to process the API Call.
 
@@ -175,8 +185,6 @@ def generic_read(request, interaction_type, resource_type, id, vid=None, *args, 
     Txn = {'name': resource_type,
            'display': resource_type,
            'mask': mask,
-           'server': settings.FHIR_SERVER,
-           'locn': "/baseDstu2/"+resource_type+"/",
            'in_fmt': in_fmt,
            }
 
@@ -198,16 +206,16 @@ def generic_read(request, interaction_type, resource_type, id, vid=None, *args, 
         print("Parameters:", pass_params)
 
     if interaction_type == "vread":
-        pass_to = Txn['server'] + Txn['locn'] + key + "/" + "_history" + "/" + vid
+        pass_to = FhirServerUrl() + "/"+ resource_type  + "/" + key + "/" + "_history" + "/" + vid
     elif interaction_type == "_history":
-        pass_to = Txn['server'] + Txn['locn'] + key + "/" + "_history"
+        pass_to = FhirServerUrl() + "/" + resource_type + "/" + key + "/" + "_history"
     else:  # interaction_type == "read":
-        pass_to = Txn['server'] + Txn['locn'] + key + "/"
+        pass_to = FhirServerUrl() + "/" + resource_type + "/" + key + "/"
 
     print("Here is the URL to send, %s now get parameters %s" % (pass_to,pass_params))
 
     if pass_params != "":
-        pass_to = pass_to + pass_params
+        pass_to += pass_params
 
     # Now make the call to the backend API
     try:
