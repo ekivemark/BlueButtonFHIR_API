@@ -20,6 +20,7 @@ from accounts.forms.other import (RegistrationFormUserTOSAndEmail,
 
 from apps.api.views import *
 from apps.home.views import WhatIsNewListView, versionView
+from apps.v1api.views.home import fhir_metadata
 
 from apps.home import views
 
@@ -31,6 +32,10 @@ urlpatterns = [
                        # url(r'^$', 'bbonfhiruser.views.home', name='home'),
                        url(r'^$', views.home_index ,
                            name='home'),
+
+                       url(r'^metadata$', fhir_metadata,
+                           name="conformance"),
+
                        # url(r'^about/$', views.about,
                        #     name='about'),
                        url(r'^base/',

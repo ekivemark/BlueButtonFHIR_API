@@ -16,6 +16,7 @@ class CrosswalkAdmin(admin.ModelAdmin):
     """
 
     list_display = ('user', 'guid', 'fhir_url_id', 'fhir', 'eob_count')
+    search_fields = ['user__username', 'fhir_url_id', 'eob_count']
     readonly_fields = ('date_created', 'guid')
 
 

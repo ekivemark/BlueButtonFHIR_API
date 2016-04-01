@@ -14,11 +14,13 @@ import json
 import requests
 import xml.dom.minidom
 
+from collections import OrderedDict
 from xml.etree import ElementTree
 
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
 from django.shortcuts import render, render_to_response
 from django.template import RequestContext
 from django.utils.safestring import mark_safe
@@ -61,6 +63,35 @@ def api_index(request):
 
     return render_to_response('v1api/index.html',
                               RequestContext(request, context, ))
+
+
+def fhir_metadata(request):
+    """"
+    fhir conformance statement
+
+    """
+
+    # prototype output
+
+    conform = OrderedDict()
+    conform['resourceType'] = "Conformance"
+    conform['url'] = settings.URL_PRE + settings.DOMAIN
+    conform['version'] = settings.VERSION_INFO
+    conform['name'] = "CMS Blue Button Data API"
+    conform['status'] = "draft"
+    conform['experimental'] = True
+    conform['Publisher'] = "Centers for Medicare and Medicaid Services, " \
+                           "Office of Enterprise Data Analytics"
+
+    conform['implementation'] = { "description": "BBonFIR_API:Experimental API "
+                                                 "with synthetic data.",
+                                  "url": "/api/v1" },
+
+    conform['fhirVersion'] = "2.11"
+    conform['format'] = ["json", "xml"]
+
+    return HttpResponse(json.dumps(conform, indent=4),
+                        content_type="application/json")
 
 
 def next_search(request, *args, **kwargs):
