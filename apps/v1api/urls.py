@@ -56,10 +56,12 @@ urlpatterns = [
                        url(r'^eob/',
                            get_eob,
                            name='eob'),
-                       url(r'^ExplanationOfBenefit(|/)$',
+                       url(r'^ExplanationOfBenefit/(?P<eob_id>[-\w]+)$',
                            ExplanationOfBenefit,
                            name='ExplanationOfBenefit'),
-
+                       url(r'^ExplanationOfBenefit$',
+                           ExplanationOfBenefit,
+                           name='ExplanationOfBenefit'),
                        url(r'^PatientExplanationOfBenefit/(?P<patient_id>[-\w]+)$',
                            PatientExplanationOfBenefit,
                            name='PatientExplanationOfBenefit_by_id'),
@@ -82,7 +84,7 @@ urlpatterns = [
 
                        url(r'^o/ExplanationOfBenefit$', o_explanationofbenefit),
 
-                       url(r'^open/ExplanationOfBenefit$', open_explanationofbenefit),
+                       url(r'^open/ExplanationOfBenefit/(?P<eob_id>\w+|)$', open_explanationofbenefit),
 
                        # Resources
                        url(r'^resourcetype',ResourceTypeList.as_view(),

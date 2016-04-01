@@ -60,11 +60,23 @@ from bbapi.utils import FhirServerUrl
 #@csrf_exempt
 @login_required
 #@protected_resource(scopes=['read write_consent'])
-def ExplanationOfBenefit(request, *args, **kwargs):
+def ExplanationOfBenefit(request, eob_id=None, Access_Mode=None, *args, **kwargs):
     """
     Function-based interface to ExplanationOfBenefit
     :param request:
     :return:
+
+    Use Cases:
+    1. No eob_id: Do Search and apply patient=Patient/User.Crosswalk.fhir_url_id
+    2. eob_id: Do Search and get eob with patient filter
+
+    http://bluebuttonhapi-test.hhsdevcloud.us/baseDstu2/ExplanationOfBenefit
+        ?_id=1286291&patient=Patient/1286160
+
+    3. eob_id and Access_mode = OPEN
+
+
+
     """
 
     if settings.DEBUG:
@@ -104,19 +116,41 @@ def ExplanationOfBenefit(request, *args, **kwargs):
     pass_to += "/ExplanationOfBenefit/"
 
     key = patient_id.strip()
-    patient_filter= "?patient=Patient/" + key
+    patient_filter= "patient=Patient/" + key
 
-    pass_to += patient_filter
+    # pass_to += patient_filter
 
     skip_parm = ['_id', '_format']
 
-    pass_to = pass_to + "&" + build_params(request.GET, skip_parm)[1:]
+    got_parms = build_params(request.GET, skip_parm)[1:]
+
+    if got_parms:
+        print("Got parms:", got_parms)
+        pass_to += "?" + got_parms
+
+    if Access_Mode == "OPEN":
+        pass
+    else:
+        if "?" in pass_to:
+            pass_to += "&" + patient_filter
+        else:
+            pass_to += "?" + patient_filter
+
+    if eob_id:
+        if "?" in pass_to:
+            pass_to += "&"
+        else:
+            pass_to += "?"
+        pass_to += "_id=" + eob_id
+
+    print("Calling:", pass_to)
 
     # Set Context
     context = {'display':"EOB",
                'name': "ExplanationOfBenefit",
                'mask': True,
                'key': key,
+               'eob': eob_id,
                'get_fmt': get_fmt,
                'in_fmt': in_fmt,
                'pass_to': pass_to,

@@ -226,7 +226,7 @@ def get_patient(request, Access_Mode=None, *args, **kwargs):
 
 
 @login_required
-def get_eob(request, Access_Mode=None, *args, **kwargs):
+def get_eob(request, eob_id, Access_Mode=None, *args, **kwargs):
     """
 
     Display one or more EOBs but Always limit scope to Patient_Id
@@ -245,10 +245,10 @@ def get_eob(request, Access_Mode=None, *args, **kwargs):
         print("KWargs      :", kwargs)
         print("Args        :", args)
 
-    if Access_Mode == "OPEN" and kwargs['patient_id']!="":
-        # Lookup using patient_id for fhir_url_id
+    if Access_Mode == "OPEN" and eob_id:
+        # Lookup using eob_id
 
-        key = kwargs['patient_id'].strip()
+        key = ""
 
     else:
         try:
@@ -296,8 +296,6 @@ def get_eob(request, Access_Mode=None, *args, **kwargs):
     # http://ec2-52-4-198-86.compute-1.amazonaws.com:8081/baseDstu2/
     # ExplanationOfBenefit/?patient=Patient/131052&_format=json
 
-    #
-
     # We will deal internally in JSON Format if caller does not choose
     # a format
     in_fmt = "json"
@@ -309,7 +307,7 @@ def get_eob(request, Access_Mode=None, *args, **kwargs):
 
     pass_to = FhirServerUrl()
     pass_to += "/ExplanationOfBenefit"
-    pass_to += "/"
+    pass_to += "/" + eob_id
 
     # We can allow an EOB but we MUST add a search Parameter
     # to limit the items found to those relevant to the Patient Id
@@ -319,10 +317,10 @@ def get_eob(request, Access_Mode=None, *args, **kwargs):
     # Now apply the search restriction to limit to patient _id
 
     #pass_to = pass_to + key + "/"
-
-    pass_to += "?patient="
-    pass_to += "Patient/"
-    pass_to += key
+    if not key == "":
+        pass_to += "?patient="
+        pass_to += "Patient/"
+        pass_to += key
 
     pass_to = pass_to + "&" + build_params(request.GET, skip_parm)[1:]
     if settings.DEBUG:
@@ -336,6 +334,7 @@ def get_eob(request, Access_Mode=None, *args, **kwargs):
                'name': 'ExplanationOfBenefit',
                'mask': mask,
                'key': key,
+               'eob_id': eob_id,
                'get_fmt': get_fmt,
                'in_fmt': in_fmt,
                'pass_to': pass_to,

@@ -220,7 +220,7 @@ def open_patient(request, patient_id, *args, **kwargs):
 
 
 @login_required
-def open_explanationofbenefit(request, *args, **kwargs):
+def open_explanationofbenefit(request, eob_id,  *args, **kwargs):
 
     if settings.DEBUG:
         print("in apps.v1api.views.ogets.open_explanationofbenefit")
@@ -237,7 +237,7 @@ def open_explanationofbenefit(request, *args, **kwargs):
     print("Patient_id:", patient_id)
     print("p_id:", p_id)
 
-    result = get_eob(request, Access_Mode="OPEN", *args, **kwargs)
+    result = get_eob(request, eob_id, Access_Mode="OPEN", *args, **kwargs)
     # if settings.DEBUG:
     #     print("Results:", result)
 
