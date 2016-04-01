@@ -328,3 +328,22 @@ def build_params(get, skip_parm=['_id','_format']):
         print("URL Pass_To:", pass_to)
 
     return pass_to
+
+
+def re_write_url(src_text, rw_from=None, rw_to=None):
+    """
+    receive text and rewrite rw_From with rw_to
+
+    """
+
+    # We need to replace FHIR Server with External Server reference
+    if rw_from == None:
+        rewrite_from = settings.FHIR_SERVER_CONF['REWRITE_FROM']
+    else:
+        rewrite_from = rw_from
+    if rw_to == None:
+        rewrite_to = settings.FHIR_SERVER_CONF['REWRITE_TO']
+    else:
+        rewrite_to = rw_to
+
+    return src_text.replace(rewrite_from, rewrite_to)

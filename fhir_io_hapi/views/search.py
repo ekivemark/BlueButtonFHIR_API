@@ -22,6 +22,8 @@ from ..models import ResourceTypeControl
 from ..utils import build_params
 from ..fhirpit import build_url, mask_id
 
+from apps.v1api.utils import re_write_url
+
 from fhir.models import SupportedResourceType
 from fhir.settings import DF_EXTRA_INFO
 
@@ -126,7 +128,10 @@ def find(request, resource_type, *arg, **kwargs):
     if '_format=xml' in pass_params:
         text_out= minidom.parseString(r.text).toprettyxml()
     else:
-        text_out = r.json()
+        # text_out = r.json()
+        pre_text = re_write_url(r.text)
+        text_out = json.loads(pre_text, object_pairs_hook=OrderedDict)
+
 
     od = OrderedDict()
     if DF_EXTRA_INFO:
