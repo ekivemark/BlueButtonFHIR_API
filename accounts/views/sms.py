@@ -182,8 +182,8 @@ def sms_login(request, *args, **kwargs):
             return HttpResponseRedirect(reverse('accounts:sms_code'))
         if form.is_valid():
             print("Authenticating...")
-            access_key = form.cleaned_data[access_field].lower()
-            password = form.cleaned_data['password'].lower()
+            access_key = form.cleaned_data[access_field] # .lower()
+            password = form.cleaned_data['password'] # .lower()
             sms_code = form.cleaned_data['sms_code']
 
             if not validate_sms(access_key=access_key, smscode=sms_code):
@@ -314,10 +314,13 @@ def sms_code(request):
                     print("Valid form with a valid ", access_field)
                 # True if email found in LDAP
                 try:
-                    u = User.objects.get(**{access_field:form.cleaned_data[access_field].lower()})
+                    print("Access_Field:", access_field)
+                    print("form:AccessField:", form.cleaned_data[access_field].lower())
+
+                    u = User.objects.get(**{access_field:form.cleaned_data[access_field]}) #.lower()
                     if settings.DEBUG:
                         print("returned u:", u)
-                    # u = User.objects.get(username=form.cleaned_data['username'].lower())
+                    # u = User.objects.get(username=form.cleaned_data['username'])
                     mfa_required = u.mfa
                     email = u.email
                     if settings.DEBUG:
