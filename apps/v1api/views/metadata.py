@@ -168,5 +168,3 @@ def interaction_filter(interaction, resource_name):
     except SupportedResourceType.DoesNotExist:
         return []
 
-
-
