@@ -15,10 +15,13 @@ from lxml import etree
 from collections import (OrderedDict,
                          defaultdict)
 from datetime import datetime
+from xml.dom import minidom
 
 from django.conf import settings
 from django.template import RequestContext
 from django.template.loader import render_to_string
+
+from bbapi.utils import notNone
 
 FORMAT_OPTIONS_CHOICES = ['json', 'xml']
 
@@ -157,6 +160,7 @@ def dict_to_json(dictionary, json_output):
                        indent=4))
     f.close()
     return
+
 
 def build_fhir_profile(request,context={},
                        template="",
@@ -347,3 +351,36 @@ def re_write_url(src_text, rw_from=None, rw_to=None):
         rewrite_to = rw_to
 
     return src_text.replace(rewrite_from, rewrite_to)
+
+
+def FhirServerUrl(server=None,path=None, release=None ):
+    # fhir_server_configuration = {"SERVER":"http://fhir-test.bbonfhir.com:8081",
+    #                              "PATH":"",
+    #                              "RELEASE":"/baseDstu2"}
+    # FHIR_SERVER_CONF = fhir_server_configuration
+    # FHIR_SERVER = FHIR_SERVER_CONF['SERVER'] + FHIR_SERVER_CONF['PATH']
+
+    fhir_server = notNone(server, settings.FHIR_SERVER_CONF['SERVER'])
+
+    fhir_path = notNone(path, settings.FHIR_SERVER_CONF['PATH'])
+
+    fhir_release = notNone(release, settings.FHIR_SERVER_CONF['RELEASE'])
+
+    return fhir_server + fhir_path + fhir_release
+
+
+def re_write_to(text, format="json"):
+    """
+    Re-write text to json or xml
+    default output  json
+    """
+
+    pre_text = re_write_url(text)
+
+    if format.lower() == "xml":
+        out_text = minidom.parseString(pre_text)
+    else:
+        out_text = json.loads(pre_text, object_pairs_hook=OrderedDict)
+
+    return out_text
+

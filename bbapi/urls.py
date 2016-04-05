@@ -20,7 +20,7 @@ from accounts.forms.other import (RegistrationFormUserTOSAndEmail,
 
 from apps.api.views import *
 from apps.home.views import WhatIsNewListView, versionView
-from apps.v1api.views.home import fhir_metadata
+from apps.v1api.views.metadata import fhir_metadata
 
 from apps.home import views
 

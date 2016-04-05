@@ -37,6 +37,9 @@ from apps.v1api.views.apidocs import (ResourceTypeList,
 from apps.v1api.views.eob import (ExplanationOfBenefit,
                                   PatientExplanationOfBenefit)
 
+from apps.v1api.views.metadata import fhir_metadata
+
+
 admin.autodiscover()
 
 urlpatterns = [
@@ -45,7 +48,10 @@ urlpatterns = [
                        url(r'^$', api_index,
                            name='home'),
 
-                       #url(r'^Patient$/(?P<patient_id>[-\w]+)$',
+                       url(r'^metadata$', fhir_metadata,
+                           name="conformance"),
+
+    #url(r'^Patient$/(?P<patient_id>[-\w]+)$',
                        url(r'^Patient/(?P<patient_id>\w+|)$',
                            get_patient,
                            name='patient_by_id'),
