@@ -91,68 +91,54 @@ def filter_resourceType(rest):
     ct = 0
     for rest_item in rest:
 
-        print("%s item(s) in rest" % ct)
-        print("This is a %s" % (type(rest)))
-        print("contained item is a %s" % (type(rest_item)))
+        # print("%s item(s) in rest" % ct)
+        # print("This is a %s" % (type(rest)))
+        # print("contained item is a %s" % (type(rest_item)))
 
         if 'resource' in rest_item:
             r_ct = 0
             re_write_resource = False
             for resource_item, value in rest_item.items():
-                print("Resource item[%s]:%s" % (r_ct, resource_item))
+                # print("Resource item[%s]:%s" % (r_ct, resource_item))
 
                 if resource_item == "resource":
-                    print("Resource Count: %s" % len(value))
+                    # print("Resource Count: %s" % len(value))
                     active_resourceTypes = []
                     rd_ct = 0
                     for resource_dict in value:
                         resource_name = resource_dict['type']
-                        print("Processing:", resource_name)
+                        # print("Processing:", resource_name)
                         for resource_dict_item, resource_dict_value in resource_dict.items():
                             if resource_dict_item == "type":
                                 try:
                                     # print("Checking %s" % (resource_dict_item))
                                     r = SupportedResourceType.objects.get(resource_name=resource_dict_value)
                                     active_resourceTypes.append(resource_dict)
-                                    print("Found:", resource_dict_value)
+                                    # print("Found:", resource_dict_value)
                                 except SupportedResourceType.DoesNotExist:
                                     re_write_resource = True
                                     # print("NOT Found:", resource_dict_value)
                             if resource_dict_item == 'interaction':
                                 interaction_value = interaction_filter(resource_dict_value, resource_name)
                                 resource_dict[resource_dict_item] = interaction_value
-                                print("Was ", resource_dict_value)
-                                print("Now ", interaction_value)
+                                # print("Was ", resource_dict_value)
+                                # print("Now ", interaction_value)
 
                         rd_ct += 1
                     if re_write_resource:
-                        print("Active Resources: %s" % len(active_resourceTypes))
+                        # print("Active Resources: %s" % len(active_resourceTypes))
                         # print(active_resourceTypes)
-                        print("r_ct = ", r_ct, ":", resource_item, ":", resource_dict)
-                        print("rewriting rest[%s][%s]" % (ct, rd_ct))
+                        # print("r_ct = ", r_ct, ":", resource_item, ":", resource_dict)
+                        # print("rewriting rest[%s][%s]" % (ct, rd_ct))
 
                         rest[ct] = active_resourceTypes
 
                 r_ct += 1
         ct += 1
-    print("Rest is now:")
+    # print("Rest is now:")
     # print(rest)
 
     return rest
-
-
-        #
-        #
-        #            for item in resource_item:
-        # for key,value in item:
-        #     if 'type' in item[key][0]:
-        #         try:
-        #             r = SupportedResourceType.objects.get(resource_name=item[key][0].type)
-        #             #
-        #
-        #         except SupportedResourceType.DoesNotExist:
-        #
-
 
 
 def interaction_filter(interaction, resource_name):
@@ -177,7 +163,7 @@ def interaction_filter(interaction, resource_name):
                 od.append(item)
             if 'search' in item['code'] and rt.search:
                 od.append(item)
-        print("Interactions:", od)
+        # print("Interactions:", od)
         return od
     except SupportedResourceType.DoesNotExist:
         return []
