@@ -85,10 +85,15 @@ def get_bundle_info(bundle=""):
     return api_call
 
 
-def write_fhir(mode, resource, body, target="" ):
+def write_fhir(mode, resource, body, target ):
     """ write a record to FHIR
     :return:
     """
+    if True:
+        print("Mode:", mode)
+        print("Resource:", resource)
+        print("Body:", body)
+        print("Target:[%s]" % target)
 
     result = ""
     headers = {'content-type': 'application/json+fhir;charset=UTF-8'}
