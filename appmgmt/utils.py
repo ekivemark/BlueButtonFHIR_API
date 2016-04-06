@@ -20,6 +20,8 @@ from django.conf import settings
 
 from .static import POET_BUNDLE_INFO
 
+from bbapi.utils import FhirServerUrl
+
 
 def Choice_Display(role):
     """
@@ -92,9 +94,9 @@ def write_fhir(mode, resource, body, target ):
     headers = {'content-type': 'application/json+fhir;charset=UTF-8'}
 
     if mode == "PUT" and target != "":
-        server = settings.FHIR_SERVER + "/baseDstu2/" + target
+        server = FhirServerUrl() + "/" + target
     else:
-        server = settings.FHIR_SERVER + "/baseDstu2/"+resource
+        server = FhirServerUrl()  + "/" + resource
 
     server = server + "?_format=json"
 
