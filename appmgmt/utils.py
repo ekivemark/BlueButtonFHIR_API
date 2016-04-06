@@ -98,8 +98,11 @@ def write_fhir(mode, resource, body, target ):
     result = ""
     headers = {'content-type': 'application/json+fhir;charset=UTF-8'}
 
-    if mode == "PUT" and target != "":
+    if target == None:
+        server = FhirServerUrl() + "/" + resource
+    elif mode == "PUT" and target != "":
         server = FhirServerUrl() + "/" + target
+
     else:
         server = FhirServerUrl()  + "/" + resource
 
