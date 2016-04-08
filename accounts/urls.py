@@ -23,7 +23,7 @@ urlpatterns = [
                            views.sms.sms_login,
                            name='login'),
                        # This is step one of login
-                       url(r'smscode/',
+                       url(r'smscode$',
                            views.sms.sms_code,
                            name='sms_code'),
                        url(r'^logout$',
