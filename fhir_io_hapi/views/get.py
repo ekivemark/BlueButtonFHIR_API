@@ -231,7 +231,8 @@ def generic_read(request, interaction_type, resource_type, id, vid=None, *args, 
         return error_status(r, r.status_code)
 
     text_out = ""
-    print("r:", r.text)
+    if settings.DEBUG:
+        print("r:", r.text)
 
     if '_format=xml' in pass_params:
         text_out= minidom.parseString(r.text).toprettyxml()

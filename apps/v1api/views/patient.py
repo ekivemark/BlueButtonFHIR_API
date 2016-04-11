@@ -143,9 +143,11 @@ def get_patient(request, Access_Mode=None, *args, **kwargs):
     # raw format
 
     get_fmt = get_format(request.GET)
-    print("pass_to:", pass_to)
+    if settings.DEBUG:
+        print("pass_to:", pass_to)
     pass_to = pass_to + build_params(request.GET, skip_parm)
-    print("pass_to added to:", pass_to)
+    if settings.DEBUG:
+        print("pass_to added to:", pass_to)
 
     mask_to = settings.DOMAIN
 
