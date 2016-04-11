@@ -1,5 +1,6 @@
 from django import forms
 from django.contrib import admin
+from django.contrib.auth import get_user_model
 
 # Register your models here.
 
@@ -10,8 +11,13 @@ from appmgmt.models import (BBApplication,
                             Developer,
                             )
 
-from oauth2_provider.models import get_application_model
+from oauth2_provider.models import (get_application_model,
+                                    Grant,
+                                    AccessToken,
+                                    RefreshToken)
+
 from oauth2_provider.settings import oauth2_settings
+
 
 # class BBApplicationCreationForm(forms.ModelForm):
 #     """
@@ -89,6 +95,55 @@ class DeveloperUpdateForm(forms.ModelForm):
         fields = ('role', 'organization')
 
 
+class GrantAdmin(admin.ModelAdmin):
+    """
+    Overide Oauth2_provider Grants Admin to add extra fields to display and search
+    """
+    list_display = ('code', 'user', 'application', 'redirect_uri')
+
+    search_fields = ('code', 'user__username', 'application__name')
+
+    # user = models.ForeignKey(AUTH_USER_MODEL)
+    # code = models.CharField(max_length=255, db_index=True)  # code comes from oauthlib
+    # application = models.ForeignKey(oauth2_settings.APPLICATION_MODEL)
+    # expires = models.DateTimeField()
+    # redirect_uri = models.CharField(max_length=255)
+    # scope = models.TextField(blank=True)
+
+
+class AccessTokenAdmin(admin.ModelAdmin):
+    """
+    Overide OAuth2_provier AccessToken Admin to add extra fields to display and search
+    """
+
+    list_display = ('token', 'user', 'application', 'expires')
+
+    search_fields = ('token', 'user__username', 'application__name')
+
+    # user = models.ForeignKey(AUTH_USER_MODEL, blank=True, null=True)
+    # token = models.CharField(max_length=255, db_index=True)
+    # application = models.ForeignKey(oauth2_settings.APPLICATION_MODEL)
+    # expires = models.DateTimeField()
+    # scope = models.TextField(blank=True)
+
+class RefreshTokenAdmin(admin.ModelAdmin):
+    """
+    Overide OAuth2_provier RefreshToken Admin to add extra fields to display and search
+    """
+
+
+    list_display = ('token', 'user', 'application', 'access_token')
+
+    search_fields = ('token', 'user__username', 'application__name', 'access_token__token')
+
+    # user = models.ForeignKey(AUTH_USER_MODEL)
+    # token = models.CharField(max_length=255, db_index=True)
+    # application = models.ForeignKey(oauth2_settings.APPLICATION_MODEL)
+    # access_token = models.OneToOneField(AccessToken,
+    #                                     related_name='refresh_token')
+
+
+
 Application = get_application_model()
 
 
@@ -101,3 +156,9 @@ admin.site.register(Organization, OrganizationAdmin)
 admin.site.unregister(Application)
 admin.site.register(Application, BBApplicationAdmin)
 admin.site.register(Developer, DeveloperAdmin)
+admin.site.unregister(Grant)
+admin.site.register(Grant, GrantAdmin)
+admin.site.unregister(AccessToken)
+admin.site.register(AccessToken, AccessTokenAdmin)
+admin.site.unregister(RefreshToken)
+admin.site.register(RefreshToken, RefreshTokenAdmin)
