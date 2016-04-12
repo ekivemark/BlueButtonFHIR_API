@@ -23,41 +23,50 @@
                 {% include "include/login_register.html" %}
                 </p>
             <div class="col-md-8">
+                <h4>Why use the enhanced CMS BlueButton?</h4>
                 <p>
-                    BlueButton 2.0 provides you, our Medicare Beneficiaries,
-                    with the ability to access your Medicare information with
-                    greater flexibility and enhanced security.
+                    The CMS BlueButton Services makes it easy for you to send your claims
+                    information to applications, services or research programs
+                    that YOU trust.
+                </p>
+                <h4>Your Information is easier to use</h4>
+                <p>
+                    We have enhanced security while making it easier to put your information
+                    to work. Use it to help you manage your health using tools and
+                    applications that work for you.
+                </p>
+                <h4>Improve the security of your data</h4>
+                <p>
+                    Do you want better security for your information? Choose to connect
+                    your mobile phone to your account. Then receive a pin code to use
+                    whenever you login to your BlueButton account.
+                </p>
+                <h4>Powerful technology working for you</h4>
+                <p>
+                    Under the hood the technology is designed to make it easier for
+                    application developers to work with the information you authorize them to
+                    receive. Letting them create applications that are useful to you.
                 </p>
                 <p>
-                    Some of the new features include:
-                    <li>
-                        An advanced interface that provides the ability to
-                        search your claims information. You no longer have
-                        to download a large file of claims information and
-                        manually sift through it to find the information
-                        you need.
-                    </li>
-                    <li>
-                        Choose to use your mobile phone to receive a
-                        temporary pin code that you enter as part of your
-                        account login.
-                    </li>
-                    <li>
-                        Add your own secret questions and answers that we
-                        can use as login challenges when we detect that
-                        your account is being accessed from a new
-                        location or device.
-                    </li>
+                    &nbsp;
                 </p>
-
-                <h4>Are you a Software Developer?</h4>
+                <div class="col-md-12 well">
+                <h4>Are you an Innovative Software Developer?</h4>
+                    <div>
+                        <p>
+                            <a href="{% url "register_developer" %}">Sign up as a developer</a>
+                        </p>
+                    </div>
                     <p>
                         Check out the
                         <a href="{% url "appmgmt:developer_intro" %}">
                             Introduction for Developers</a> and
                         learn how you can enable Medicare Beneficiaries to connect their
-                        data to your application, service or research program.
+                        claims information to your application, service or research program.
+                        Use the CMS BlueButton on FHIR API to create applications that empower
+                        them to live better through their data and your creative work.
                     </p>
+                </div>
             </div>
 
             <div class="col-md-4"><img
