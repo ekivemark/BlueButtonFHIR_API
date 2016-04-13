@@ -50,11 +50,17 @@ def me(request):
     context = OrderedDict()
     context['template'] = 'v1api/user.html'
     context['profile'] = "User"
+    context['get_fmt'] = "json"
     context['name'] = u.username
     context['first_name'] = u.first_name
     context['last_name'] = u.last_name
     context['email'] = u.email
     context['fhir_urlid'] = xwalk.fhir_url_id
+    context['text'] = "<div>Name: <b>%s %s</b> (%s)<br/>" \
+                      "Email: %s<br/>" \
+                      "FHIR ID: %s</div>" % (context['first_name'], context['last_name'],
+                                             context['name'], context['email'],
+                                             context['fhir_urlid'])
 
     return render_to_response(context['template'],
                               RequestContext(request,
