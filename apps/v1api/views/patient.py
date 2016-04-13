@@ -228,7 +228,7 @@ def get_patient(request, Access_Mode=None, *args, **kwargs):
 
 
 @login_required
-def get_eob(request, eob_id, Access_Mode=None, *args, **kwargs):
+def get_eob(request, eob_id=None, Access_Mode=None, *args, **kwargs):
     """
 
     Display one or more EOBs but Always limit scope to Patient_Id
@@ -247,11 +247,10 @@ def get_eob(request, eob_id, Access_Mode=None, *args, **kwargs):
         print("KWargs      :", kwargs)
         print("Args        :", args)
 
-    if Access_Mode == "OPEN" and eob_id:
-        # Lookup using eob_id
 
+    if Access_Mode == "OPEN":
+        # Lookup using eob_id without patient filter
         key = ""
-
     else:
         try:
             xwalk = Crosswalk.objects.get(user=request.user)
@@ -309,7 +308,11 @@ def get_eob(request, eob_id, Access_Mode=None, *args, **kwargs):
 
     pass_to = FhirServerUrl()
     pass_to += "/ExplanationOfBenefit"
-    pass_to += "/" + eob_id
+    pass_to += "/"
+    if eob_id == None:
+        pass
+    else:
+        pass_to += eob_id
 
     # We can allow an EOB but we MUST add a search Parameter
     # to limit the items found to those relevant to the Patient Id

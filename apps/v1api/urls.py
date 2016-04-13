@@ -22,7 +22,7 @@ from django.contrib import admin
 from apps.v1api.views.home import *
 from apps.v1api.views.patient import (get_patient,
                                       get_eob,
-                                      get_eob_view,)
+                                      get_eob_view)
 
 from apps.v1api.views.ogets import (Hello,
                                     o_patient,
@@ -39,6 +39,7 @@ from apps.v1api.views.eob import (ExplanationOfBenefit,
 
 from apps.v1api.views.metadata import fhir_metadata
 
+from apps.v1api.views.user import me
 
 admin.autodiscover()
 
@@ -51,6 +52,7 @@ urlpatterns = [
                        url(r'^metadata$', fhir_metadata,
                            name="conformance"),
 
+                       url(r'^me$', me, name="my_profile"),
     #url(r'^Patient$/(?P<patient_id>[-\w]+)$',
                        url(r'^Patient/(?P<patient_id>\w+|)$',
                            get_patient,
@@ -59,7 +61,7 @@ urlpatterns = [
                            get_patient,
                            name='patient'),
 
-                       url(r'^eob/',
+                       url(r'^eob$',
                            get_eob,
                            name='eob'),
                        url(r'^ExplanationOfBenefit/(?P<eob_id>[-\w]+)$',

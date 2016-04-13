@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% if get_fmt == "xml" or get_fmt == "json" %}
+    {{ result }}
+{% else %}
+{% load i18n %}
+{% load staticfiles %}
+{% block pretitle %}Welcome to the {% endblock %}
+{% block title %}{{ settings.APPLICATION_TITLE }} v1 {{ profile }}/{% endblock %}
+{% block extra_head %}
+
+{% endblock %}
+{% block breadcrumbs %}
+    <div class="container">
+        <ul class="breadcrumb">
+            <li class="active">Home</li>
+            <li><a href="{% url 'api:home' %}">api</a></li>
+            <li><a href="{% url 'api:v1:home' %}">v1</a></li>
+            <li class="active">{{ profile }}</li>
+        </ul>
+    </div>
+{% endblock %}
+{% block pagename %}{{ settings.APPLICATION_TITLE }} | api/v1/{{ profile }}{% endblock %}
+{% block content %}
+
+       <div class="container-fluid">
+
+                 {% if user.is_authenticated %}
+                   <div class="col-md-12">
+                    {% if settings.DEBUG %}
+                       <div class="col-md-12 well">
+                           <h4>Debug Call Info:</h4>
+                           {{ settings.URL_PRE }}{{ settings.DOMAIN }}{{ request.get_full_path }}<br>
+                           {{ pass_to }}
+                           {% comment %}Get: {{ '{' }}{{ get.QueryDict }}{{ '}' }}
+                           Args: {{ args }} | KWargs: {{ kwargs }}{% endcomment %}
+                       </div>
+                    {% endif %}
+
+                        <div class="col-md-12 well">
+                            <h4>User displayable content: [{% if get_fmt %}{{ get_fmt|capfirst }}{% else %}{{ in_fmt|upper }}{% endif %}]</h4>
+                            <p>&nbsp;</p>
+                            {% if text %}<p>{{ text|safe }}</p>{% endif %}
+                            {% if error %}<p>{{ error }}</p>{% endif %}
+                            <p>&nbsp;</p>
+                        </div>
+
+                   </div>
+                     <div class="col-md-12 well">
+                       <pre>
+                           User name:  {{ name }}
+                           first name: {{ first_name }}
+                           last name:  {{ last_name }}
+                           email:      {{ email }}
+                           FHIR Id:    {{ fhir_urlid }}
+                       </pre>
+                     </div>
+
+                {% else %}
+
+                {% endif %}
+
+        </div>
+
+{% endblock %}
+
+{% endif %}
