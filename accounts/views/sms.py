@@ -8,6 +8,7 @@ All SMS Related views
 """
 __author__ = 'Mark Scrimshire:@ekivemark'
 
+import json
 import ldap3
 
 from django.conf import settings
@@ -161,16 +162,18 @@ def sms_login(request, *args, **kwargs):
         print("SMS_LOGIN.GET:", access_field, ":[%s]" % (access_key))
         # print(request.POST)
         print(args)
-
+        print(kwargs)
     next = ""
 
     # Passing next parameter through to form
     if request.GET:
         if 'next' in request.GET:
             next = request.GET['next']
+            next = request.get_full_path().split('next=')[1]
 
     if settings.DEBUG:
         print("We got a next value of:", next)
+        print("full path = ", request.get_full_path())
     if request.method == 'POST':
         form = AuthenticationForm(request.POST)
         if request.POST['login'].lower() == 'resend code':
@@ -224,6 +227,10 @@ def sms_login(request, *args, **kwargs):
                                               user)
                     # Otherwise don't send a message
                     if next != "":
+                        if settings.DEBUG:
+                            print("About to redirect to:", next )
+                            print("QUERY_DICT:", dict(request.POST.items()))
+                            print("but what about kwargs", kwargs)
                         return HttpResponseRedirect(next)
                     else:
                         return HttpResponseRedirect(reverse('home'))
@@ -285,7 +292,7 @@ def sms_code(request):
         next = request.GET['next']
         if settings.DEBUG:
             print("next parameter is:", next)
-
+            print("Other parameters = ",dict(request.GET.items()))
     if request.method == 'POST':
         if request.POST.__contains__(access_field):
             access_key = request.POST[access_field].lower()

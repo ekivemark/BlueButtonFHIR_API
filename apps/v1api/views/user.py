@@ -25,10 +25,12 @@ from django.template import RequestContext
 from accounts.utils import get_user_record
 from ..models import Crosswalk
 
-from fhir.utils import kickout_404
+from fhir.utils import (kickout_401,
+                        kickout_404,)
+
+from apps.v1api.utils import get_format
 
 
-@login_required
 def me(request):
     """
     Return user information
@@ -39,6 +41,9 @@ def me(request):
     User = get_user_model()
     u = get_user_record(request.user)
 
+    if not request.user.is_authenticated():
+        return kickout_401("User is not Authenticated")
+
     try:
         xwalk = Crosswalk.objects.get(user=request.user.id)
     except Crosswalk.DoesNotExist:
@@ -47,10 +52,13 @@ def me(request):
         messages.error(request, reason)
         return kickout_404(reason)
 
+    get_fmt = get_format(request.GET)
+
+
     context = OrderedDict()
     context['template'] = 'v1api/user.html'
     context['profile'] = "User"
-    context['get_fmt'] = "json"
+    context['get_fmt'] = get_fmt
     context['name'] = u.username
     context['first_name'] = u.first_name
     context['last_name'] = u.last_name

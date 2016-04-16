@@ -53,7 +53,7 @@ urlpatterns = [
                            name="conformance"),
 
                        url(r'^me$', me, name="my_profile"),
-    #url(r'^Patient$/(?P<patient_id>[-\w]+)$',
+                       #url(r'^Patient$/(?P<patient_id>[-\w]+)$',
                        url(r'^Patient/(?P<patient_id>\w+|)$',
                            get_patient,
                            name='patient_by_id'),
