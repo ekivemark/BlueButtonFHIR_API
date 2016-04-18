@@ -1,7 +1,7 @@
-{% extends "base.html" %}
 {% if get_fmt == "xml" or get_fmt == "json" %}
     {{ result }}
 {% else %}
+{% extends "base.html" %}
 {% load i18n %}
 {% load staticfiles %}
 {% block pretitle %}Welcome to the {% endblock %}
@@ -62,5 +62,4 @@
         </div>
 
 {% endblock %}
-
 {% endif %}

@@ -11,14 +11,16 @@ Created: 4/12/16 10:47 PM
 
 """
 __author__ = 'Mark Scrimshire:@ekivemark'
+import json
 
 from collections import OrderedDict
-
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import (reverse_lazy,
                                       reverse)
+from django.http import JsonResponse
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 
@@ -53,7 +55,8 @@ def me(request):
         return kickout_404(reason)
 
     get_fmt = get_format(request.GET)
-
+    if settings.DEBUG:
+        print('Format:', get_fmt)
 
     context = OrderedDict()
     context['template'] = 'v1api/user.html'
@@ -69,6 +72,12 @@ def me(request):
                       "FHIR ID: %s</div>" % (context['first_name'], context['last_name'],
                                              context['name'], context['email'],
                                              context['fhir_urlid'])
+    # result = json.dumps(context, indent=4, sort_keys=False)
+    # context['result'] = result
+
+    if get_fmt == "json":
+        # return HttpResponse(context['result'],content_type="application/json")
+        return JsonResponse(context)
 
     return render_to_response(context['template'],
                               RequestContext(request,

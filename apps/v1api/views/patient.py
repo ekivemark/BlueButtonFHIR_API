@@ -44,7 +44,7 @@ from fhir.utils import kickout_404
 from bbapi.utils import FhirServerUrl
 
 
-# @login_required
+@login_required
 def get_patient(request, Access_Mode=None, *args, **kwargs):
     """
     Display Patient Profile
