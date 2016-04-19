@@ -13,6 +13,7 @@ import json
 import requests
 
 from collections import OrderedDict
+from oauth2_provider.decorators import protected_resource
 from xml.dom import minidom
 
 from xml.etree import ElementTree as ET
@@ -44,7 +45,7 @@ from fhir.utils import kickout_404
 from bbapi.utils import FhirServerUrl
 
 
-@login_required
+@protected_resource()
 def get_patient(request, Access_Mode=None, *args, **kwargs):
     """
     Display Patient Profile
