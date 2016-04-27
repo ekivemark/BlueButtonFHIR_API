@@ -1,68 +1,61 @@
 {% load i18n %}
 {% load staticfiles %}
-
-<div class="container-fluid">
-    <div class="navbar navbar-default navbar-fixed-top">
+<nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="row">
 {% comment %}
 Add a color to the NavBar if we are on localhost:8000
 Just to avoid confusion...
 {% endcomment %}
+         <!-- Brand and toggle get grouped for better mobile display -->
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+        <a href="{% url 'home' %}" contenteditable="false"
+            class="navbar-brand"
+            style="vertical-align:top;max-height:100%;max-width:100%">
+            <img src="{% static 'img/layout/blue-button-trim.png' %}"
+                 style="vertical-align:text-top;max-height:100%;max-width:100%"></a>
+        <a href="{% url 'home' %}" contenteditable="false"
+           class="navbar-brand"
+           alt="{{ settings.APPLICATION_TITLE }}">
+                <strong>{{ settings.APPLICATION_TITLE }}</strong>
+        </a>
+
         <ul class="nav navbar-nav">
+
+            {% comment %}
             <li>
-                <a href="{% if request.session.auth_device %}{% url 'api:home' %}
-                {% else %}{% url 'home' %}{% endif %}" contenteditable="false"
-                   class="navbar-brand">
-                    <img src="{% static 'img/layout/blue-button-trim.png' %}"
-                     style="vertical-align:middle;display:inline-block;max-height:100%;max-width:100%"
-                     alt="{{ settings.APPLICATION_TITLE }}">
-                </a>
-            </li>
-            <li>
-                <a class="" href="{% url 'home' %}"
-                   contenteditable="false" title="{{ settings.APPLICATION_TITLE }} Home"><i class="fa fa-home fa-lg"></i></a>
-            </li>
-            {% if user.is_authenticated and request.session.auth_master %}
-            <li>
-                <a class="" href="{% url 'home' %}"
-                   contenteditable="false" title="{{ settings.APPLICATION_TITLE }} Home">{{ settings.APPLICATION_TITLE }}<br>Home
-                </a>
-            </li>
-            <li>
-                <a href="{% url 'api:home' %}" class=""
-                   contenteditable="false" title="BlueButton API Access"><i class="fa fa-bolt"></i> API
-                </a>
-            </li>
-            {% comment %}<li>
-                {# DONE: create /accounts/app_management - redirect to accounts:manage_account #}
-                <a href="{% url 'accounts:manage_account' %}">
-                    <i class="fa fa-cogs"></i>{% trans " My Dashboard" %}</a>
-            </li>{% endcomment %}
-            {% else %}
-                {% comment %}<li>
                     <a href="{% url 'accounts:sms_code' %}?next=/" title="Login"><i class="fa fa-sign-in"></i> {% trans "Login" %}</a>
-                </li>{% endcomment %}
+            </li>
+            {% endcomment %}
+            {% if not user.is_authenticated %}
                 <li>
                     <a href="{% url 'register' %}" title="Register"><i class="fa fa-check-square-o"></i> {% trans "Register" %}</a>
                 </li>
             {% endif %}
-                <li class="dropdown" id="menu1">
-                    <a href="#" class="btn dropdown-toggle"
+            <li class="dropdown" id="menu1">
+                <a href="#" class="btn dropdown-toggle"
                    data-toggle="dropdown"><i class="fa fa-info-circle"></i> Learn More<span
                         class="caret"></span></a>
-                    <ul class="dropdown-menu" id="menu1" role="menu">
-                        {% comment %}<li>
-                            <a href="{% url 'accounts:learn_0' %}" title="Learn More">{% trans "Learn More" %}</a>
-                        </li>{% endcomment %}
-                        <li>
-                            <a href="{% url 'base:about' %}" title="About {{ settings.APPLICATION_TITLE }}">{% trans "About" %}</a>
-                        </li>
-                        <li>
-                            <a href="{% url 'base:new_stuff' %}">{% trans "What's New" %}</a>
-                        </li>
-                    </ul>
-                </li>
-
-{#            <li class="divider-vertical"></li>#}
+                <ul class="dropdown-menu" id="menu1" role="menu">
+                    {% comment %}
+                    <li>
+                           <a href="{% url 'accounts:learn_0' %}" title="Learn More">{% trans "Learn More" %}</a>
+                    </li>
+                    {% endcomment %}
+                    <li>
+                        <a href="{% url 'base:about' %}" title="About {{ settings.APPLICATION_TITLE }}">{% trans "About" %}</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'base:new_stuff' %}">{% trans "What's New" %}</a>
+                    </li>
+                </ul>
+            </li>
 
             <li class="dropdown" id="menu2">
                 <a href="#" class="btn dropdown-toggle"
@@ -93,32 +86,14 @@ Just to avoid confusion...
             </li>
         </ul>
 
-        <ul class="nav navbar-nav navbar-right">
-            {%  if user.is_authenticated %}
-                {% if request.session.auth_master %}
-                    <li>
-                        <a href="{%  url 'accounts:manage_account' %}" title="My Account Dashboard">
-                            [<i class="fa fa-cogs"></i> {{ user.first_name }} {{ user.last_name }} ]</a>
-                    </li>
-                {% else %}
-                    <li>
-                        <a href="{%  url 'accounts:account_access' %}">
-                        [<i class="fa fa-cogs"></i> {{ user.first_name }} {{ user.last_name }} {% if request.session.auth_device %}
-                            <br>via {{ request.session.auth_device }} {% endif %}]</a>
-                    </li>
-                {% endif %}
-                <li>
-                    <a href="{% url "accounts:logout" %}?next=/{% if request.session.auth_device %}api/{% endif %}" title="Logout">
-                        {% trans "Logout" %} <i class="fa fa-sign-out"></i>&nbsp;&nbsp;&nbsp;</a>
-                </li>
-            {% else %}
-                <li>
-                    <a href="{% url "accounts:sms_code" %}" title="Login">
-                        {% trans "Login" %} <i class="fa fa-sign-in"></i>&nbsp;&nbsp;&nbsp;</a>
-                </li>
-            {% endif %}
-        </ul>
+        <div class="nav navbar-nav navbar-right align-right">
+                <ul class="nav navbar-nav navbar-right">
+                    {% include "include/top-nav-user-dropdown.html" %}
 
+                    {% include 'include/top-nav-login-logout.html' %}
+                </ul>
+
+            </div>
     </div>
-</div>
-
+    </div>
+</nav>

@@ -15,6 +15,8 @@ from django.core.urlresolvers import reverse_lazy
 from django.views.generic import TemplateView
 from django.views.static import serve as Static_Serve
 
+from accounts.views.sms import sms_login
+from accounts.views import logout
 from accounts.forms.other import (RegistrationFormUserTOSAndEmail,
                                   RegistrationFormDeveloperTOSAndEmail)
 
@@ -92,15 +94,26 @@ urlpatterns = [
                            auth_views.password_reset_done,
                            name='password_reset_done'),
 # fhir
-                       url(r'^fhir/', include('fhir.urls',
-                                              namespace='fhir')),
+                       url(r'^fhir/',
+                           include('fhir.urls',
+                                   namespace='fhir')),
 # OAuth2_provider
-                       url(r'^o/', include('oauth2_provider.urls',
+                       url(r'^o/',
+                           include('oauth2_provider.urls',
                                            namespace='oauth2_provider')),
 
                        # OAuth2 Provider Library
-                       url(r'^o/', include('oauth2_provider.urls',
+                       url(r'^o/',
+                           include('oauth2_provider.urls',
                                            namespace='oauth2_provider')),
+# login / logout
+                       url(r'^login$',
+                           sms_login,
+                           name='login'),
+                       url(r'^logout$',
+                           logout,
+                           name='logout'),
+
 # Templates
                        url(r'^support/$', TemplateView.as_view(template_name='support.html')),
 

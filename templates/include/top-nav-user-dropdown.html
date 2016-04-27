@@ -1,0 +1,30 @@
+<li class="dropdown">
+    <!-- User dropdown right align -->
+    {% if user.is_authenticated %}
+      <a href="{% url "login" %}?next={% if next %}{{ next }}{% else %}/{% endif %}" class="dropdown-toggle" data-toggle="dropdown"
+         role="button"
+         aria-haspopup="true"
+         aria-expanded="false"><i class="fa fa-cogs"></i> {% if not user.first_name and not user.last_name %}
+            {{ user }}
+          {% else %}
+            {{ user.first_name }} {{ user.last_name }}
+          {% endif %}<span class="caret"></span></a>
+      <ul class="dropdown-menu">
+            <li>
+                <a href="{% url 'accounts:myapps' %}" title="My Apps">
+                    <i class="fa fa-cogs"></i>&nbsp;My apps
+                   </a>
+            </li>
+            <li>
+                <a href="{% url 'accounts:manage_account' %}" title="My Account">
+                    <i class="fa fa-cogs"></i>&nbsp;My account
+                   </a>
+            </li>
+            <li role="separator" class="divider"></li>
+            <li>
+                <a href="{% url "logout" %}?next=/" title="Logout">
+                   <i class="fa fa-sign-out"></i> Logout &nbsp;&nbsp;&nbsp;</a>
+            </li>
+      </ul>
+    {% endif %}
+</li>

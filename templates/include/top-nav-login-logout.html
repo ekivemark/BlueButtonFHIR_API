@@ -1,0 +1,9 @@
+<li>
+    {% if user.is_authenticated %}
+        <a href="{% url "logout" %}?next=/" title="Logout">
+                   <i class="fa fa-sign-out"></i> Logout &nbsp;&nbsp;&nbsp;</a>
+    {% else %}
+        <a href="{% url "login" %}" title="Login"><i class="fa fa-sign-in"></i> Login
+            &nbsp;&nbsp;&nbsp;</a>
+    {% endif %}
+</li>
