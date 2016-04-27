@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block breadcrumbs %}
+    <div class="container">
+        <ul class="breadcrumb">
+            <li><a href="{% url 'home' %}">Home</a></li>
+
+            <li class="active">My Apps</li>
+        </ul>
+    </div>
+{% endblock %}
+{% block pagename %}<h2>My Apps Dashboard</h2>{% endblock %}
+{% block content %}
+
+<div class="col-lg-12 well">
+
+    {% for granted in my_apps %}
+
+            <div class="table-bordered table-responsive">
+            <table class="table">
+                <tr>
+
+                    <table class="table table-condensed ">
+                        <thead>
+                            <tr>
+                                <td>Action</td>
+                                <td></td>
+                                <td>Name</td>
+                                <td>About</td>
+                                <td>Publisher</td>
+                                <td>Valid until</td>
+                                <td>Type</td>
+                            </tr>
+                        </thead>
+                        <tr>
+                            <td>[Remove]</td>
+                            <td><img src="{{ MEDIA_URL }}{{ granted.application.logo }}"
+                     width="50" height="50"></td>
+                            <td>{{ granted.application.name }}</td>
+                            <td>{{ granted.application.about }}</td>
+                            <td>{{ granted.application.owner }}</td>
+                            <td>{{ granted.expires }} <br/>Add [1hr] [1D] [1Mth] [1Yr] </td>
+                            <td>
+                                {{ granted.application.app_type|lower|capfirst }}
+                            </td>
+                        </tr>
+                    </table>
+
+                </tr>
+
+            </table>
+
+            </div>
+
+        </div>
+    {%  endfor %}
+
+{% endblock %}

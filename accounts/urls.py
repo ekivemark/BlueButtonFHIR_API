@@ -9,6 +9,7 @@ from accounts import views
 from accounts.views.user import (verify_phone, user_edit)
 from accounts.views.other import (manage_account, logout, login)
 from accounts.views.sms import (sms_code, sms_login)
+from accounts.views.myapps import myapps
 
 admin.autodiscover()
 
@@ -62,6 +63,10 @@ urlpatterns = [
                        url(r'^user/account_access$',
                            views.user.account_access,
                            name='account_access'),
+                       url(r'^myapps$',
+                           myapps,
+                           name='myapps'),
+
                        # DONE: apply session_master
 
                        url(r'^admin/', include(admin.site.urls)),

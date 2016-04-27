@@ -32,6 +32,8 @@ from .utils import (str2bool,
                     Server_Name)
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+if True:
+    print("BASE_DIR:", BASE_DIR)
 
 APPLICATION_ROOT = BASE_DIR
 
