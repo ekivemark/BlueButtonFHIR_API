@@ -53,7 +53,7 @@ oauthlib==1.0.3
 paramiko==1.15.2
 pathspec==0.3.3
 phonenumbers==7.2.7
-Pillow==3.1.1
+Pillow==3.3.2
 psycopg2==2.6.1
 pyasn1==0.1.9
 pycparser==2.14
